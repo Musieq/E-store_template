@@ -1,0 +1,49 @@
+@import "colors";
+@import "header";
+@import "adminStyles";
+
+
+/* Root */
+body {
+
+}
+
+
+
+
+/* Global classes */
+.required {
+  color: red;
+  font-size: 1.1em;
+}
+
+
+
+
+
+/* Animations */
+@keyframes slideDown {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+}
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+
+
