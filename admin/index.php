@@ -53,8 +53,8 @@ require_once('common/header.php');
 <!-- Bootstrap Bundle with Popper -->
 <script src="../js/bootstrap.bundle.min.js"></script>
 
-<!-- Sidebar JS -->
-<script src="js/sidebars.js"></script>
+<!-- Admin JS -->
+<script src="js/adminScripts.js"></script>
 
 </body>
 </html>

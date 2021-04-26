@@ -90,7 +90,7 @@ if (isset($_GET['deleteCatID'])) {
 
         <?php
         if ($errors) {
-            echo "<div class='col-12'><div class='callout callout-danger'>";
+            echo "<div class='col-12'><div class='callout callout-danger alert-danger'>";
             foreach ($errors as $value) {
                 echo "<strong>$value</strong>";
             }
@@ -141,7 +141,7 @@ if (isset($_GET['deleteCatID'])) {
 
 
     <div class="col-xl-7">
-        <p class="alert-info"><strong>Information: </strong>Deleting a category assigns all products from that category to default category. There is only 1 default category and it cannot be deleted. In order to delete it, you need to set other category to default.</p>
+        <p class="callout callout-info alert-info"><strong>Information: </strong>Deleting a category assigns all products from that category to default category. There is only 1 default category and it cannot be deleted. In order to delete it, you need to set other category to default.</p>
 
         <table class="table">
             <thead>
@@ -168,7 +168,7 @@ if (isset($_GET['deleteCatID'])) {
                             <td>count</td> <!-- TODO count how many products are in this category -->
                             <td><a href="index.php?source=categories&editCatID=<?php echo $categoriesResult['category_id'] ?>">Edit</a></td>
                             <td><?php if ($categoriesResult['is_default'] != 1) : ?>
-                                    <a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>">Delete</a>
+                                    <a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>" class="link-danger delete-category-link" data-bs-toggle="modal" data-bs-target="#modalCatDeleteWarning">Delete</a>
                                 <?php endif; ?>
                             </td> <!-- TODO window asking if you really want to delete this category -->
                         </tr>
@@ -187,7 +187,24 @@ if (isset($_GET['deleteCatID'])) {
 </div>
 
 
-
+<!-- Modal -->
+<div class="modal fade" id="modalCatDeleteWarning" tabindex="-1" aria-labelledby="modalCatDeleteWarningLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCatDeleteWarningLabel">Delete category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete category? This operation cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="delete-category-confirm">Delete category</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
