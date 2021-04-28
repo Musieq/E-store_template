@@ -89,14 +89,7 @@ if (isset($_GET['deleteCatID'])) {
 
 
         <?php
-        if ($errors) {
-            echo "<div class='col-12'><div class='callout callout-danger alert-danger'>";
-            foreach ($errors as $value) {
-                echo "<strong>$value</strong>";
-            }
-            echo "</div></div>";
-        }
-
+        displayErrors($errors);
         ?>
 
 

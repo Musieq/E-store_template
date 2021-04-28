@@ -56,14 +56,7 @@ if (!is_numeric($editCatID)) {
     ?>
 
     <?php
-    if ($errors) {
-        echo "<div class='col-12'><div class='callout callout-danger'>";
-        foreach ($errors as $value) {
-            echo "<strong>$value</strong>";
-        }
-        echo "</div></div>";
-    }
-
+    displayErrors($errors);
     ?>
 
     <form class="form-width-700" method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>">

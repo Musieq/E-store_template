@@ -18,3 +18,17 @@ function categoriesHierarchyInSelectField($currentParentID, $parentID = 0, $hier
 
 
 
+function displayErrors($errors) {
+    if ($errors) {
+        echo "<div class='col-12'><div class='callout callout-danger alert-danger'>";
+        foreach ($errors as $value) {
+            echo "<strong>$value</strong>";
+        }
+        echo "</div></div>";
+    }
+}
+
+
+
+
+
