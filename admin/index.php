@@ -27,6 +27,11 @@ require_once('common/header.php');
                 break;
 
 
+            case 'images':
+                include 'images.php';
+                break;
+
+
             default:
                 ?>
 

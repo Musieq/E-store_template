@@ -1,0 +1,20 @@
+div.admin-wrapper {
+
+  .image-upload-preview {
+    display: flex;
+    min-height: 250px;
+    border: 1px solid #ced4da;
+    padding: 1em;
+    border-radius: .25rem;
+    flex-direction: column;
+
+    span {
+      margin: auto;
+      padding-bottom: 1rem;
+    }
+
+    img.image-upload {
+
+    }
+  }
+}

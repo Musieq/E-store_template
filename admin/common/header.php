@@ -43,6 +43,11 @@ if(!isset($_SESSION['userRole']) || $_SESSION['userRole'] != 'admin') {
             </a>
         </li>
         <li>
+            <a href="index.php?source=images" class="nav-link text-white">
+                Images
+            </a>
+        </li>
+        <li>
             <a href="index.php?source=categories" class="nav-link text-white">
                 Categories
             </a>

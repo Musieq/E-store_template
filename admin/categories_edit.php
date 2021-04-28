@@ -66,7 +66,7 @@ if (!is_numeric($editCatID)) {
 
     ?>
 
-    <form method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>" style="max-width: 700px">
+    <form class="form-width-700" method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>">
         <div class="mb-3">
             <div class="d-flex flex-row"><label for="EditCategoryName" class="form-label">Category name</label><div class="required">*</div></div>
             <input type="text" class="form-control" id="EditCategoryName" name="EditCategoryName" aria-describedby="categoryNameHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_name']; } ?>">

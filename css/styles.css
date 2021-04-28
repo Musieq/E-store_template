@@ -157,12 +157,21 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper:hover .my-account-lin
   animation-name: slideUp;
 }
 
+div.admin-wrapper .image-upload-preview {
+  display: flex;
+  min-height: 250px;
+  border: 1px solid #ced4da;
+  padding: 1em;
+  border-radius: 0.25rem;
+  flex-direction: column;
+}
+div.admin-wrapper .image-upload-preview span {
+  margin: auto;
+  padding-bottom: 1rem;
+}
 div.admin-content {
   display: flex;
   flex-wrap: nowrap;
-  height: 100vh;
-  overflow-x: auto;
-  overflow-y: auto;
 }
 div.admin-content > * {
   flex-shrink: 0;
@@ -179,6 +188,10 @@ div.admin-content div.admin-sidebar {
 .required {
   color: red;
   font-size: 1.1em;
+}
+
+.form-width-700 {
+  max-width: 700px;
 }
 
 /* Animations */

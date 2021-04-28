@@ -28,7 +28,7 @@
       <option name="exitCodeBehavior" value="ERROR" />
       <option name="fileExtension" value="scss" />
       <option name="immediateSync" value="true" />
-      <option name="name" value="SCSS" />
+      <option name="name" value="Bootstrap Watcher" />
       <option name="output" value="$FileNameWithoutExtension$.css:../css/$FileNameWithoutExtension$.css.map" />
       <option name="outputFilters">
         <array />
