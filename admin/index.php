@@ -4,7 +4,7 @@ require_once('common/header.php');
 <div class="admin-wrapper">
 
     <div class="container-fluid">
-        <h1>Hello, admin!</h1>
+
 
 
 

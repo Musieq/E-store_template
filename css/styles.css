@@ -169,6 +169,14 @@ div.admin-wrapper .image-upload-preview span {
   margin: auto;
   padding-bottom: 1rem;
 }
+div.admin-wrapper table.table-images div.admin-image-container {
+  width: 200px;
+  height: 112.5px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 div.admin-content {
   display: flex;
   flex-wrap: nowrap;

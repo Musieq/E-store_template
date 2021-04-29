@@ -53,6 +53,11 @@ if (isset($_POST['addImageButton'])) {
         array_push($errors, fileUploadErrors($imageUpload['error']));
     }
 }
+
+
+//TODO Delete images
+
+
 ?>
 
 <div class="row">
@@ -61,7 +66,9 @@ if (isset($_POST['addImageButton'])) {
     displayErrors($errors);
     ?>
 
-    <div class="col-12">
+    <div class="col-12 mb-3">
+        <h2>Upload new image</h2>
+        <!-- TODO form validation -->
         <form class="form-width-700" action="index.php?source=images" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="addImage" class="form-label">Select image to upload</label>
@@ -93,7 +100,63 @@ if (isset($_POST['addImageButton'])) {
     </div>
 
     <div class="col-12">
-        <!--display img here-->display
+        <h2>Uploaded images</h2>
+        <div class="alert-warning callout callout-warning"><strong>Do not remove</strong> uploaded images directly from the directory.</div>
+
+        <!-- TODO bulk option for images and live search by title -->
+        <table class="table table-images">
+            <thead>
+                <tr>
+                    <th scope="col">Bulk</th>
+                    <th scope="col">Image</th>
+                    <th scope="col">Title</th>
+                    <th scope="col">Alternative text</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                <?php
+
+                /** Display all images **/
+                $displayImagesQuery = mysqli_query($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT 50");
+                while($displayImagesResults = mysqli_fetch_assoc($displayImagesQuery)){
+                    $imageID = $displayImagesResults['id'];
+                    $imageUniqueName = $displayImagesResults['unique_name'];
+                    $imageTitle = $displayImagesResults['title'];
+                    $imageAlt = $displayImagesResults['alt'];
+                    $uploadDate = $displayImagesResults['upload_date'];
+                    $fullPath = $displayImagesResults['path'];
+
+                    // Get path without extension and extension
+                    $path = pathinfo($fullPath, PATHINFO_DIRNAME);
+                    $path .= '/'.pathinfo($fullPath, PATHINFO_FILENAME);
+                    $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+                    ?>
+                    
+                    <tr>
+                        <td>Bulk</td>
+                        <td><a href="../<?=$fullPath?>">
+                                <div class="admin-image-container" style="background-image: url('../<?=$path?>-thumbnail.<?=$extension?>') "></div>
+                            </a>
+                        </td>
+                        <td><?=$imageTitle?></td>
+                        <td><?=$imageAlt?></td>
+                        <td><?=$uploadDate?></td>
+                        <td><a href="index.php?source=images&editImageID=<?=$imageID?>">Edit</td>
+                        <td><a href="index.php?source=images&deleteImageID=<?=$imageID?>">Delete</td>
+                    </tr>
+                    
+                    <?php  
+                }
+
+                ?>
+              
+            </tbody>
+        </table>
+        <!-- TODO pagination for images -->
     </div>
 
 </div>
