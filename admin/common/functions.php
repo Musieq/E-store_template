@@ -30,5 +30,55 @@ function displayErrors($errors) {
 
 
 
+function fileUploadErrors ($err): string {
+    $phpFileUploadErrors = [
+        1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
+        2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+        3 => 'The uploaded file was only partially uploaded',
+        4 => 'No file was uploaded',
+        6 => 'Missing a temporary folder',
+        7 => 'Failed to write file to disk.',
+        8 => 'A PHP extension stopped the file upload.',
+    ];
+
+    return $phpFileUploadErrors[$err];
+}
+
+
+function resizeUploadedImages($image, $uniqueImageName, $imageExtension, $imageType, $imageDestination) {
+
+    // Array with size name and image width
+    $sizesArray = [
+        0 => ['name' => 'thumbnail', 'width' => 250],
+        1 => ['name' => 'main-image', 'width' => 600]
+    ];
+
+    // Create image from uploaded file
+    $imageCreate = imagecreatefromstring(file_get_contents($image['tmp_name']));
+
+    foreach ($sizesArray as $key) {
+        $name = $key['name'];
+        $width = $key['width'];
+
+        // Scale image and save it to given path
+        $imageScale = imagescale($imageCreate, $width);
+        switch ($imageType) {
+            case 'image/jpeg':
+            case 'image/jpg':
+                imagejpeg($imageScale, '../'.$imageDestination.'/'.$uniqueImageName.'-'.$name.'.'.$imageExtension);
+                break;
+
+            case 'image/png':
+                imagepng($imageScale, '../'.$imageDestination.'/'.$uniqueImageName.'-'.$name.'.'.$imageExtension);
+                break;
+
+            case 'image/gif':
+                imagegif($imageScale, '../'.$imageDestination.'/'.$uniqueImageName.'-'.$name.'.'.$imageExtension);
+                break;
+        }
+    }
+}
+
+
 
 

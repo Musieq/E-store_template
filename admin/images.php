@@ -1,14 +1,6 @@
 <?php
 $errors = [];
-$phpFileUploadErrors = [
-    1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-    2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
-    3 => 'The uploaded file was only partially uploaded',
-    4 => 'No file was uploaded',
-    6 => 'Missing a temporary folder',
-    7 => 'Failed to write file to disk.',
-    8 => 'A PHP extension stopped the file upload.',
-];
+
 
 /** Upload image to server and database **/
 if (isset($_POST['addImageButton'])) {
@@ -23,7 +15,7 @@ if (isset($_POST['addImageButton'])) {
         $imageExtension = pathinfo($imageName, PATHINFO_EXTENSION);
 
         // Check if uploaded file's type is allowed
-        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         if (in_array($imageType, $allowedTypes)) {
             // Get image alt and title from form
             $imageAlt = $_POST['addImageAlt'];
@@ -31,7 +23,8 @@ if (isset($_POST['addImageButton'])) {
             $imageTitle = empty($imageTitle) ? str_replace('.'.$imageExtension,'', $imageName) : $imageTitle;
 
             // Generate unique name for file
-            $uniqueImageName = uniqid('',true).'.'.$imageExtension;
+            $uniqueImageName = uniqid('',true);
+            $uniqueImageNameExtension = $uniqueImageName.'.'.$imageExtension;
 
             // Create folders for storing images if doesn't exist
             $imageDestination = 'uploaded_images/'.date('Y').'/'.date('m');
@@ -39,21 +32,25 @@ if (isset($_POST['addImageButton'])) {
                 mkdir('../'.$imageDestination, 0777, true);
             }
 
-            $imageFullDestination = $imageDestination.'/'.$uniqueImageName;
+            $imageFullDestination = $imageDestination.'/'.$uniqueImageNameExtension;
+
+
+            // Create copies of this image with lower resolution
+            resizeUploadedImages($imageUpload, $uniqueImageName, $imageExtension, $imageType, $imageDestination);
+
 
             // Upload image
             move_uploaded_file($imageTmpName, '../'.$imageFullDestination);
 
             // Update database with image informations
-            mysqli_query($db, "INSERT INTO images (unique_name, title, alt, path) VALUES ('$uniqueImageName', '$imageTitle', '$imageAlt', '$imageFullDestination')");
+            mysqli_query($db, "INSERT INTO images (unique_name, title, alt, path) VALUES ('$uniqueImageNameExtension', '$imageTitle', '$imageAlt', '$imageFullDestination')");
 
-            // TODO copies of image with lower resolutions - function which will also be used in products.php
 
         } else {
-            array_push($errors, "Wrong file type. Allowed types: jpg, jpeg, png.");
+            array_push($errors, "Wrong file type. Allowed types: jpg, jpeg, png, gif.");
         }
     } else {
-        array_push($errors, $phpFileUploadErrors[$imageUpload['error']]);
+        array_push($errors, fileUploadErrors($imageUpload['error']));
     }
 }
 ?>
@@ -68,7 +65,7 @@ if (isset($_POST['addImageButton'])) {
         <form class="form-width-700" action="index.php?source=images" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="addImage" class="form-label">Select image to upload</label>
-                <input class="form-control" type="file" accept="image/png,image/jpg,image/jpeg" id="addImage" name="addImage">
+                <input class="form-control" type="file" accept="image/png,image/jpg,image/jpeg,image/gif" id="addImage" name="addImage">
             </div>
 
             <div class="image-upload-preview mb-3">
