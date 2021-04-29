@@ -95,6 +95,7 @@ if (isset($_GET['deleteCatID'])) {
 
 
     <div class="col-xl-5 mb-3 mb-xl-0">
+        <h2>Add new category</h2>
         <!-- TODO form validation -->
         <form method="post" action="index.php?source=categories">
             <div class="mb-3">
@@ -134,6 +135,7 @@ if (isset($_GET['deleteCatID'])) {
 
 
     <div class="col-xl-7">
+        <h2>Categories</h2>
         <p class="callout callout-info alert-info"><strong>Information: </strong>Deleting a category assigns all products from that category to default category. There is only 1 default category and it cannot be deleted. In order to delete it, you need to set other category to default.</p>
 
         <table class="table">
