@@ -140,13 +140,13 @@ if (isset($_GET['deleteCatID'])) {
 
         <table class="table">
             <thead>
-            <tr>
-                <th scope="col">Name</th>
-                <th scope="col">Slug</th>
-                <th scope="col">Count</th>
-                <th scope="col">Edit</th>
-                <th scope="col">Delete</th>
-            </tr>
+                <tr>
+                    <th scope="col">Name</th>
+                    <th scope="col">Slug</th>
+                    <th scope="col">Count</th>
+                    <th scope="col">Edit</th>
+                    <th scope="col">Delete</th>
+                </tr>
             </thead>
             <tbody>
             <?php
