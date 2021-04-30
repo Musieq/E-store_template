@@ -140,6 +140,10 @@ if (isset($_GET['deleteImageID'])) {
         <h2>Uploaded images</h2>
         <div class="alert-warning callout callout-warning"><strong>Do not remove</strong> uploaded images directly from the directory.</div>
 
+
+
+
+
         <!-- TODO bulk option for images and live search by title -->
         <table class="table table-images">
             <thead>
@@ -157,8 +161,16 @@ if (isset($_GET['deleteImageID'])) {
                
                 <?php
 
+                // Variables for pagination
+                $imagesCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM images");
+                $imagesCount = mysqli_fetch_array($imagesCountQuery)[0];
+                $limit = 20;
+                $pages = ceil($imagesCount / $limit);
+                $currentPage = $_GET['page'] ?? 1;
+                $offset = ($currentPage - 1) * $limit;
+
                 /** Display all images **/
-                $displayImagesQuery = mysqli_query($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT 50");
+                $displayImagesQuery = mysqli_query($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
                 while($displayImagesResults = mysqli_fetch_assoc($displayImagesQuery)){
                     $imageID = $displayImagesResults['id'];
                     $imageUniqueName = $displayImagesResults['unique_name'];
@@ -193,7 +205,100 @@ if (isset($_GET['deleteImageID'])) {
               
             </tbody>
         </table>
-        <!-- TODO pagination for images -->
+
+
+        <?php
+            // Create pagination if there is more than 1 page
+            if ($pages > 1) :
+            ?>
+
+                <nav aria-label="Pagination for images">
+                    <ul class="pagination justify-content-center">
+
+                        <?php
+                        if ($pages <= 3) :
+                            for ($i = 1; $i <= $pages; $i++) :
+                            ?>
+
+                                <li class="page-item <?php if($i == $currentPage) { echo 'active'; } ?>" <?php if($i == $currentPage) { echo 'aria-current="page"'; } ?>>
+                                    <a class="page-link" href="index.php?source=images&page=<?=$i?>"><?=$i?></a>
+                                </li>
+
+                            <?php
+                            endfor;
+                        else :
+                        ?>
+
+                            <?php
+                            if ($currentPage == 1) :
+                            ?>
+                                <li class="page-item disabled">
+                                    <span class="page-link">First</span>
+                                </li>
+                            <?php
+                            else :
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?source=images&page=1">First</a>
+                                </li>
+                            <?php
+                            endif;
+                            ?>
+
+                            <?php
+                            if ($currentPage > 1) :
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?source=images&page=<?=$currentPage-1?>"><?=$currentPage-1?></a>
+                                </li>
+                            <?php
+                            endif;
+                            ?>
+
+                                <li class="page-item active" aria-current="page">
+                                    <span class="page-link"><?=$currentPage?></span>
+                                </li>
+
+                            <?php
+                            if ($currentPage < $pages) :
+                            ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?source=images&page=<?=$currentPage+1?>"><?=$currentPage+1?></a>
+                                </li>
+                            <?php
+                            endif;
+                            ?>
+
+                            <?php
+                            if ($currentPage == $pages) :
+                                ?>
+                                <li class="page-item disabled">
+                                    <span class="page-link">Last</span>
+                                </li>
+                            <?php
+                            else :
+                                ?>
+                                <li class="page-item">
+                                    <a class="page-link" href="index.php?source=images&page=<?=$pages?>">Last</a>
+                                </li>
+                            <?php
+                            endif;
+                            ?>
+
+                        <?php
+                        endif;
+                        ?>
+
+                    </ul>
+                </nav>
+
+            <?php
+            endif;
+        ?>
+
+
+
+
     </div>
 
 </div>
