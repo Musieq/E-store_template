@@ -1,16 +1,16 @@
-/** Handles deleting categories on categories.php page. Passes href to button in modal window. **/
-(function(){
-    const deleteCatLink = document.querySelectorAll('.delete-category-link');
-    const deleteCatConfirm = document.getElementById('delete-category-confirm');
-    deleteCatLink.forEach(e => {
+/** Handles deleting after confirming it in modal window. Pass delete button class and ID of modal confirmation button. Function passes href to button in modal window. **/
+function deleteAndShowModal(deleteBtnClass, deleteBtnModalID) {
+    const deleteLinkSelector = document.querySelectorAll(`.${deleteBtnClass}`);
+    const deleteModalConfirmSelector = document.getElementById(`${deleteBtnModalID}`);
+    deleteLinkSelector.forEach(e => {
         e.addEventListener('click', function (){
             console.log(e.href);
-            deleteCatConfirm.addEventListener('click', function (){
+            deleteModalConfirmSelector.addEventListener('click', function (){
                 window.location.href = e.href;
             })
         })
     })
-})();
+}
 
 
 /** Displays image preview when adding image on images.php **/
@@ -27,7 +27,6 @@
             }
 
             reader.readAsDataURL(this.files[0]); // convert to base64 string
-
         }
     })
 })();

@@ -56,6 +56,41 @@ if (isset($_POST['addImageButton'])) {
 
 
 //TODO Delete images
+/** Delete image **/
+if (isset($_GET['deleteImageID'])) {
+    $deleteImageID = $_GET['deleteImageID'];
+    if (is_numeric($deleteImageID)) {
+        // 1. Get unique file name and path
+        $deleteImageQuery = mysqli_query($db, "SELECT unique_name, path FROM images WHERE id = $deleteImageID");
+        if (mysqli_num_rows($deleteImageQuery) == 1) {
+            $deleteImageResults = mysqli_fetch_assoc($deleteImageQuery);
+
+            // 2. Get directory w/o filename AND file name w/o extension
+            $deleteImageDir = pathinfo('../'.$deleteImageResults['path'], PATHINFO_DIRNAME);
+            $deleteImageName = pathinfo($deleteImageResults['unique_name'], PATHINFO_FILENAME);
+
+            // 3. Get all files from directory
+            $filesInDir = glob($deleteImageDir.'/*');
+
+            // 4. Loop through the files to find every file that contains unique_name and delete them - deletes scaled images
+            foreach ($filesInDir as $file) {
+                if (is_file($file)) {
+                    if (strpos($file, $deleteImageName)) {
+                        unlink($file);
+                    }
+                }
+            }
+
+            // 5. Delete DB entry
+            mysqli_query($db, "DELETE FROM images WHERE id = $deleteImageID");
+
+        } else {
+            array_push($errors, "Image with given ID doesn't exist");
+        }
+    } else {
+        array_push($errors, "Given image ID isn't a numeric value.");
+    }
+}
 
 
 ?>
@@ -146,7 +181,7 @@ if (isset($_POST['addImageButton'])) {
                         <td><?=$imageAlt?></td>
                         <td><?=$uploadDate?></td>
                         <td><a href="index.php?source=images&editImageID=<?=$imageID?>">Edit</td>
-                        <td><a href="index.php?source=images&deleteImageID=<?=$imageID?>">Delete</td>
+                        <td><a href="index.php?source=images&deleteImageID=<?=$imageID?>" class="link-danger delete-image-link" data-bs-toggle="modal" data-bs-target="#modalImageDeleteWarning">Delete</td>
                     </tr>
                     
                     <?php  
@@ -160,3 +195,28 @@ if (isset($_POST['addImageButton'])) {
     </div>
 
 </div>
+
+
+
+<!-- Modal - delete image -->
+<div class="modal fade" id="modalImageDeleteWarning" tabindex="-1" aria-labelledby="modalImageDeleteWarningLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalImageDeleteWarningLabel">Delete category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete this image? This operation cannot be undone.
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-danger" id="deleteImageConfirm">Delete image</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    window.onload = function() { deleteAndShowModal('delete-image-link', 'deleteImageConfirm') };
+</script>
