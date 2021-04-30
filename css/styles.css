@@ -169,6 +169,9 @@ div.admin-wrapper .image-upload-preview span {
   margin: auto;
   padding-bottom: 1rem;
 }
+div.admin-wrapper .image-upload-preview img.image-preview {
+  width: 100%;
+}
 div.admin-wrapper table.table-images div.admin-image-container {
   width: 200px;
   height: 112.5px;

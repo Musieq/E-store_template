@@ -28,7 +28,11 @@ require_once('common/header.php');
 
 
             case 'images':
-                include 'images.php';
+                if (isset($_GET['editImageID'])) {
+                    include 'images_edit.php';
+                } else {
+                    include 'images.php';
+                }
                 break;
 
 
