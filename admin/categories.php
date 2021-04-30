@@ -48,38 +48,39 @@ if (isset($_POST['categoryAdd'])) {
 if (isset($_GET['deleteCatID'])) {
 
     $deleteCatID = $_GET['deleteCatID'];
+    if (is_numeric($deleteCatID)) {
+        // Check if it's default category for extra safety
+        $defaultCatIDCheckQuery = mysqli_query($db, "SELECT category_id FROM categories WHERE is_default = 1");
+        if ($deleteCatID != mysqli_fetch_array($defaultCatIDCheckQuery)[0]){
+            // 1. Check if this category is a parent of other categories
+            $isParentQuery = mysqli_query($db, "SELECT category_id FROM categories WHERE parent_id = $deleteCatID");
 
-    // Check if it's default category for extra safety
-    $defaultCatIDCheckQuery = mysqli_query($db, "SELECT category_id FROM categories WHERE is_default = 1");
-    if ($deleteCatID != mysqli_fetch_array($defaultCatIDCheckQuery)[0]){
-        // 1. Check if this category is a parent of other categories
-        $isParentQuery = mysqli_query($db, "SELECT category_id FROM categories WHERE parent_id = $deleteCatID");
+            if (mysqli_num_rows($isParentQuery) > 0) {
+                // 2. If yes - check if it's a first category in this tree
+                $isFirstCatQuery = mysqli_query($db, "SELECT parent_id FROM categories WHERE category_id = $deleteCatID");
 
-        if (mysqli_num_rows($isParentQuery) > 0) {
-            // 2. If yes - check if it's a first category in this tree
-            $isFirstCatQuery = mysqli_query($db, "SELECT parent_id FROM categories WHERE category_id = $deleteCatID");
+                // 3. If first - edit it's children parent_id to 0
+                if (mysqli_fetch_array($isFirstCatQuery)[0] == 0) {
+                    mysqli_query($db, "UPDATE categories SET parent_id = 0 WHERE parent_id = $deleteCatID");
+                } else {
+                    // 4. If not first - get it's parent_id and change it's children parent_id to it
+                    $deleteCatParentQuery = mysqli_query($db, "SELECT parent_id FROM categories WHERE category_id = $deleteCatID");
+                    $deleteCatParent = mysqli_fetch_array($deleteCatParentQuery)[0];
 
-            // 3. If first - edit it's children parent_id to 0
-            if (mysqli_fetch_array($isFirstCatQuery)[0] == 0) {
-                mysqli_query($db, "UPDATE categories SET parent_id = 0 WHERE parent_id = $deleteCatID");
-            } else {
-                // 4. If not first - get it's parent_id and change it's children parent_id to it
-                $deleteCatParentQuery = mysqli_query($db, "SELECT parent_id FROM categories WHERE category_id = $deleteCatID");
-                $deleteCatParent = mysqli_fetch_array($deleteCatParentQuery)[0];
-
-                mysqli_query($db, "UPDATE categories SET parent_id = $deleteCatParent WHERE parent_id = $deleteCatID");
+                    mysqli_query($db, "UPDATE categories SET parent_id = $deleteCatParent WHERE parent_id = $deleteCatID");
+                }
             }
+
+            // 5. Delete category
+            mysqli_query($db, "DELETE FROM categories WHERE category_id = $deleteCatID");
+
+            // TODO update category ID for products which category was deleted
+        } else {
+            array_push($errors, "You cannot delete default category.");
         }
-
-        // 5. Delete category
-        mysqli_query($db, "DELETE FROM categories WHERE category_id = $deleteCatID");
-
-        // TODO update category ID for products which category was deleted
     } else {
-        array_push($errors, "You cannot delete default category.");
+        array_push($errors, "Given category ID isn't a numeric value.");
     }
-
-
 }
 
 ?>
@@ -182,7 +183,9 @@ if (isset($_GET['deleteCatID'])) {
 </div>
 
 
-<!-- Modal -->
+
+
+<!-- Modal - delete category -->
 <div class="modal fade" id="modalCatDeleteWarning" tabindex="-1" aria-labelledby="modalCatDeleteWarningLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -191,16 +194,19 @@ if (isset($_GET['deleteCatID'])) {
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to delete category? This operation cannot be undone.
+                Are you sure you want to delete this category? This operation cannot be undone.
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-danger" id="delete-category-confirm">Delete category</button>
+                <button type="button" class="btn btn-danger" id="deleteCategoryConfirm">Delete category</button>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    window.onload = function() { deleteAndShowModal('delete-category-link', 'deleteCategoryConfirm') };
+</script>
 
 
 
