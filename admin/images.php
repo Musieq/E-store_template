@@ -81,6 +81,8 @@ if (isset($_GET['deleteImageID'])) {
                 }
             }
 
+            // TODO remove connection to products in DB
+
             // 5. Delete DB entry
             mysqli_query($db, "DELETE FROM images WHERE id = $deleteImageID");
 

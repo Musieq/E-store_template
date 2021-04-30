@@ -49,8 +49,8 @@ function resizeUploadedImages($image, $uniqueImageName, $imageExtension, $imageT
 
     // Array with size name and image width
     $sizesArray = [
-        0 => ['name' => 'thumbnail', 'width' => 250, 'height' => -1],
-        1 => ['name' => 'main-image', 'width' => 600, 'height' => -1]
+        0 => ['name' => 'thumbnail', 'width' => 250, 'height' => -1, 'mode' => IMG_SINC],
+        1 => ['name' => 'main-image', 'width' => 600, 'height' => -1, 'mode' => IMG_SINC]
     ];
 
     // Create image from uploaded file
@@ -60,9 +60,10 @@ function resizeUploadedImages($image, $uniqueImageName, $imageExtension, $imageT
         $name = $key['name'];
         $width = $key['width'];
         $height = $key['height'];
+        $mode = $key['mode'];
 
         // Scale image and save it to given path
-        $imageScale = imagescale($imageCreate, $width, $height);
+        $imageScale = imagescale($imageCreate, $width, $height, $mode);
         switch ($imageType) {
             case 'image/jpeg':
             case 'image/jpg':

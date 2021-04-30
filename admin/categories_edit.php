@@ -31,7 +31,7 @@ if (isset($_POST['categoryEdit']) && is_numeric($editCatID)) {
 
 /** Check if ID is correct, then get informations about category to fill form. **/
 if (!is_numeric($editCatID)) {
-    array_push($errors, 'Category ID is not a number. Choose category to edit again or check your URL.');
+    array_push($errors, "Given category ID isn't a numeric value.");
 } else {
     $editCatQuery = mysqli_query($db, "SELECT parent_id, category_name, category_slug, is_default FROM categories WHERE category_id = $editCatID");
     $editCatResult = mysqli_fetch_assoc($editCatQuery);
@@ -47,9 +47,11 @@ if (!is_numeric($editCatID)) {
     <?php
     if ($success) :
     ?>
-    <div class="alert-success">
-        <p>Category updated.</p>
-        <p><a href="index.php?source=categories">Go back to categories</a></p>
+    <div class="col-12">
+        <div class="alert-success">
+            <p><strong>Category updated.</strong></p>
+            <p><a href="index.php?source=categories">Go back to categories</a></p>
+        </div>
     </div>
     <?php
     endif;
