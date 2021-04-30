@@ -63,7 +63,7 @@ if (is_numeric($editImageID)) {
     <div class="col-12 mb-3">
         <h2>Edit image information</h2>
         <!-- TODO form validation -->
-        <form class="form-width-700" action="index.php?source=images&editImageID=<?php echo $_GET['editImageID'] ?>" method="post">
+        <form class="form-width-700" action="index.php?source=images&editImageID=<?=$_GET['editImageID']?>" method="post">
 
             <div class="image-upload-preview mb-3">
                 <span id="image-upload-text" class="text-muted">

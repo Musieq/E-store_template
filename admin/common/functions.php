@@ -83,7 +83,7 @@ function resizeUploadedImages($image, $uniqueImageName, $imageExtension, $imageT
 
 
 
-function getScaledImagePath($path, $scaleName) {
+function getScaledImagePath($path, $scaleName): string {
     $dir = pathinfo($path, PATHINFO_DIRNAME);
     $file = pathinfo($path, PATHINFO_FILENAME);
     $ext = pathinfo($path, PATHINFO_EXTENSION);
