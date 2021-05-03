@@ -28,33 +28,53 @@ if(!isset($_SESSION['userRole']) || $_SESSION['userRole'] != 'admin') {
 <body>
 
 
+<?php
+$currentPage = $_GET['source'] ?? '';
+?>
+
 <div class="admin-content">
 
-<!-- TODO toggle sidebar on small devices / position: absolute -->
-<div class="admin-sidebar d-flex flex-column p-3 text-white bg-dark" style="width: 280px;">
-    <a href=".." class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
-        Store name
-    </a>
-    <hr>
-    <ul class="nav nav-pills flex-column mb-auto">
-        <li class="nav-item">
-            <a href="index.php" aria-current="page" class="nav-link active">
-                Dashboard
-            </a>
-        </li>
-        <li>
-            <a href="index.php?source=images" class="nav-link text-white">
-                Images
-            </a>
-        </li>
-        <li>
-            <a href="index.php?source=categories" class="nav-link text-white">
-                Categories
-            </a>
-        </li>
+<div class="navbar navbar-expand-lg navbar-dark admin-sidebar text-white bg-dark">
+    <div class="container-fluid container-lg d-lg-flex flex-lg-column p-lg-3 mb-lg-auto align-items-lg-start">
+        <a class="navbar-brand mb-lg-3" href="..">Store name</a>
 
-    </ul>
-    <hr>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="nav nav-pills flex-column mb-auto pt-3 pt-lg-0">
+                <li class="nav-item">
+                    <a href="index.php" <?php if($currentPage == '') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == '') echo "active" ?>">
+                        Dashboard
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.php?source=images" <?php if($currentPage == 'images') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'images') echo "active" ?>">
+                        Images
+                    </a>
+
+                    <ul class="nav nav-pills nav-child">
+                        <li class="nav-item">
+                            <a href="index.php?source=images&uploadImage=1" class="nav-link text-white">
+                                Upload image
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.php?source=categories" <?php if($currentPage == 'categories') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'categories') echo "active" ?>">
+                        Categories
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+<!--    <hr>
     <div class="dropdown">
         <a href="#" class="d-flex align-items-center text-white text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
             <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle me-2">
@@ -67,5 +87,5 @@ if(!isset($_SESSION['userRole']) || $_SESSION['userRole'] != 'admin') {
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Sign out</a></li>
         </ul>
-    </div>
+    </div>-->
 </div>

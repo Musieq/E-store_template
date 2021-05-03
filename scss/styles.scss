@@ -21,7 +21,9 @@ body {
   max-width: 700px;
 }
 
-
+ul.nav-child {
+  padding-inline-start: 1.5rem;
+}
 
 /* Animations */
 @keyframes slideDown {

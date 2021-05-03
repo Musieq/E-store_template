@@ -30,6 +30,8 @@ require_once('common/header.php');
             case 'images':
                 if (isset($_GET['editImageID'])) {
                     include 'images_edit.php';
+                } elseif (isset($_GET['uploadImage'])) {
+                    include 'images_upload.php';
                 } else {
                     include 'images.php';
                 }

@@ -1,19 +1,36 @@
 @import "adminImages";
 
-div.admin-content {
-  display: flex;
-  flex-wrap: nowrap;
+@media (min-width: $lg) {
+  div.admin-content {
+    display: flex;
+    flex-wrap: nowrap;
 
-  > * {
-    flex-shrink: 0;
-  }
+    .admin-sidebar {
+      width: 280px;
 
-  div.admin-wrapper {
-    // 100% width for content minus sidebar and scrollbar
-    width: calc(100vw - (100vw - 100%) - 280px);
-  }
+      .collapse {
+        width: inherit;
 
-  div.admin-sidebar {
-    min-height: 100vh;
+        ul {
+          width: inherit;
+        }
+      }
+
+    }
+
+    > * {
+      flex-shrink: 0;
+    }
+
+    div.admin-wrapper {
+      // 100% width for content minus sidebar and scrollbar
+      width: calc(100vw - (100vw - 100%) - 280px);
+    }
+
+    div.admin-sidebar {
+      min-height: 100vh;
+    }
   }
 }
+
+

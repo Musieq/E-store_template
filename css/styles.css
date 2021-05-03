@@ -180,20 +180,30 @@ div.admin-wrapper table.table-images div.admin-image-container {
   background-size: cover;
 }
 
-div.admin-content {
-  display: flex;
-  flex-wrap: nowrap;
+@media (min-width: 992px) {
+  div.admin-content {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+  div.admin-content .admin-sidebar {
+    width: 280px;
+  }
+  div.admin-content .admin-sidebar .collapse {
+    width: inherit;
+  }
+  div.admin-content .admin-sidebar .collapse ul {
+    width: inherit;
+  }
+  div.admin-content > * {
+    flex-shrink: 0;
+  }
+  div.admin-content div.admin-wrapper {
+    width: calc(100vw - (100vw - 100%) - 280px);
+  }
+  div.admin-content div.admin-sidebar {
+    min-height: 100vh;
+  }
 }
-div.admin-content > * {
-  flex-shrink: 0;
-}
-div.admin-content div.admin-wrapper {
-  width: calc(100vw - (100vw - 100%) - 280px);
-}
-div.admin-content div.admin-sidebar {
-  min-height: 100vh;
-}
-
 /* Root */
 /* Global classes */
 .required {
@@ -203,6 +213,10 @@ div.admin-content div.admin-sidebar {
 
 .form-width-700 {
   max-width: 700px;
+}
+
+ul.nav-child {
+  padding-inline-start: 1.5rem;
 }
 
 /* Animations */
