@@ -139,45 +139,47 @@ if (isset($_GET['deleteCatID'])) {
         <h2>Categories</h2>
         <p class="callout callout-info alert-info"><strong>Information: </strong>Deleting a category assigns all products from that category to default category. There is only 1 default category and it cannot be deleted. In order to delete it, you need to set other category to default.</p>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th scope="col">Name</th>
-                    <th scope="col">Slug</th>
-                    <th scope="col">Count</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-            <?php
-            function categoriesHierarchy($parentID = 0, $hierarchy = '') {
-                global $db;
-                $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name, category_slug, is_default FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Name</th>
+                        <th scope="col">Slug</th>
+                        <th scope="col">Count</th>
+                        <th scope="col">Edit</th>
+                        <th scope="col">Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php
+                function categoriesHierarchy($parentID = 0, $hierarchy = '') {
+                    global $db;
+                    $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name, category_slug, is_default FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
 
-                if (mysqli_num_rows($categoriesQuery) > 0) {
-                    while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
-                        ?>
-                        <tr>
-                            <td><?php echo $hierarchy.' '.$categoriesResult['category_name']; if ($categoriesResult['is_default'] == 1) { echo " <b>(Default)</b>"; } ?></td>
-                            <td><?php echo $categoriesResult['category_slug'] ?></td>
-                            <td>count</td> <!-- TODO count how many products are in this category -->
-                            <td><a href="index.php?source=categories&editCatID=<?php echo $categoriesResult['category_id'] ?>">Edit</a></td>
-                            <td><?php if ($categoriesResult['is_default'] != 1) : ?>
-                                    <a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>" class="link-danger delete-category-link" data-bs-toggle="modal" data-bs-target="#modalCatDeleteWarning">Delete</a>
-                                <?php endif; ?>
-                            </td> <!-- TODO window asking if you really want to delete this category -->
-                        </tr>
-                        <?php
-                        categoriesHierarchy($categoriesResult['category_id'], $hierarchy.'—');
+                    if (mysqli_num_rows($categoriesQuery) > 0) {
+                        while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
+                            ?>
+                            <tr>
+                                <td><?php echo $hierarchy.' '.$categoriesResult['category_name']; if ($categoriesResult['is_default'] == 1) { echo " <b>(Default)</b>"; } ?></td>
+                                <td><?php echo $categoriesResult['category_slug'] ?></td>
+                                <td>count</td> <!-- TODO count how many products are in this category -->
+                                <td><a href="index.php?source=categories&editCatID=<?php echo $categoriesResult['category_id'] ?>">Edit</a></td>
+                                <td><?php if ($categoriesResult['is_default'] != 1) : ?>
+                                        <a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>" class="link-danger delete-category-link" data-bs-toggle="modal" data-bs-target="#modalCatDeleteWarning">Delete</a>
+                                    <?php endif; ?>
+                                </td> <!-- TODO window asking if you really want to delete this category -->
+                            </tr>
+                            <?php
+                            categoriesHierarchy($categoriesResult['category_id'], $hierarchy.'—');
+                        }
                     }
                 }
-            }
-            categoriesHierarchy();
+                categoriesHierarchy();
 
-            ?>
-            </tbody>
-        </table>
+                ?>
+                </tbody>
+            </table>
+        </div>
     </div>
 
 </div>
