@@ -61,42 +61,45 @@ if (!is_numeric($editCatID)) {
     displayErrors($errors);
     ?>
 
-    <form class="form-width-700" method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>">
-        <div class="mb-3">
-            <div class="d-flex flex-row"><label for="EditCategoryName" class="form-label">Category name</label><div class="required">*</div></div>
-            <input type="text" class="form-control" id="EditCategoryName" name="EditCategoryName" aria-describedby="categoryNameHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_name']; } ?>">
-            <div id="categoryNameHelp" class="form-text">Category name is the one visible on website.</div>
-        </div>
+    <div class="col-12">
+        <h2>Edit category</h2>
 
-        <!-- TODO pretty links - category slug names required? Maybe auto generate them. -->
-        <div class="mb-3">
-            <label for="EditCategorySlug" class="form-label">Category slug</label>
-            <input type="text" class="form-control" id="EditCategorySlug" name="EditCategorySlug" aria-describedby="slugHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_slug']; } ?>">
-            <div id="slugHelp" class="form-text">Category slug is short name of your category which will be used in URLs. It can't contain special characters. For example slug name for category name "Car parts" could be "car-parts". Leave empty to automatically generate.</div>
-        </div>
+        <form class="form-width-700" method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>">
+            <div class="mb-3">
+                <div class="d-flex flex-row"><label for="EditCategoryName" class="form-label">Category name</label><div class="required">*</div></div>
+                <input type="text" class="form-control" id="EditCategoryName" name="EditCategoryName" aria-describedby="categoryNameHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_name']; } ?>">
+                <div id="categoryNameHelp" class="form-text">Category name is the one visible on website.</div>
+            </div>
 
-        <div class="mb-3">
-            <label for="EditCategoryParent" class="form-label">Choose parent category</label>
-            <select class="form-select" id="EditCategoryParent" name="EditCategoryParent" aria-describedby="parentHelp">
-                <option value="0">None</option>
-                <?php
-                /** Get categories from database and display them in select field **/
-                if (is_numeric($editCatID)) { categoriesHierarchyInSelectField($editCatResult['parent_id']); }
-                ?>
-            </select>
-            <div id="parentHelp" class="form-text">Choose parent category to create hierarchy.</div>
-        </div>
+            <!-- TODO pretty links - category slug names required? Maybe auto generate them. -->
+            <div class="mb-3">
+                <label for="EditCategorySlug" class="form-label">Category slug</label>
+                <input type="text" class="form-control" id="EditCategorySlug" name="EditCategorySlug" aria-describedby="slugHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_slug']; } ?>">
+                <div id="slugHelp" class="form-text">Category slug is short name of your category which will be used in URLs. It can't contain special characters. For example slug name for category name "Car parts" could be "car-parts". Leave empty to automatically generate.</div>
+            </div>
 
-        <?php
-        if (is_numeric($editCatID)) :
-        if ($editCatResult['is_default'] == 0) : ?>
-        <div class="mb-3 form-check">
-            <input type="checkbox" class="form-check-input" id="editCategoryDefault" name="editCategoryDefault">
-            <label class="form-check-label" for="editCategoryDefault">Set to default category</label>
-        </div>
-        <?php endif; endif; ?>
+            <div class="mb-3">
+                <label for="EditCategoryParent" class="form-label">Choose parent category</label>
+                <select class="form-select" id="EditCategoryParent" name="EditCategoryParent" aria-describedby="parentHelp">
+                    <option value="0">None</option>
+                    <?php
+                    /** Get categories from database and display them in select field **/
+                    if (is_numeric($editCatID)) { categoriesHierarchyInSelectField($editCatResult['parent_id']); }
+                    ?>
+                </select>
+                <div id="parentHelp" class="form-text">Choose parent category to create hierarchy.</div>
+            </div>
 
-        <button type="submit" class="btn btn-primary " name="categoryEdit">Submit</button>
-    </form>
+            <?php
+            if (is_numeric($editCatID)) :
+            if ($editCatResult['is_default'] == 0) : ?>
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" id="editCategoryDefault" name="editCategoryDefault">
+                <label class="form-check-label" for="editCategoryDefault">Set to default category</label>
+            </div>
+            <?php endif; endif; ?>
 
+            <button type="submit" class="btn btn-primary" name="categoryEdit">Submit</button>
+        </form>
+    </div>
 </div>
