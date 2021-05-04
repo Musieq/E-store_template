@@ -92,5 +92,53 @@ function getScaledImagePath($path, $scaleName): string {
 }
 
 
+function deleteImage($db, $imageID) {
+    global $errors;
+    if (is_numeric($imageID)) {
+        // 1. Get unique file name and path
+        $stmt = mysqli_prepare($db, "SELECT unique_name, path FROM images WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, 'i', $imageID);
+        mysqli_stmt_execute($stmt);
+        $stmtResults = mysqli_stmt_get_result($stmt);
+        if (mysqli_num_rows($stmtResults) == 1) {
+            $deleteImageResults = mysqli_fetch_assoc($stmtResults);
+
+            // 2. Get directory w/o filename AND file name w/o extension
+            $deleteImageDir = pathinfo('../'.$deleteImageResults['path'], PATHINFO_DIRNAME);
+            $deleteImageName = pathinfo($deleteImageResults['unique_name'], PATHINFO_FILENAME);
+
+            // 3. Get all files from directory
+            $filesInDir = glob($deleteImageDir.'/*');
+
+            // 4. Loop through the files to find every file that contains unique_name and delete them - deletes scaled images
+            foreach ($filesInDir as $file) {
+                if (is_file($file)) {
+                    if (strpos($file, $deleteImageName)) {
+                        unlink($file);
+                    }
+                }
+            }
+
+            // TODO remove connection to products in DB
+
+            // 5. Delete DB entry
+            $stmt = mysqli_prepare($db, "DELETE FROM images WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $imageID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+
+            // Delete ID of deleted image from URL
+            unset($_GET['deleteImageID']);
+            $cleanURL = http_build_query($_GET);
+            header("Location: index.php?$cleanURL");
+
+        } else {
+            array_push($errors, "Image with given ID doesn't exist");
+        }
+    } else {
+        array_push($errors, "Given image ID isn't a numeric value.");
+    }
+}
+
 
 

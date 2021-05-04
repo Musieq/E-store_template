@@ -33,3 +33,14 @@ function deleteAndShowModal(deleteBtnClass, deleteBtnModalID) {
 
 
 
+/** Select every checkbox - bulk actions **/
+function selectCheckboxes(checkboxSelectAllID, checkboxSelectName) {
+    const checkboxSelectAll = document.getElementById(checkboxSelectAllID);
+    const checkboxes = document.getElementsByName(checkboxSelectName);
+
+    checkboxes.forEach(e => {
+        e.checked = !!checkboxSelectAll.checked;
+    })
+}
+
+

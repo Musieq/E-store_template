@@ -6,43 +6,16 @@ $errors = [];
 /** Delete image **/
 if (isset($_GET['deleteImageID'])) {
     $deleteImageID = $_GET['deleteImageID'];
-    if (is_numeric($deleteImageID)) {
-        // 1. Get unique file name and path
-        $deleteImageQuery = mysqli_query($db, "SELECT unique_name, path FROM images WHERE id = $deleteImageID");
-        if (mysqli_num_rows($deleteImageQuery) == 1) {
-            $deleteImageResults = mysqli_fetch_assoc($deleteImageQuery);
+    deleteImage($db, $deleteImageID);
+}
 
-            // 2. Get directory w/o filename AND file name w/o extension
-            $deleteImageDir = pathinfo('../'.$deleteImageResults['path'], PATHINFO_DIRNAME);
-            $deleteImageName = pathinfo($deleteImageResults['unique_name'], PATHINFO_FILENAME);
 
-            // 3. Get all files from directory
-            $filesInDir = glob($deleteImageDir.'/*');
-
-            // 4. Loop through the files to find every file that contains unique_name and delete them - deletes scaled images
-            foreach ($filesInDir as $file) {
-                if (is_file($file)) {
-                    if (strpos($file, $deleteImageName)) {
-                        unlink($file);
-                    }
-                }
-            }
-
-            // TODO remove connection to products in DB
-
-            // 5. Delete DB entry
-            mysqli_query($db, "DELETE FROM images WHERE id = $deleteImageID");
-
-            // Delete ID of deleted image from URL
-            unset($_GET['deleteImageID']);
-            $cleanURL = http_build_query($_GET);
-            header("Location: index.php?$cleanURL");
-
-        } else {
-            array_push($errors, "Image with given ID doesn't exist");
+/** Bulk delete **/
+if (isset($_POST['imageBulkDelete'])) {
+    if ($_POST['imageBulkOption'] == 1) {
+        foreach ($_POST['imageDeleteCheckbox'] as $imageBulkDeleteID) {
+            deleteImage($db, $imageBulkDeleteID);
         }
-    } else {
-        array_push($errors, "Given image ID isn't a numeric value.");
     }
 }
 
@@ -62,7 +35,7 @@ if (isset($_GET['deleteImageID'])) {
 
 
         <!-- Search images by date and title -->
-        <form class="row form-width-700 g-3 mb-3" method="get" action="index.php">
+        <form class="row form-width-700 g-3 mb-3" method="get">
             <input type="hidden" name="source" value="images">
 
             <div class="col-md-6">
@@ -75,6 +48,7 @@ if (isset($_GET['deleteImageID'])) {
                 <select class="form-select" id="imageFilterDate" name="imageFilterDate">
                     <option value="0">Every image</option>
                     <?php
+                    /** Create options for select field with dates - image filters **/
                     // Get dates of images uploads
                     $dateQuery = mysqli_query($db, "SELECT upload_date FROM images");
                     $dateArray = [];
@@ -113,112 +87,117 @@ if (isset($_GET['deleteImageID'])) {
         <form class="row row-cols-lg-auto g-3" method="post" action="index.php?source=images">
 
             <div class="col-12">
-                <label for="imageDate" class="form-label visually-hidden">Bulk action</label>
-                <select class="form-select" id="imageDate" name="imageDate">
+                <label for="imageBulkOption" class="form-label visually-hidden">Bulk action</label>
+                <select class="form-select" id="imageBulkOption" name="imageBulkOption">
                     <option value="0" selected>Bulk action</option>
                     <option value="1">Delete all</option>
                 </select>
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary " name="imageFilter">Submit</button>
+                <button type="submit" class="btn btn-primary" name="imageBulkDelete">Submit</button>
             </div>
+
+
+
+            <div class="table-responsive" style="width: 100%">
+                    <table class="table table-images">
+                        <thead>
+                        <tr>
+                            <th scope="col"><input type="checkbox" class="form-check-input" aria-label="Check to delete every image shown below" id="imageDeleteSelectAll" onclick="selectCheckboxes(this.id, 'imageDeleteCheckbox[]')"></th>
+                            <th scope="col">Image</th>
+                            <th scope="col">Title</th>
+                            <th scope="col">Alternative text</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Edit</th>
+                            <th scope="col">Delete</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <?php
+                        // Variables for pagination
+                        $imagesCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM images");
+                        $imagesCount = mysqli_fetch_array($imagesCountQuery)[0];
+                        $limit = 20;
+                        $pages = ceil($imagesCount / $limit);
+                        $currentPage = $_GET['page'] ?? 1;
+                        $offset = ($currentPage - 1) * $limit;
+
+
+                        /** Filter images by title and/or by chosen date **/
+                        $titleFilter = '';
+                        $dateFilter = 0;
+                        if (isset($_GET['imageFilterSubmit'])) {
+                            $titleFilter = $_GET['imageFilterTitle'];
+                            $dateFilter = $_GET['imageFilterDate'];
+                            $yearFilter = substr($dateFilter, 0, 4);
+                            $monthFilter = substr($dateFilter, 4, 2);
+                        }
+
+                        if ($titleFilter != '' && $dateFilter != 0) {
+                            $titleFilter = '%'.$titleFilter.'%';
+                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? AND YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($displayImagesQuery, "sii",$titleFilter, $yearFilter, $monthFilter);
+                        } elseif ($titleFilter != '') {
+                            $titleFilter = '%'.$titleFilter.'%';
+                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($displayImagesQuery, "s",$titleFilter);
+                        } elseif ($dateFilter != 0) {
+                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($displayImagesQuery, "ii",$yearFilter, $monthFilter);
+                        } else {
+                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
+                        }
+
+                        // Execute prepared statement
+                        mysqli_stmt_execute($displayImagesQuery);
+                        $displayImagesGetResults = mysqli_stmt_get_result($displayImagesQuery);
+
+                        /** Display images **/
+                        while($displayImagesResults = mysqli_fetch_assoc($displayImagesGetResults)){
+                            $imageID = $displayImagesResults['id'];
+                            $imageUniqueName = $displayImagesResults['unique_name'];
+                            $imageTitle = $displayImagesResults['title'];
+                            $imageAlt = $displayImagesResults['alt'];
+                            $uploadDate = $displayImagesResults['upload_date'];
+                            $fullPath = $displayImagesResults['path'];
+
+                            // Get path without extension and extension
+                            $path = pathinfo($fullPath, PATHINFO_DIRNAME);
+                            $path .= '/'.pathinfo($fullPath, PATHINFO_FILENAME);
+                            $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+
+                            // Create URL when deleting images after applying filters
+                            $deleteURL = http_build_query(array_merge($_GET,['deleteImageID' => $imageID]));
+                            ?>
+
+                            <tr>
+                                <td><input type="checkbox" name="imageDeleteCheckbox[]" class="form-check-input" value="<?=$imageID?>" aria-label="Check for bulk deleting image <?=$imageTitle?>"></td>
+                                <td><a href="../<?=$fullPath?>">
+                                        <div class="admin-image-container" style="background-image: url('../<?=$path?>-thumbnail.<?=$extension?>') "></div>
+                                    </a>
+                                </td>
+                                <td><?=$imageTitle?></td>
+                                <td><?=$imageAlt?></td>
+                                <td><?=$uploadDate?></td>
+                                <td><a href="index.php?source=images&editImageID=<?=$imageID?>">Edit</td>
+                                <td><a href="index.php?<?=$deleteURL?>" class="link-danger delete-image-link" data-bs-toggle="modal" data-bs-target="#modalImageDeleteWarning">Delete</td>
+                            </tr>
+
+                            <?php
+                        }
+                        mysqli_stmt_close($displayImagesQuery)
+
+                        ?>
+
+                        </tbody>
+                    </table>
+                </div>
+
+
+
         </form>
-
-
-<div class="table-responsive">
-        <table class="table table-images">
-            <thead>
-                <tr>
-                    <th scope="col">Bulk</th>
-                    <th scope="col">Image</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Alternative text</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Edit</th>
-                    <th scope="col">Delete</th>
-                </tr>
-            </thead>
-            <tbody>
-               
-                <?php
-                // Variables for pagination
-                $imagesCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM images");
-                $imagesCount = mysqli_fetch_array($imagesCountQuery)[0];
-                $limit = 20;
-                $pages = ceil($imagesCount / $limit);
-                $currentPage = $_GET['page'] ?? 1;
-                $offset = ($currentPage - 1) * $limit;
-
-
-                /** Filter images by title and/or by chosen date **/
-                $titleFilter = '';
-                $dateFilter = 0;
-                if (isset($_GET['imageFilterSubmit'])) {
-                    $titleFilter = $_GET['imageFilterTitle'];
-                    $dateFilter = $_GET['imageFilterDate'];
-                    $yearFilter = substr($dateFilter, 0, 4);
-                    $monthFilter = substr($dateFilter, 4, 2);
-                }
-
-                if ($titleFilter != '' && $dateFilter != 0) {
-                    $titleFilter = '%'.$titleFilter.'%';
-                    $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? AND YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                    mysqli_stmt_bind_param($displayImagesQuery, "sii",$titleFilter, $yearFilter, $monthFilter);
-                } elseif ($titleFilter != '') {
-                    $titleFilter = '%'.$titleFilter.'%';
-                    $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                    mysqli_stmt_bind_param($displayImagesQuery, "s",$titleFilter);
-                } elseif ($dateFilter != 0) {
-                    $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                    mysqli_stmt_bind_param($displayImagesQuery, "ii",$yearFilter, $monthFilter);
-                } else {
-                    $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                }
-
-                // Execute prepared statement
-                mysqli_stmt_execute($displayImagesQuery);
-                $displayImagesGetResults = mysqli_stmt_get_result($displayImagesQuery);
-
-                /** Display images **/
-                while($displayImagesResults = mysqli_fetch_assoc($displayImagesGetResults)){
-                    $imageID = $displayImagesResults['id'];
-                    $imageUniqueName = $displayImagesResults['unique_name'];
-                    $imageTitle = $displayImagesResults['title'];
-                    $imageAlt = $displayImagesResults['alt'];
-                    $uploadDate = $displayImagesResults['upload_date'];
-                    $fullPath = $displayImagesResults['path'];
-
-                    // Get path without extension and extension
-                    $path = pathinfo($fullPath, PATHINFO_DIRNAME);
-                    $path .= '/'.pathinfo($fullPath, PATHINFO_FILENAME);
-                    $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
-
-                    // Create URL when deleting images after applying filters
-                    $deleteURL = http_build_query(array_merge($_GET,['deleteImageID' => $imageID]));
-                    ?>
-                    
-                    <tr>
-                        <td>Bulk</td>
-                        <td><a href="../<?=$fullPath?>">
-                                <div class="admin-image-container" style="background-image: url('../<?=$path?>-thumbnail.<?=$extension?>') "></div>
-                            </a>
-                        </td>
-                        <td><?=$imageTitle?></td>
-                        <td><?=$imageAlt?></td>
-                        <td><?=$uploadDate?></td>
-                        <td><a href="index.php?source=images&editImageID=<?=$imageID?>">Edit</td>
-                        <td><a href="index.php?<?=$deleteURL?>" class="link-danger delete-image-link" data-bs-toggle="modal" data-bs-target="#modalImageDeleteWarning">Delete</td>
-                    </tr>
-                    
-                    <?php  
-                }
-
-                ?>
-              
-            </tbody>
-        </table>
-</div>
 
         <?php
             // Create pagination if there is more than 1 page
