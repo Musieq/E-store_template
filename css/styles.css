@@ -134,9 +134,9 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links 
   border-radius: 0.75em;
   padding: 1em 1.5em;
   background-color: #fff;
-  transition: visibility 0.4s, opacity 0.4s;
-  animation-duration: 0.4s;
-  animation-name: slideDown;
+  transition: visibility 0.3s, opacity 0.3s;
+  animation-duration: 0.3s;
+  animation-name: slideUp;
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul {
   flex-direction: column;
@@ -153,8 +153,8 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links 
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper:hover .my-account-links {
   visibility: visible;
   opacity: 1;
-  animation-duration: 0.4s;
-  animation-name: slideUp;
+  animation-duration: 0.3s;
+  animation-name: slideDown;
 }
 
 div.admin-wrapper .image-upload-preview {
@@ -222,22 +222,22 @@ ul.nav-child {
 /* Animations */
 @keyframes slideDown {
   0% {
-    opacity: 1;
-    transform: translateY(0);
+    opacity: 0;
+    transform: translateY(-20px);
   }
   100% {
-    opacity: 0;
-    transform: translateY(40px);
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 @keyframes slideUp {
   0% {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  100% {
     opacity: 1;
     transform: translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-20px);
   }
 }
 

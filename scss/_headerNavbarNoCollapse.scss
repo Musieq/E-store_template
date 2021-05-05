@@ -152,9 +152,9 @@ display: flex;
           border-radius: .75em;
           padding: 1em 1.5em;
           background-color: $primaryBackground;
-          transition: visibility 0.4s, opacity 0.4s;
-          animation-duration: 0.4s;
-          animation-name: slideDown;
+          transition: visibility 0.3s, opacity 0.3s;
+          animation-duration: 0.3s;
+          animation-name: slideUp;
 
           ul {
             flex-direction: column;
@@ -177,8 +177,8 @@ display: flex;
           .my-account-links {
             visibility: visible;
             opacity: 1;
-            animation-duration: 0.4s;
-            animation-name: slideUp;
+            animation-duration: 0.3s;
+            animation-name: slideDown;
           }
         }
 
