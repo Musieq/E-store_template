@@ -11,10 +11,12 @@ if (isset($_GET['deleteImageID'])) {
 
 
 /** Bulk delete **/
-if (isset($_POST['imageBulkDelete'])) {
+if (isset($_POST['imageBulkOption'])) {
     if ($_POST['imageBulkOption'] == 1) {
-        foreach ($_POST['imageDeleteCheckbox'] as $imageBulkDeleteID) {
-            deleteImage($db, $imageBulkDeleteID);
+        if(!empty($_POST['imageDeleteCheckbox'])) {
+            foreach ($_POST['imageDeleteCheckbox'] as $imageBulkDeleteID) {
+                deleteImage($db, $imageBulkDeleteID);
+            }
         }
     }
 }
@@ -83,8 +85,7 @@ if (isset($_POST['imageBulkDelete'])) {
 
 
         <!-- Bulk delete form -->
-        <!-- TODO show modal before deleting -->
-        <form class="row row-cols-lg-auto g-3" method="post" action="index.php?source=images">
+        <form class="row row-cols-lg-auto g-3" id="imageBulkDeleteForm" name="imageBulkDeleteForm" method="post" action="index.php?<?=http_build_query(array_merge($_GET))?>">
 
             <div class="col-12">
                 <label for="imageBulkOption" class="form-label visually-hidden">Bulk action</label>
@@ -95,7 +96,7 @@ if (isset($_POST['imageBulkDelete'])) {
             </div>
 
             <div class="col-12">
-                <button type="submit" class="btn btn-primary" name="imageBulkDelete">Submit</button>
+                <button type="button" class="btn btn-primary" name="imageBulkDelete" onclick="bulkDeleteModal('imageBulkDeleteForm', 'imageBulkOption')">Submit</button>
             </div>
 
 
