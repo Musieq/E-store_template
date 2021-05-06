@@ -58,3 +58,72 @@ function bulkDeleteModal(formID, selectID) {
 }
 
 
+
+
+function ajaxFilterImages() {
+    // Get inputs and container
+    const imageContainer = document.getElementById('productImages');
+    const imageFilterTitle = document.getElementById('imageFilterTitle');
+    const imageFilterDate = document.getElementById('imageFilterDate');
+
+    // Check if they exist
+    if (!imageContainer || !imageFilterDate || !imageFilterTitle) {
+        return;
+    }
+
+    // Get values from inputs
+    const imageFilterTitleValue = imageFilterTitle.value;
+    const imageFilterDateValue = imageFilterDate.value;
+
+    function paginationInit() {
+        const pagination = document.querySelectorAll('.page-link');
+        if (!pagination) {
+            return;
+        }
+        pagination.forEach(page => {
+            page.addEventListener('click', function (e) {
+                e.preventDefault();
+                fetchImg(page.href);
+            })
+        })
+    }
+
+    // Fetch images
+    function fetchImg(link) {
+        fetch(link)
+            .then(response => response.text())
+            .then(data => {
+                imageContainer.innerHTML = data;
+            }).then(paginationInit)
+    }
+    fetchImg("product_ajax_images.php?source=products&addProduct=1&imageFilterTitle="+imageFilterTitleValue+"&imageFilterDate="+imageFilterDateValue+"&imageFilterSubmit=filter");
+}
+ajaxFilterImages();
+
+/*function ajaxFilterImagesPaginationInit() {
+    const pagination = document.querySelectorAll('.page-link');
+    pagination.forEach(page => {
+        page.addEventListener('click', function (e) {
+            e.preventDefault();
+            fetchImg(page.href);
+        })
+    })
+}*/
+
+
+
+
+/** Initialize CKEditor **/
+const CKEditorElement = document.querySelector( '#addProductDescription');
+if (CKEditorElement) {
+    ClassicEditor
+        .create( CKEditorElement, {
+            removePlugins: ['Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload', 'CKFinder', 'EasyImage']
+        } )
+        .then( editor => {
+            //console.log( editor );
+        } )
+        .catch( error => {
+            //console.error( error );
+        } );
+}

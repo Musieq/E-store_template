@@ -1,5 +1,7 @@
 @import "adminImages";
+@import "adminProducts";
 
+/* Admin container and sidebar */
 @media (min-width: $lg) {
   div.admin-content {
     display: flex;
@@ -32,5 +34,7 @@
     }
   }
 }
+
+
 
 
