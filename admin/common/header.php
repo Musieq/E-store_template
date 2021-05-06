@@ -66,6 +66,20 @@ $currentPage = $_GET['source'] ?? '';
                 </li>
 
                 <li class="nav-item">
+                    <a href="index.php?source=products" <?php if($currentPage == 'products') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'products') echo "active" ?>">
+                        Products
+                    </a>
+
+                    <ul class="nav nav-pills nav-child">
+                        <li class="nav-item">
+                            <a href="index.php?source=products&addProduct=1" class="nav-link text-white">
+                                Add product
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="nav-item">
                     <a href="index.php?source=categories" <?php if($currentPage == 'categories') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'categories') echo "active" ?>">
                         Categories
                     </a>

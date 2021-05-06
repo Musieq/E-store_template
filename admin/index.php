@@ -38,6 +38,15 @@ require_once('common/header.php');
                 break;
 
 
+            case 'products':
+                if(isset($_GET['addProduct'])) {
+                    include 'product_add.php';
+                } else {
+                    include 'products.php';
+                }
+                break;
+
+
             default:
                 ?>
 
@@ -63,6 +72,10 @@ require_once('common/header.php');
 </div>
 <!-- Bootstrap Bundle with Popper -->
 <script src="../js/bootstrap.bundle.min.js"></script>
+
+<!-- CKEditor -->
+<script src="../common/ckeditor5-build-classic/ckeditor.js"></script>
+<script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 
 <!-- Admin JS -->
 <script src="js/adminScripts.js"></script>
