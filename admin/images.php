@@ -117,39 +117,15 @@ if (isset($_POST['imageBulkOption'])) {
                         <tbody>
 
                         <?php
-                        // Variables for pagination
-                        $imagesCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM images");
-                        $imagesCount = mysqli_fetch_array($imagesCountQuery)[0];
-                        $limit = 20;
-                        $pages = ceil($imagesCount / $limit);
-                        $currentPage = $_GET['page'] ?? 1;
-                        $offset = ($currentPage - 1) * $limit;
+                        // Limit for images per page
+                        $limit = 1;
 
 
                         /** Filter images by title and/or by chosen date **/
-                        $titleFilter = '';
-                        $dateFilter = 0;
-                        if (isset($_GET['imageFilterSubmit'])) {
-                            $titleFilter = $_GET['imageFilterTitle'];
-                            $dateFilter = $_GET['imageFilterDate'];
-                            $yearFilter = substr($dateFilter, 0, 4);
-                            $monthFilter = substr($dateFilter, 4, 2);
-                        }
-
-                        if ($titleFilter != '' && $dateFilter != 0) {
-                            $titleFilter = '%'.$titleFilter.'%';
-                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? AND YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($displayImagesQuery, "sii",$titleFilter, $yearFilter, $monthFilter);
-                        } elseif ($titleFilter != '') {
-                            $titleFilter = '%'.$titleFilter.'%';
-                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE title LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($displayImagesQuery, "s",$titleFilter);
-                        } elseif ($dateFilter != 0) {
-                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images WHERE YEAR(upload_date) LIKE ? AND MONTH(upload_date) LIKE ? ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($displayImagesQuery, "ii",$yearFilter, $monthFilter);
-                        } else {
-                            $displayImagesQuery = mysqli_prepare($db, "SELECT * FROM images ORDER BY upload_date DESC LIMIT $limit OFFSET $offset");
-                        }
+                        $imageFiltersArr = imageFilters($db, $limit);
+                        $displayImagesQuery = $imageFiltersArr[0];
+                        $pages = $imageFiltersArr[1];
+                        $currentPage = $imageFiltersArr[2];
 
                         // Execute prepared statement
                         mysqli_stmt_execute($displayImagesQuery);
@@ -157,32 +133,22 @@ if (isset($_POST['imageBulkOption'])) {
 
                         /** Display images **/
                         while($displayImagesResults = mysqli_fetch_assoc($displayImagesGetResults)){
-                            $imageID = $displayImagesResults['id'];
-                            $imageUniqueName = $displayImagesResults['unique_name'];
-                            $imageTitle = $displayImagesResults['title'];
-                            $imageAlt = $displayImagesResults['alt'];
-                            $uploadDate = $displayImagesResults['upload_date'];
-                            $fullPath = $displayImagesResults['path'];
-
-                            // Get path without extension and extension
-                            $path = pathinfo($fullPath, PATHINFO_DIRNAME);
-                            $path .= '/'.pathinfo($fullPath, PATHINFO_FILENAME);
-                            $extension = pathinfo($fullPath, PATHINFO_EXTENSION);
+                            $imageFieldsArr = getImageFields($displayImagesResults);
 
                             // Create URL when deleting images after applying filters
-                            $deleteURL = http_build_query(array_merge($_GET,['deleteImageID' => $imageID]));
+                            $deleteURL = http_build_query(array_merge($_GET,['deleteImageID' => $imageFieldsArr['imageID']]));
                             ?>
 
                             <tr>
-                                <td><input type="checkbox" name="imageDeleteCheckbox[]" class="form-check-input" value="<?=$imageID?>" aria-label="Check for bulk deleting image <?=$imageTitle?>"></td>
-                                <td><a href="../<?=$fullPath?>">
-                                        <div class="admin-image-container" style="background-image: url('../<?=$path?>-thumbnail.<?=$extension?>') "></div>
+                                <td><input type="checkbox" name="imageDeleteCheckbox[]" class="form-check-input" value="<?=$imageFieldsArr['imageID']?>" aria-label="Check for bulk deleting image <?=$imageFieldsArr['imagetitle']?>"></td>
+                                <td><a href="../<?=$imageFieldsArr['fullPath']?>">
+                                        <div class="admin-image-container" style="background-image: url('../<?=$imageFieldsArr['path']?>-thumbnail.<?=$imageFieldsArr['extension']?>') "></div>
                                     </a>
                                 </td>
-                                <td><?=$imageTitle?></td>
-                                <td><?=$imageAlt?></td>
-                                <td><?=$uploadDate?></td>
-                                <td><a href="index.php?source=images&editImageID=<?=$imageID?>">Edit</td>
+                                <td><?=$imageFieldsArr['imageTitle']?></td>
+                                <td><?=$imageFieldsArr['imageAlt']?></td>
+                                <td><?=$imageFieldsArr['imageUploadDate']?></td>
+                                <td><a href="index.php?source=images&editImageID=<?=$imageFieldsArr['imageID']?>">Edit</td>
                                 <td><a href="index.php?<?=$deleteURL?>" class="link-danger delete-image-link" data-bs-toggle="modal" data-bs-target="#modalImageDeleteWarning">Delete</td>
                             </tr>
 
@@ -201,99 +167,8 @@ if (isset($_POST['imageBulkOption'])) {
         </form>
 
         <?php
-            // Create pagination if there is more than 1 page
-            if ($pages > 1) :
-            ?>
-
-                <nav aria-label="Pagination for images">
-                    <ul class="pagination justify-content-center">
-
-                        <?php
-                        // Unset $_GET['page'] so we can set it when building link. Necessary for pagination when filters are applied.
-                        unset($_GET['page']);
-                        if ($pages <= 3) :
-                            for ($i = 1; $i <= $pages; $i++) :
-                                $paginationURL = http_build_query(array_merge($_GET,['page' => $i]));
-                            ?>
-
-                                <li class="page-item <?php if($i == $currentPage) { echo 'active'; } ?>" <?php if($i == $currentPage) { echo 'aria-current="page"'; } ?>>
-                                    <a class="page-link" href="index.php?<?=$paginationURL?>"><?=$i?></a>
-                                </li>
-
-                            <?php
-                            endfor;
-                        else :
-                        ?>
-
-                            <?php
-                            if ($currentPage == 1) :
-                            ?>
-                                <li class="page-item disabled">
-                                    <span class="page-link">First</span>
-                                </li>
-                            <?php
-                            else :
-                                $paginationURL = http_build_query(array_merge($_GET,['page' => 1]));
-                            ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="index.php?<?=$paginationURL?>">First</a>
-                                </li>
-                            <?php
-                            endif;
-                            ?>
-
-                            <?php
-                            if ($currentPage > 1) :
-                                $paginationURL = http_build_query(array_merge($_GET,['page' => $currentPage-1]));
-                            ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="index.php?<?=$paginationURL?>"><?=$currentPage-1?></a>
-                                </li>
-                            <?php
-                            endif;
-                            ?>
-
-                                <li class="page-item active" aria-current="page">
-                                    <span class="page-link"><?=$currentPage?></span>
-                                </li>
-
-                            <?php
-                            if ($currentPage < $pages) :
-                                $paginationURL = http_build_query(array_merge($_GET,['page' => $currentPage+1]));
-                            ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="index.php?<?=$paginationURL?>"><?=$currentPage+1?></a>
-                                </li>
-                            <?php
-                            endif;
-                            ?>
-
-                            <?php
-                            if ($currentPage == $pages) :
-                                ?>
-                                <li class="page-item disabled">
-                                    <span class="page-link">Last</span>
-                                </li>
-                            <?php
-                            else :
-                                $paginationURL = http_build_query(array_merge($_GET,['page' => $pages]));
-                                ?>
-                                <li class="page-item">
-                                    <a class="page-link" href="index.php?<?=$paginationURL?>">Last</a>
-                                </li>
-                            <?php
-                            endif;
-                            ?>
-
-                        <?php
-                        endif;
-                        ?>
-
-                    </ul>
-                </nav>
-
-            <?php
-            endif;
+        // Create pagination if there is more than 1 page
+        createPagination('Pagination for images in product add', $pages, $currentPage, 'index.php');
         ?>
 
 
