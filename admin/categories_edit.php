@@ -84,7 +84,7 @@ if (!is_numeric($editCatID)) {
                     <option value="0">None</option>
                     <?php
                     /** Get categories from database and display them in select field **/
-                    if (is_numeric($editCatID)) { categoriesHierarchyInSelectField($editCatResult['parent_id']); }
+                    if (is_numeric($editCatID)) { categoriesHierarchyInSelectField($db, $editCatResult['parent_id']); }
                     ?>
                 </select>
                 <div id="parentHelp" class="form-text">Choose parent category to create hierarchy.</div>

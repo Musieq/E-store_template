@@ -118,7 +118,7 @@ if (isset($_GET['deleteCatID'])) {
                     <option selected value="0">None</option>
                     <?php
                     /** Get categories from database and display them in select field **/
-                    categoriesHierarchyInSelectField(0);
+                    categoriesHierarchyInSelectField($db,0);
                     ?>
                 </select>
                 <div id="parentHelp" class="form-text">Choose parent category to create hierarchy.</div>
