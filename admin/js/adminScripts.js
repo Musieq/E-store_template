@@ -58,8 +58,7 @@ function bulkDeleteModal(formID, selectID) {
 }
 
 
-
-
+/** Show images in product_add.php **/
 function ajaxFilterImages() {
     // Get inputs and container
     const imageContainer = document.getElementById('productImages');
@@ -75,6 +74,20 @@ function ajaxFilterImages() {
     const imageFilterTitleValue = imageFilterTitle.value;
     const imageFilterDateValue = imageFilterDate.value;
 
+
+    // Fetch images
+    function fetchImg(link) {
+        fetch(link)
+            .then(response => response.text())
+            .then(data => {
+                imageContainer.innerHTML = data;
+            }).then(paginationInit)
+            .then(selectCheckboxImage)
+    }
+    fetchImg("product_ajax_images.php?source=products&addProduct=1&imageFilterTitle="+imageFilterTitleValue+"&imageFilterDate="+imageFilterDateValue+"&imageFilterSubmit=filter");
+
+
+    // Pagination
     function paginationInit() {
         const pagination = document.querySelectorAll('.page-link');
         if (!pagination) {
@@ -88,27 +101,40 @@ function ajaxFilterImages() {
         })
     }
 
-    // Fetch images
-    function fetchImg(link) {
-        fetch(link)
-            .then(response => response.text())
-            .then(data => {
-                imageContainer.innerHTML = data;
-            }).then(paginationInit)
+    // Selecting images
+    function selectCheckboxImage() {
+        let imageList = document.querySelectorAll('.imageList');
+        if (!imageList) {
+            return;
+        }
+
+        imageList.forEach(e => {
+            e.addEventListener('keydown', function (event) {
+                if (event.keyCode === 32 || event.code === 'Space' || event.key === ' ') {
+                    checkImage(e);
+                }
+            })
+
+            e.addEventListener('click', function () {
+                checkImage(e);
+            })
+        })
+
+        function checkImage(checkbox) {
+            let checkboxChecked = checkbox.getAttribute('aria-checked');
+            if (checkboxChecked === 'true') {
+                checkbox.setAttribute('aria-checked', 'false');
+            } else if(checkboxChecked === 'false') {
+                checkbox.setAttribute('aria-checked', 'true');
+            }
+        }
     }
-    fetchImg("product_ajax_images.php?source=products&addProduct=1&imageFilterTitle="+imageFilterTitleValue+"&imageFilterDate="+imageFilterDateValue+"&imageFilterSubmit=filter");
 }
 ajaxFilterImages();
 
-/*function ajaxFilterImagesPaginationInit() {
-    const pagination = document.querySelectorAll('.page-link');
-    pagination.forEach(page => {
-        page.addEventListener('click', function (e) {
-            e.preventDefault();
-            fetchImg(page.href);
-        })
-    })
-}*/
+
+
+
 
 
 

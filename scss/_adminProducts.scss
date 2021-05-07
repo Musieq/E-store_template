@@ -21,6 +21,14 @@ ul.product-images {
     margin: .5rem;
   }
 
+  li[aria-checked="true"] {
+    box-shadow: 0 0 10px 4px #007BFF;
+  }
+
+  li[aria-checked]:focus {
+    opacity: 0.5;
+  }
+
   div.admin-image-container {
     width: 200px;
     height: 112.5px;

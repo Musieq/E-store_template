@@ -200,6 +200,12 @@ ul.product-images {
 ul.product-images > li {
   margin: 0.5rem;
 }
+ul.product-images li[aria-checked=true] {
+  box-shadow: 0 0 10px 4px #007BFF;
+}
+ul.product-images li[aria-checked]:focus {
+  opacity: 0.5;
+}
 ul.product-images div.admin-image-container {
   width: 200px;
   height: 112.5px;

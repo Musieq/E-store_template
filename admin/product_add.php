@@ -27,7 +27,7 @@ $errors = [];
 
             <div class="mb-3">
                 <div class="container-images-draggable">
-                    images
+                    Images
                 </div>
 
                 <a href="#" data-bs-toggle="modal" data-bs-target="#addProductSelectImages">Select product images</a>
@@ -174,10 +174,6 @@ $errors = [];
                 <ul class="product-images d-flex flex-row flex-wrap" id="productImages">
 
                 </ul>
-
-
-
-
 
 
 

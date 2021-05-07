@@ -21,7 +21,7 @@ while($displayImagesResults = mysqli_fetch_assoc($displayImagesGetResults)){
 
     ?>
 
-    <li role="checkbox" tabindex="0" aria-checked="false" aria-label="<?=$imageFieldsArr['imageTitle']?>" class="list-unstyled" data-id="<?=$imageFieldsArr['imageID']?>">
+    <li role="checkbox" tabindex="0" aria-checked="false" aria-label="<?=$imageFieldsArr['imageTitle']?>" class="imageList list-unstyled" data-id="<?=$imageFieldsArr['imageID']?>">
         <div class="admin-image-container" style="background-image: url('../<?=$imageFieldsArr['path']?>-thumbnail.<?=$imageFieldsArr['extension']?>') "></div>
     </li>
 
