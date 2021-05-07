@@ -13,7 +13,43 @@ ul.select-product-category {
   border-radius: 0.25rem;
 }
 
+// Selected images preview
+ul.selected-product-images {
+  display: flex;
+  flex-direction: row;
+  padding-inline-start: 0;
+  flex-wrap: wrap;
 
+  >li {
+    margin: .5rem;
+    position: relative;
+  }
+
+  div.admin-image-container {
+    width: 200px;
+    height: 112.5px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+  }
+
+  div.removeSelectedImg {
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    top: -8px;
+    right: -8px;
+    background-color: #dc3545;
+    line-height: 0.8;
+    padding-left: 3.5px;
+    font-weight: 700;
+    color: white;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+}
+
+// Select images modal
 ul.product-images {
   padding-inline-start: 0;
 

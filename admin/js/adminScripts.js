@@ -133,9 +133,229 @@ function ajaxFilterImages() {
 ajaxFilterImages();
 
 
+/** Show modal on link click. Handle selecting images on product_add.php **/
+(function () {
+    // Prepare modal and show it on click
+    const productImagesModal = new bootstrap.Modal(document.getElementById('addProductSelectImages'));
+    const showModalBtn = document.getElementById('showProductImagesModal');
+    const chooseImagesBtn = document.getElementById('chooseImagesBtn');
+    const selectedImagesContainer = document.getElementById('containerImagesDraggable');
+    const imageInput = document.getElementById('addProductImages');
+
+    // Show modal on click
+    showModal(showModalBtn, productImagesModal)
+
+    // Add listener for submitting selected images
+    if (!chooseImagesBtn) {
+        console.log("Submit button doesn't exist")
+        return;
+    }
+    chooseImagesBtn.addEventListener('click', function () {
+        const imageList = document.querySelectorAll('.imageList');
+        // Get array with all selected images
+        let selectedImagesArr = getSelectedImages(imageList);
+
+        // Close modal if at least 1 image is selected
+        if (selectedImagesArr.length > 0) {
+            productImagesModal.hide();
+
+            // Show images on page
+            if (!selectedImagesContainer && !imageInput) {
+                console.log('Image container or input doesn\'t exist');
+                return;
+            }
+            showSelectedImages(selectedImagesArr, selectedImagesContainer, imageInput);
+
+            // Remove unwanted selected images
+            removeSelectedImage(imageInput, selectedImagesContainer);
+        }
+    })
 
 
 
+
+    function showModal(showModalBtn, productImagesModal) {
+        if (!showModalBtn || !productImagesModal) {
+            return;
+        }
+
+        showModalBtn.addEventListener('click', function () {
+            productImagesModal.show();
+        })
+    }
+
+
+    function getSelectedImages(imageList) {
+        let selectedImagesArr = [];
+        // Get all selected images
+        if (!imageList) {
+            return;
+        }
+
+        imageList.forEach(image => {
+            if(image.getAttribute('aria-checked') === 'true'){
+                // Create array with selected images
+                selectedImagesArr.push(image.cloneNode(true));
+
+                // Unselect images
+                image.setAttribute('aria-checked', 'false');
+            }
+        })
+        return selectedImagesArr;
+    }
+
+
+    function showSelectedImages(selectedImagesArr, selectedImagesContainer, imageInput) {
+        selectedImagesArr.forEach(image => {
+            selectedImagesContainer.appendChild(image);
+            image.removeAttribute('role');
+            image.removeAttribute('aria-checked');
+
+            // Add image id to hidden input
+            let imageID = image.getAttribute('data-id');
+            let imageInputValue = imageInput.value;
+            if (imageInputValue === '') {
+                imageInput.value = imageID;
+            } else {
+                imageInput.value += ','+imageID;
+            }
+
+            // Create element for removing selected img
+            let removeSelectedImg = document.createElement('div');
+            removeSelectedImg.classList.add('removeSelectedImg');
+            removeSelectedImg.innerHTML = 'x';
+            image.appendChild(removeSelectedImg);
+        })
+    }
+
+
+    function removeSelectedImage(imageInput, selectedImagesContainer) {
+        // Remove selected image on click
+        let removeSelectedImgBtn = document.querySelectorAll('.removeSelectedImg');
+        if (!removeSelectedImgBtn) {
+            return;
+        }
+        removeSelectedImgBtn.forEach(el => {
+            el.addEventListener('click', function () {
+                let parent = el.parentElement;
+                parent.remove();
+
+                // Update hidden input field value
+                imageInput.value = '';
+                let imageList = selectedImagesContainer.childNodes;
+                imageList.forEach(e => {
+                    console.log(e);
+                    let imageID = e.getAttribute('data-id');
+                    let imageInputValue = imageInput.value;
+                    if (imageInputValue === '') {
+                        imageInput.value = imageID;
+                    } else {
+                        imageInput.value += ','+imageID;
+                    }
+                })
+            })
+        })
+    }
+})();
+
+/*(function () {
+    // Prepare modal and show it on click
+    const productImagesModal = new bootstrap.Modal(document.getElementById('addProductSelectImages'));
+    const showModalBtn = document.getElementById('showProductImagesModal');
+    if (!showModalBtn || !productImagesModal) {
+        return;
+    }
+
+    showModalBtn.addEventListener('click', function () {
+        productImagesModal.show();
+    })
+
+
+    // Get select button
+    const chooseImagesBtn = document.getElementById('chooseImagesBtn');
+    if (!chooseImagesBtn) {
+        return;
+    }
+
+    chooseImagesBtn.addEventListener('click', function () {
+        let selectedImagesArr = [];
+        // Get all selected images
+        const imageList = document.querySelectorAll('.imageList');
+        if (!imageList) {
+            return;
+        }
+
+        imageList.forEach(image => {
+            if(image.getAttribute('aria-checked') === 'true'){
+                // Create array with selected images
+                selectedImagesArr.push(image.cloneNode(true));
+
+                // Unselect images
+                image.setAttribute('aria-checked', 'false');
+            }
+        })
+
+        // Close modal if at least 1 image is selected
+        if (selectedImagesArr.length > 0) {
+            productImagesModal.hide();
+
+            // Show them on page
+            const selectedImagesContainer = document.getElementById('containerImagesDraggable');
+            const imageInput = document.getElementById('addProductImages');
+            if (!selectedImagesContainer && !imageInput) {
+                return;
+            }
+
+            selectedImagesArr.forEach(image => {
+                selectedImagesContainer.appendChild(image);
+                image.removeAttribute('role');
+                image.removeAttribute('aria-checked');
+
+                // Add image id to hidden input
+                let imageID = image.getAttribute('data-id');
+                let imageInputValue = imageInput.value;
+                if (imageInputValue === '') {
+                    imageInput.value = imageID;
+                } else {
+                    imageInput.value += ','+imageID;
+                }
+
+                // Create element for removing selected img
+                let removeSelectedImg = document.createElement('div');
+                removeSelectedImg.classList.add('removeSelectedImg');
+                removeSelectedImg.innerHTML = 'x';
+                image.appendChild(removeSelectedImg);
+            })
+
+            // Remove selected image on click
+            let removeSelectedImgBtn = document.querySelectorAll('.removeSelectedImg');
+            if (!removeSelectedImgBtn) {
+                return;
+            }
+            removeSelectedImgBtn.forEach(el => {
+                el.addEventListener('click', function () {
+                    let parent = el.parentElement;
+                    parent.remove();
+
+                    // Update hidden input field value
+                    imageInput.value = '';
+                    let imageList = selectedImagesContainer.childNodes;
+                    imageList.forEach(e => {
+                        console.log(e);
+                        let imageID = e.getAttribute('data-id');
+                        let imageInputValue = imageInput.value;
+                        if (imageInputValue === '') {
+                            imageInput.value = imageID;
+                        } else {
+                            imageInput.value += ','+imageID;
+                        }
+                    })
+                })
+            })
+
+        }
+    })
+})();*/
 
 
 

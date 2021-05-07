@@ -26,11 +26,13 @@ $errors = [];
             </div>
 
             <div class="mb-3">
+                Product images
                 <div class="container-images-draggable">
-                    Images
+                    <ul id="containerImagesDraggable" class="selected-product-images"></ul>
+                    <input type="hidden" id="addProductImages" name="addProductImages" value="">
                 </div>
 
-                <a href="#" data-bs-toggle="modal" data-bs-target="#addProductSelectImages">Select product images</a>
+                <a href="#" id="showProductImagesModal">Select product images</a>
             </div>
 
             <div class="mb-3">
@@ -118,7 +120,7 @@ $errors = [];
 
 <!-- Modal for selecting images -->
 <div class="modal fade" id="addProductSelectImages" tabindex="-1" aria-labelledby="addProductSelectImagesLabel" aria-hidden="true">
-    <div class="modal-dialog modal-select-product-image">
+    <div class="modal-dialog modal-select-product-image" id="addProductImagesModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="addProductSelectImagesLabel">Select product image</h5>
@@ -180,7 +182,7 @@ $errors = [];
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Select</button>
+                <button type="button" class="btn btn-primary" id="chooseImagesBtn">Select</button>
             </div>
         </div>
     </div>
