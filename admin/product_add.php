@@ -1,12 +1,85 @@
 <?php
 $errors = [];
+$success = false;
 
+
+if (isset($_POST['productAdd'])) {
+    $productName = $_POST['addProductName'];
+    if (!empty($productName)) {
+
+        $productImages = $_POST['addProductImages'];
+        $productDescription = $_POST['addProductDescription'];
+        $productCategories = $_POST['addProductCategory'] ?? 0;  // array with categories
+        $productPrice = $_POST['addProductPrice'];
+        if (!empty($productPrice)) {
+            $productSalePrice = $_POST['addProductSalePrice'];
+            $productManageStock = $_POST['addProductManageStock'] ?? 0;
+            if ($productManageStock) {
+                $productManageStock = 1;
+                $addProductStockStatus = -1;
+                $addProductStock = $_POST['addProductStock'];
+            } else {
+                $addProductStockStatus = $_POST['addProductStockStatus'];
+                $addProductStock = -1;
+            }
+            $addProductStatus = $_POST['addProductStatus'];
+
+            // Insert into product table
+                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, price, price_sale, stock, stock_status, stock_manage, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "ssiiiiis", $productName, $productDescription, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $addProductStatus);
+                mysqli_stmt_execute($stmt);
+                $productID = mysqli_stmt_insert_id($stmt);
+                mysqli_stmt_close($stmt);
+
+                // Insert into images table
+                if (!empty($productImages)) {
+                    $productImagesArray = explode(',', $productImages);
+                    foreach ($productImagesArray as $imageOrder => $imageID) {
+                        $stmt = mysqli_prepare($db, "INSERT INTO product_image_order (product_id, image_id, image_order) VALUES (?, ?, ?)");
+                        mysqli_stmt_bind_param($stmt, "iii", $productID, $imageID, $imageOrder);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_close($stmt);
+                    }
+                }
+
+                // Insert into categories table
+                if(!empty($productCategories)) {
+                    foreach ($productCategories as $productCategory) {
+                        $stmt = mysqli_prepare($db, "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)");
+                        mysqli_stmt_bind_param($stmt, "ii", $productID, $productCategory);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_close($stmt);
+                    }
+                }
+
+            $success = true;
+
+        } else {
+            array_push($errors, 'Price cannot be empty');
+        }
+    } else {
+        array_push($errors, 'Product name cannot be empty');
+    }
+}
 
 ?>
 
 
 
 <div class="row">
+
+    <?php
+    if ($success) :
+        ?>
+        <div class="col-12">
+            <div class="callout callout-success alert-success">
+                <p><strong>Product created successfully.</strong></p>
+                <p><a href="index.php?source=products">Go back to products</a></p>
+            </div>
+        </div>
+    <?php
+    endif;
+    ?>
 
 
     <?php
@@ -18,7 +91,7 @@ $errors = [];
     <div class="col-12">
         <h2>Add new product</h2>
         <!-- TODO form validation -->
-        <form method="post" action="index.php?source=products&productAdd=1">
+        <form method="post" action="index.php?source=products&addProduct=1">
 
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="addProductName" class="form-label">Product name</label><div class="required">*</div></div>
@@ -74,8 +147,8 @@ $errors = [];
                 </div>
 
                 <div class="col-lg-6">
-                    <div class="d-flex flex-row"><label for="addProductPrice" class="form-label">Sale price</label></div>
-                    <input type="text" class="form-control" id="addProductPrice" name="addProductPrice">
+                    <div class="d-flex flex-row"><label for="addProductSalePrice" class="form-label">Sale price</label></div>
+                    <input type="text" class="form-control" id="addProductSalePrice" name="addProductSalePrice">
                 </div>
             </div>
 
@@ -110,7 +183,7 @@ $errors = [];
 
 
 
-            <button type="submit" class="btn btn-primary " name="categoryAdd">Submit</button>
+            <button type="submit" class="btn btn-primary" name="productAdd">Submit</button>
         </form>
     </div>
 
