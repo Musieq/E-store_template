@@ -199,19 +199,26 @@ ul.selected-product-images {
   flex-direction: row;
   padding-inline-start: 0;
   flex-wrap: wrap;
+  /*  display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;*/
 }
-ul.selected-product-images > li {
+ul.selected-product-images li.imageList {
   margin: 0.5rem;
   position: relative;
+  cursor: move;
 }
-ul.selected-product-images div.admin-image-container {
+ul.selected-product-images li.imageList.over {
+  box-shadow: 0 0 10px 4px #007BFF;
+}
+ul.selected-product-images li.imageList div.admin-image-container {
   width: 200px;
   height: 112.5px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
-ul.selected-product-images div.removeSelectedImg {
+ul.selected-product-images li.imageList div.removeSelectedImg {
   position: absolute;
   width: 16px;
   height: 16px;

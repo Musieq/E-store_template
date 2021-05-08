@@ -19,34 +19,49 @@ ul.selected-product-images {
   flex-direction: row;
   padding-inline-start: 0;
   flex-wrap: wrap;
-
-  >li {
+/*  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;*/
+  li.imageList {
     margin: .5rem;
     position: relative;
+    cursor: move;
+
+    &.over {
+      box-shadow: 0 0 10px 4px #007BFF;
+      >div {
+        //border: 3px solid green;
+      }
+
+    }
+
+    div.admin-image-container {
+      width: 200px;
+      height: 112.5px;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+    }
+
+    div.removeSelectedImg {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      top: -8px;
+      right: -8px;
+      background-color: #dc3545;
+      line-height: 0.8;
+      padding-left: 3.5px;
+      font-weight: 700;
+      color: white;
+      border-radius: 50%;
+      cursor: pointer;
+    }
   }
 
-  div.admin-image-container {
-    width: 200px;
-    height: 112.5px;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-  }
 
-  div.removeSelectedImg {
-    position: absolute;
-    width: 16px;
-    height: 16px;
-    top: -8px;
-    right: -8px;
-    background-color: #dc3545;
-    line-height: 0.8;
-    padding-left: 3.5px;
-    font-weight: 700;
-    color: white;
-    border-radius: 50%;
-    cursor: pointer;
-  }
+
+
 }
 
 // Select images modal

@@ -143,7 +143,7 @@ ajaxFilterImages();
     const imageInput = document.getElementById('addProductImages');
 
     // Show modal on click
-    showModal(showModalBtn, productImagesModal)
+    showModal()
 
     // Add listener for submitting selected images
     if (!chooseImagesBtn) {
@@ -164,17 +164,20 @@ ajaxFilterImages();
                 console.log('Image container or input doesn\'t exist');
                 return;
             }
-            showSelectedImages(selectedImagesArr, selectedImagesContainer, imageInput);
+            showSelectedImages(selectedImagesArr);
+
+            // Allow drag and drop
+            dragAndDrop(removeSelectedImage);
 
             // Remove unwanted selected images
-            removeSelectedImage(imageInput, selectedImagesContainer);
+            removeSelectedImage();
         }
     })
 
 
 
 
-    function showModal(showModalBtn, productImagesModal) {
+    function showModal() {
         if (!showModalBtn || !productImagesModal) {
             return;
         }
@@ -205,11 +208,12 @@ ajaxFilterImages();
     }
 
 
-    function showSelectedImages(selectedImagesArr, selectedImagesContainer, imageInput) {
+    function showSelectedImages(selectedImagesArr) {
         selectedImagesArr.forEach(image => {
             selectedImagesContainer.appendChild(image);
             image.removeAttribute('role');
             image.removeAttribute('aria-checked');
+            image.setAttribute('draggable', 'true');
 
             // Add image id to hidden input
             let imageID = image.getAttribute('data-id');
@@ -229,7 +233,7 @@ ajaxFilterImages();
     }
 
 
-    function removeSelectedImage(imageInput, selectedImagesContainer) {
+    function removeSelectedImage() {
         // Remove selected image on click
         let removeSelectedImgBtn = document.querySelectorAll('.removeSelectedImg');
         if (!removeSelectedImgBtn) {
@@ -241,22 +245,172 @@ ajaxFilterImages();
                 parent.remove();
 
                 // Update hidden input field value
-                imageInput.value = '';
-                let imageList = selectedImagesContainer.childNodes;
-                imageList.forEach(e => {
-                    console.log(e);
-                    let imageID = e.getAttribute('data-id');
-                    let imageInputValue = imageInput.value;
-                    if (imageInputValue === '') {
-                        imageInput.value = imageID;
-                    } else {
-                        imageInput.value += ','+imageID;
-                    }
-                })
+                updateInputValue();
             })
         })
     }
+
+    function updateInputValue() {
+        imageInput.value = '';
+        let imageList = selectedImagesContainer.childNodes;
+        imageList.forEach(e => {
+            let imageID = e.getAttribute('data-id');
+            let imageInputValue = imageInput.value;
+            if (imageInputValue === '') {
+                imageInput.value = imageID;
+            } else {
+                imageInput.value += ','+imageID;
+            }
+        })
+    }
+
+/*    function dragAndDrop() {
+        function handleDragStart(e) {
+            this.style.opacity = '0.4';
+
+            dragSrcEl = this;
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+        }
+
+        function handleDragEnd(e) {
+            this.style.opacity = '1';
+
+            items.forEach(function (item) {
+                item.classList.remove('over');
+            });
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            this.classList.add('over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('over');
+        }
+
+        function handleDrop(e) {
+            e.stopPropagation(); // stops the browser from redirecting.
+            console.log(e);
+            if (dragSrcEl !== this) {
+                //dragSrcEl.outerHTML = this.outerHTML;
+                this.outerHTML = e.dataTransfer.getData('text/html');
+                updateInputValue();
+                getItems();
+            }
+
+            return false;
+        }
+
+        let dragSrcEl;
+        let getItems = function () {
+            return document.querySelectorAll('.selected-product-images .imageList');
+        }
+        let items = getItems();
+        //let items = document.querySelectorAll('.selected-product-images .imageList');
+        items.forEach(function(item) {
+            item.addEventListener('dragstart', handleDragStart, false);
+            item.addEventListener('dragover', handleDragOver, false);
+            item.addEventListener('dragenter', handleDragEnter, false);
+            item.addEventListener('dragleave', handleDragLeave, false);
+            item.addEventListener('dragend', handleDragEnd, false);
+            item.addEventListener('drop', handleDrop, false);
+
+        });
+    }*/
+
+    function dragAndDrop() {
+        let dragSrcEl = null;
+
+        function handleDragStart(e) {
+            // Target (this) element is the source node.
+            dragSrcEl = this;
+
+            e.dataTransfer.effectAllowed = 'move';
+            e.dataTransfer.setData('text/html', this.outerHTML);
+
+            //this.classList.add('dragElem');
+            this.style.opacity = '.4';
+        }
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault(); // Necessary. Allows us to drop.
+            }
+
+
+            e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+            return false;
+        }
+
+        function handleDragEnter(e) {
+            // this / e.target is the current hover target.
+            this.classList.add('over');
+        }
+
+        function handleDragLeave(e) {
+            this.classList.remove('over');  // this / e.target is previous target element.
+        }
+
+        function handleDrop(e) {
+            // this/e.target is current target element.
+
+            if (e.stopPropagation) {
+                e.stopPropagation(); // Stops some browsers from redirecting.
+            }
+
+            // Don't do anything if dropping the same column we're dragging.
+            if (dragSrcEl !== this) {
+                // Set the source column's HTML to the HTML of the column we dropped on.
+                this.parentNode.removeChild(dragSrcEl);
+                let dropHTML = e.dataTransfer.getData('text/html');
+
+                // Add before selected element
+                this.insertAdjacentHTML('beforebegin',dropHTML);
+                // Get added element and create event listeners
+                let dropElem = this.previousSibling;
+                addDnDHandlers(dropElem);
+                // Update input field
+                updateInputValue();
+            }
+            this.classList.remove('over');
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            // this/e.target is the source node.
+            this.classList.remove('over');
+            this.style.opacity = '1';
+        }
+
+        function addDnDHandlers(elem) {
+            elem.addEventListener('dragstart', handleDragStart, false);
+            elem.addEventListener('dragenter', handleDragEnter, false)
+            elem.addEventListener('dragover', handleDragOver, false);
+            elem.addEventListener('dragleave', handleDragLeave, false);
+            elem.addEventListener('drop', handleDrop, false);
+            elem.addEventListener('dragend', handleDragEnd, false);
+
+        }
+
+        let cols = document.querySelectorAll('.selected-product-images .imageList');
+        [].forEach.call(cols, addDnDHandlers);
+    }
+
+
 })();
+
+
+
 
 /*(function () {
     // Prepare modal and show it on click
