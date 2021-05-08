@@ -167,7 +167,7 @@ ajaxFilterImages();
             showSelectedImages(selectedImagesArr);
 
             // Allow drag and drop
-            dragAndDrop(removeSelectedImage);
+            dragAndDrop();
 
             // Remove unwanted selected images
             removeSelectedImage();
@@ -264,69 +264,6 @@ ajaxFilterImages();
         })
     }
 
-/*    function dragAndDrop() {
-        function handleDragStart(e) {
-            this.style.opacity = '0.4';
-
-            dragSrcEl = this;
-
-            e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/html', this.outerHTML);
-        }
-
-        function handleDragEnd(e) {
-            this.style.opacity = '1';
-
-            items.forEach(function (item) {
-                item.classList.remove('over');
-            });
-        }
-
-        function handleDragOver(e) {
-            if (e.preventDefault) {
-                e.preventDefault();
-            }
-
-            return false;
-        }
-
-        function handleDragEnter(e) {
-            this.classList.add('over');
-        }
-
-        function handleDragLeave(e) {
-            this.classList.remove('over');
-        }
-
-        function handleDrop(e) {
-            e.stopPropagation(); // stops the browser from redirecting.
-            console.log(e);
-            if (dragSrcEl !== this) {
-                //dragSrcEl.outerHTML = this.outerHTML;
-                this.outerHTML = e.dataTransfer.getData('text/html');
-                updateInputValue();
-                getItems();
-            }
-
-            return false;
-        }
-
-        let dragSrcEl;
-        let getItems = function () {
-            return document.querySelectorAll('.selected-product-images .imageList');
-        }
-        let items = getItems();
-        //let items = document.querySelectorAll('.selected-product-images .imageList');
-        items.forEach(function(item) {
-            item.addEventListener('dragstart', handleDragStart, false);
-            item.addEventListener('dragover', handleDragOver, false);
-            item.addEventListener('dragenter', handleDragEnter, false);
-            item.addEventListener('dragleave', handleDragLeave, false);
-            item.addEventListener('dragend', handleDragEnd, false);
-            item.addEventListener('drop', handleDrop, false);
-
-        });
-    }*/
 
     function dragAndDrop() {
         let dragSrcEl = null;
@@ -341,6 +278,7 @@ ajaxFilterImages();
             //this.classList.add('dragElem');
             this.style.opacity = '.4';
         }
+
         function handleDragOver(e) {
             if (e.preventDefault) {
                 e.preventDefault(); // Necessary. Allows us to drop.
@@ -381,6 +319,8 @@ ajaxFilterImages();
                 addDnDHandlers(dropElem);
                 // Update input field
                 updateInputValue();
+
+                removeSelectedImage();
             }
             this.classList.remove('over');
             return false;
@@ -409,107 +349,6 @@ ajaxFilterImages();
 
 })();
 
-
-
-
-/*(function () {
-    // Prepare modal and show it on click
-    const productImagesModal = new bootstrap.Modal(document.getElementById('addProductSelectImages'));
-    const showModalBtn = document.getElementById('showProductImagesModal');
-    if (!showModalBtn || !productImagesModal) {
-        return;
-    }
-
-    showModalBtn.addEventListener('click', function () {
-        productImagesModal.show();
-    })
-
-
-    // Get select button
-    const chooseImagesBtn = document.getElementById('chooseImagesBtn');
-    if (!chooseImagesBtn) {
-        return;
-    }
-
-    chooseImagesBtn.addEventListener('click', function () {
-        let selectedImagesArr = [];
-        // Get all selected images
-        const imageList = document.querySelectorAll('.imageList');
-        if (!imageList) {
-            return;
-        }
-
-        imageList.forEach(image => {
-            if(image.getAttribute('aria-checked') === 'true'){
-                // Create array with selected images
-                selectedImagesArr.push(image.cloneNode(true));
-
-                // Unselect images
-                image.setAttribute('aria-checked', 'false');
-            }
-        })
-
-        // Close modal if at least 1 image is selected
-        if (selectedImagesArr.length > 0) {
-            productImagesModal.hide();
-
-            // Show them on page
-            const selectedImagesContainer = document.getElementById('containerImagesDraggable');
-            const imageInput = document.getElementById('addProductImages');
-            if (!selectedImagesContainer && !imageInput) {
-                return;
-            }
-
-            selectedImagesArr.forEach(image => {
-                selectedImagesContainer.appendChild(image);
-                image.removeAttribute('role');
-                image.removeAttribute('aria-checked');
-
-                // Add image id to hidden input
-                let imageID = image.getAttribute('data-id');
-                let imageInputValue = imageInput.value;
-                if (imageInputValue === '') {
-                    imageInput.value = imageID;
-                } else {
-                    imageInput.value += ','+imageID;
-                }
-
-                // Create element for removing selected img
-                let removeSelectedImg = document.createElement('div');
-                removeSelectedImg.classList.add('removeSelectedImg');
-                removeSelectedImg.innerHTML = 'x';
-                image.appendChild(removeSelectedImg);
-            })
-
-            // Remove selected image on click
-            let removeSelectedImgBtn = document.querySelectorAll('.removeSelectedImg');
-            if (!removeSelectedImgBtn) {
-                return;
-            }
-            removeSelectedImgBtn.forEach(el => {
-                el.addEventListener('click', function () {
-                    let parent = el.parentElement;
-                    parent.remove();
-
-                    // Update hidden input field value
-                    imageInput.value = '';
-                    let imageList = selectedImagesContainer.childNodes;
-                    imageList.forEach(e => {
-                        console.log(e);
-                        let imageID = e.getAttribute('data-id');
-                        let imageInputValue = imageInput.value;
-                        if (imageInputValue === '') {
-                            imageInput.value = imageID;
-                        } else {
-                            imageInput.value += ','+imageID;
-                        }
-                    })
-                })
-            })
-
-        }
-    })
-})();*/
 
 
 
