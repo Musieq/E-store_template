@@ -147,7 +147,6 @@ ajaxFilterImages();
 
     // Add listener for submitting selected images
     if (!chooseImagesBtn) {
-        console.log("Submit button doesn't exist")
         return;
     }
     chooseImagesBtn.addEventListener('click', function () {
@@ -161,7 +160,6 @@ ajaxFilterImages();
 
             // Show images on page
             if (!selectedImagesContainer && !imageInput) {
-                console.log('Image container or input doesn\'t exist');
                 return;
             }
             showSelectedImages(selectedImagesArr);
@@ -349,7 +347,25 @@ ajaxFilterImages();
 
 })();
 
+/** Display stock or stock status input fields depending on manage stock? checkbox **/
+(function () {
+    const manageStockCheckbox = document.getElementById('addProductManageStock');
+    const noStockManagement = document.getElementById('noStockManagement');
+    const stockManagement = document.getElementById('stockManagement');
+    if (!manageStockCheckbox || !noStockManagement || !stockManagement) {
+        return;
+    }
 
+    manageStockCheckbox.addEventListener('click', function () {
+        if (this.checked) {
+            noStockManagement.style.display = 'none';
+            stockManagement.style.display = 'block';
+        } else {
+            noStockManagement.style.display = 'block';
+            stockManagement.style.display = 'none';
+        }
+    })
+})();
 
 
 /** Initialize CKEditor **/

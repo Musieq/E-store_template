@@ -28,7 +28,7 @@ $errors = [];
             <div class="mb-3">
                 Product images
                 <div class="callout callout-info alert-info">
-                    You can drag and drop selected images to set their order. Image is dropped before selected one.
+                    First image will be product's main image. You can drag and drop selected images to set their order. Image is dropped before selected one.
                 </div>
                 <div class="container-images-draggable">
                     <ul id="containerImagesDraggable" class="selected-product-images"></ul>
