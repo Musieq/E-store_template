@@ -13,16 +13,15 @@
 
     function valueMinus() {
         let inputValue = parseInt(input.value);
-        if (input.value > input.min) {
+        if (inputValue > input.min) {
             input.value = inputValue - step;
         }
     }
 
     function valuePlus() {
         let inputValue = parseInt(input.value);
-        if (input.value < input.max) {
+        if (inputValue < input.max) {
             input.value = inputValue + step;
         }
-        console.log(input.value);
     }
 })()
