@@ -1,6 +1,7 @@
 @import "colors";
 @import "header";
 @import "adminStyles";
+@import "singleProduct";
 
 
 /* Root */
@@ -25,6 +26,10 @@ ul.nav-child {
   padding-inline-start: 1.5rem;
 }
 
+a.link-location {
+  font-weight: 500;
+  text-decoration: none;
+}
 
 
 

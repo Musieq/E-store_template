@@ -2,7 +2,7 @@
 $errors = [];
 $success = false;
 
-
+// TODO multiple purchases of 1 product
 if (isset($_POST['productAdd'])) {
     $productName = $_POST['addProductName'];
     if (!empty($productName)) {
@@ -11,8 +11,9 @@ if (isset($_POST['productAdd'])) {
         $productDescription = $_POST['addProductDescription'];
         $productCategories = $_POST['addProductCategory'] ?? 0;  // array with categories
         $productPrice = $_POST['addProductPrice'];
-        if (!empty($productPrice)) {
-            $productSalePrice = $_POST['addProductSalePrice'];
+        $productSalePrice = $_POST['addProductSalePrice'];
+        $productSalePrice = $productSalePrice > 0 ? $productSalePrice: -1;
+        if (!empty($productPrice) && is_numeric($productPrice) && is_numeric($productSalePrice)) {
             $productManageStock = $_POST['addProductManageStock'] ?? 0;
             if ($productManageStock) {
                 $productManageStock = 1;
@@ -23,10 +24,16 @@ if (isset($_POST['productAdd'])) {
                 $addProductStock = -1;
             }
             $addProductStatus = $_POST['addProductStatus'];
+            if (isset($_POST['addProductAllowMultiplePurchases'])) {
+                $allowMultiplePurchases = 1;
+            } else {
+                $allowMultiplePurchases = 0;
+            }
+
 
             // Insert into product table
-                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, price, price_sale, stock, stock_status, stock_manage, status) VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "ssiiiiis", $productName, $productDescription, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $addProductStatus);
+                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "ssiiiiiis", $productName, $productDescription, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
                 mysqli_stmt_execute($stmt);
                 $productID = mysqli_stmt_insert_id($stmt);
                 mysqli_stmt_close($stmt);
@@ -171,6 +178,11 @@ if (isset($_POST['productAdd'])) {
                     <div class="d-flex flex-row"><label for="addProductStock" class="form-label">Stock</label><div class="required">*</div></div>
                     <input type="number" class="form-control" id="addProductStock" name="addProductStock">
                 </div>
+            </div>
+
+            <div class="mb-3">
+                <input type="checkbox" class="form-check-input" id="addProductAllowMultiplePurchases" name="addProductAllowMultiplePurchases">
+                <label class="form-check-label" for="addProductAllowMultiplePurchases">Allow multiple purchases?</label>
             </div>
 
             <div class="mb-3">

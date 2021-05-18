@@ -118,7 +118,7 @@ if (isset($_POST['imageBulkOption'])) {
 
                         <?php
                         // Limit for images per page
-                        $limit = 1;
+                        $limit = 50;
 
 
                         /** Filter images by title and/or by chosen date **/

@@ -1,14 +1,20 @@
 <?php
 require_once('common/header.php');
 ?>
-<h1>Hello, world!</h1>
 
 
 
 
 
 
+<?php
 
+if (isset($_GET['productID']) && is_numeric($_GET['productID']) && isset($_GET['categoryID']) && is_numeric($_GET['categoryID'])) {
+    include 'single_product.php';
+} else {
+    include 'category.php';
+}
+?>
 
 
 
