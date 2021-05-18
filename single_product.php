@@ -89,8 +89,11 @@ $errors = [];
                             <h1 class="product-name"><?=$name?></h1>
                             <span class="product-price">
                                 <?php
-                                if ($priceSale == -1) {
-                                    echo '<strong>'.$price.' $</strong>';
+                                if ($priceSale > -1) {
+                                    echo "<span class='price-crossed text-muted me-1'>" . $price . "$</span>";
+                                    echo "<span class='price'>" . $priceSale . "$</span>";
+                                } else {
+                                    echo "<span class='price'>" . $price . "$</span>";
                                 }
                                 ?>
                             </span>

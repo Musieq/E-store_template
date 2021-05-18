@@ -42,8 +42,19 @@
     }
 
     .product-price {
-      font-size: 2rem;
-      color: $mainThemeColor;
+      display: flex;
+
+      .price-crossed {
+        text-decoration: line-through;
+        margin-bottom: auto;
+        font-size: 1.25rem;
+      }
+
+      .price {
+        font-size: 1.6rem;
+        color: $mainThemeColor;
+        font-weight: 500;
+      }
     }
 
     .product-add-to-cart {
