@@ -1,6 +1,6 @@
 <?php
 require_once ("../common/db_connection.php");
-require_once ("common/functions.php");
+require_once ("../common/functions.php");
 // Limit for images per page
 $limit = 50;
 
