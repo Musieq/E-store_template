@@ -6,14 +6,14 @@ $errors = [];
 
 <div class="container-fluid container-xl mt-3">
     <div class="row">
-        <div class="col-12">
+<!--        <div class="col-12">
             <div class="current-location mb-3">
                 <?php
-                $categoryID = $_GET['categoryID'];
+/*                $categoryID = $_GET['categoryID'];
                 displayCurrentLocation($categoryID, $db);
-                ?>
+                */?>
             </div>
-        </div>
+        </div>-->
 
         <?php
         /** Get product **/
