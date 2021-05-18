@@ -48,7 +48,7 @@ $pages =  ceil($productCount / $limit);
                 }
                 ?>
 
-                <ul class="nav flex-column">
+                <ul class="nav flex-column categories">
                 <?php
                 if (isset($_GET['categoryID'])) {
                     $parentID = $_GET['categoryID'];

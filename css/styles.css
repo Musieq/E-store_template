@@ -380,7 +380,7 @@ ul.product-images nav {
   }
 }
 .products .product-wrapper > a .image-wrapper {
-  min-width: 75%;
+  min-width: 85%;
   min-height: 200px;
   margin-left: auto;
   margin-right: auto;
@@ -427,6 +427,18 @@ ul.product-images nav {
   font-size: 1.3rem;
   color: #097d1e;
   font-weight: 500;
+}
+
+a.categories-back {
+  color: black;
+}
+
+ul.nav.categories li {
+  margin-bottom: 0.25rem;
+}
+ul.nav.categories li a {
+  color: black;
+  padding: 0;
 }
 
 /* Root */
