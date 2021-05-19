@@ -12,14 +12,11 @@ if (isset($_POST['categoryEdit']) && is_numeric($editCatID)) {
     if (!empty($editCatName)) {
         $editCatSlug = $_POST['EditCategorySlug'];
         $editCatParent = $_POST['EditCategoryParent'];
-        $editCatDefault = isset($_POST['editCategoryDefault']) ?  1 : 0;
 
-        if ($editCatDefault == 0) {
-            mysqli_query($db, "UPDATE categories SET category_name = '$editCatName', category_slug = '$editCatSlug', parent_id = $editCatParent WHERE category_id = $editCatID");
-        } else {
-            mysqli_query($db, "UPDATE categories SET is_default = 0 WHERE is_default = 1");
-            mysqli_query($db, "UPDATE categories SET category_name = '$editCatName', category_slug = '$editCatSlug', parent_id = $editCatParent, is_default = $editCatDefault WHERE category_id = $editCatID");
-        }
+
+
+        mysqli_query($db, "UPDATE categories SET category_name = '$editCatName', category_slug = '$editCatSlug', parent_id = $editCatParent WHERE category_id = $editCatID");
+
 
         $success = true;
 
@@ -33,7 +30,7 @@ if (isset($_POST['categoryEdit']) && is_numeric($editCatID)) {
 if (!is_numeric($editCatID)) {
     array_push($errors, "Given category ID isn't a numeric value.");
 } else {
-    $editCatQuery = mysqli_query($db, "SELECT parent_id, category_name, category_slug, is_default FROM categories WHERE category_id = $editCatID");
+    $editCatQuery = mysqli_query($db, "SELECT parent_id, category_name, category_slug FROM categories WHERE category_id = $editCatID");
     $editCatResult = mysqli_fetch_assoc($editCatQuery);
 }
 
@@ -89,15 +86,6 @@ if (!is_numeric($editCatID)) {
                 </select>
                 <div id="parentHelp" class="form-text">Choose parent category to create hierarchy.</div>
             </div>
-
-            <?php
-            if (is_numeric($editCatID)) :
-            if ($editCatResult['is_default'] == 0) : ?>
-            <div class="mb-3 form-check">
-                <input type="checkbox" class="form-check-input" id="editCategoryDefault" name="editCategoryDefault">
-                <label class="form-check-label" for="editCategoryDefault">Set to default category</label>
-            </div>
-            <?php endif; endif; ?>
 
             <button type="submit" class="btn btn-primary" name="categoryEdit">Submit</button>
         </form>
