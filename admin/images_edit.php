@@ -23,6 +23,7 @@ if (isset($_POST['editImageButton'])) {
 $getImageTitle = '';
 $getImageAlt = '';
 $getImagePath = '';
+$getScaledImage = '';
 
 if (is_numeric($editImageID)) {
     $editImageQuery = mysqli_query($db, "SELECT title, alt, path FROM images WHERE id = $editImageID");
@@ -73,7 +74,9 @@ if (is_numeric($editImageID)) {
                 <span id="image-upload-text" class="text-muted">
                     Image preview
                 </span>
+                <?php if ($getImagePath != '' && $getScaledImage != '') :?>
                 <a href="../<?=$getImagePath?>"><img class="image-preview" src="../<?=$getScaledImage?>"></a>
+                <?php endif; ?>
             </div>
 
             <div class="mb-3">
