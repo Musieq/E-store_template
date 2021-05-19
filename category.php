@@ -101,8 +101,8 @@ $pages =  ceil($productCount / $limit);
                 // Show found products
                 $query = $_GET['query'];
                 $query = '%'.$query.'%';
-                $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE published = 1 AND name LIKE ? ORDER BY id DESC LIMIT $limit OFFSET $offset");
-                mysqli_stmt_bind_param($stmt, 's', $query);
+                $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE published = 1 AND (name LIKE ? OR tags LIKE ?) ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                mysqli_stmt_bind_param($stmt, 'ss', $query, $query);
                 mysqli_stmt_execute($stmt);
                 $productsQuery = mysqli_stmt_get_result($stmt);
                 mysqli_stmt_close($stmt);

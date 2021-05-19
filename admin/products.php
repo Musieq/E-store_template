@@ -159,17 +159,17 @@ if (isset($_POST['productBulkOption'])) {
                             $stmtCount = mysqli_prepare($db, "SELECT products.id FROM products, product_category WHERE products.published = ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id");
                             mysqli_stmt_bind_param($stmtCount, "ii", $productFilterPublished, $productFilterCategory);
                         } elseif ($productFilterPublished == -1 && $productFilterName != '') {
-                            $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE products.name LIKE ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($stmt, "si", $productFilterName, $productFilterCategory);
+                            $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE (products.name LIKE ? OR products.tags LIKE ?) AND product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($stmt, "ssi", $productFilterName, $productFilterName, $productFilterCategory);
 
-                            $stmtCount = mysqli_prepare($db, "SELECT products.id FROM products, product_category WHERE products.name LIKE ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id");
-                            mysqli_stmt_bind_param($stmtCount, "si", $productFilterName, $productFilterCategory);
+                            $stmtCount = mysqli_prepare($db, "SELECT products.id FROM products, product_category WHERE (products.name LIKE ? OR products.tags LIKE ?) AND product_category.category_id LIKE ? AND products.id = product_category.product_id");
+                            mysqli_stmt_bind_param($stmtCount, "ssi", $productFilterName, $productFilterName, $productFilterCategory);
                         } elseif ($productFilterPublished != -1 && $productFilterName != '') {
-                            $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE products.name LIKE ? AND products.published = ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($stmt, "sii", $productFilterName, $productFilterPublished, $productFilterCategory);
+                            $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE (products.name LIKE ? OR products.tags LIKE ?) AND products.published = ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($stmt, "ssii", $productFilterName, $productFilterName, $productFilterPublished, $productFilterCategory);
 
-                            $stmtCount = mysqli_prepare($db, "SELECT products.id FROM products, product_category WHERE products.name LIKE ? AND products.published = ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id");
-                            mysqli_stmt_bind_param($stmtCount, "sii", $productFilterName, $productFilterPublished, $productFilterCategory);
+                            $stmtCount = mysqli_prepare($db, "SELECT products.id FROM products, product_category WHERE (products.name LIKE ? OR products.tags LIKE ?) AND products.published = ? AND product_category.category_id LIKE ? AND products.id = product_category.product_id");
+                            mysqli_stmt_bind_param($stmtCount, "ssii", $productFilterName, $productFilterName, $productFilterPublished, $productFilterCategory);
                         } else {
                             $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
                             mysqli_stmt_bind_param($stmt, "i",$productFilterCategory);
@@ -185,17 +185,17 @@ if (isset($_POST['productBulkOption'])) {
                             $stmtCount = mysqli_prepare($db, "SELECT id FROM products WHERE published = ?");
                             mysqli_stmt_bind_param($stmtCount, "i", $productFilterPublished);
                         } elseif ($productFilterPublished == -1 && $productFilterName != '') {
-                            $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE products.name LIKE ? ORDER BY id DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($stmt, "s", $productFilterName);
+                            $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE (products.name LIKE ? OR products.tags LIKE ?) ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($stmt, "ss", $productFilterName, $productFilterName);
 
-                            $stmtCount = mysqli_prepare($db, "SELECT id FROM products WHERE name LIKE ?");
-                            mysqli_stmt_bind_param($stmtCount, "s", $productFilterName);
+                            $stmtCount = mysqli_prepare($db, "SELECT id FROM products WHERE (name LIKE ? OR products.tags LIKE ?)");
+                            mysqli_stmt_bind_param($stmtCount, "ss", $productFilterName, $productFilterName);
                         } elseif ($productFilterPublished != -1 && $productFilterName != '') {
-                            $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE name LIKE ? AND published = ? ORDER BY id DESC LIMIT $limit OFFSET $offset");
-                            mysqli_stmt_bind_param($stmt, "si", $productFilterName, $productFilterPublished);
+                            $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE (name LIKE ? OR products.tags LIKE ?) AND published = ? ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                            mysqli_stmt_bind_param($stmt, "ssi", $productFilterName, $productFilterName, $productFilterPublished);
 
-                            $stmtCount = mysqli_prepare($db, "SELECT id FROM products WHERE name LIKE ? AND published = ?");
-                            mysqli_stmt_bind_param($stmtCount, "si", $productFilterName, $productFilterPublished);
+                            $stmtCount = mysqli_prepare($db, "SELECT id FROM products WHERE (name LIKE ? OR products.tags LIKE ?) AND published = ?");
+                            mysqli_stmt_bind_param($stmtCount, "ssi", $productFilterName, $productFilterName, $productFilterPublished);
                         } else {
                             $stmt = mysqli_prepare($db, "SELECT * FROM products ORDER BY id DESC LIMIT $limit OFFSET $offset");
 
