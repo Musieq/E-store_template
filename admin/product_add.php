@@ -8,6 +8,7 @@ if (isset($_POST['productAdd'])) {
 
         $productImages = $_POST['productImagesInput'];
         $productDescription = $_POST['productDescription'];
+        $productTags = $_POST['productTags'];
         $productCategories = $_POST['addProductCategory'] ?? 0;  // array with categories
         $productPrice = $_POST['addProductPrice'];
         $productSalePrice = $_POST['addProductSalePrice'];
@@ -31,8 +32,8 @@ if (isset($_POST['productAdd'])) {
 
 
             // Insert into product table
-                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "ssiiiiiis", $productName, $productDescription, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
+                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, tags, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                mysqli_stmt_bind_param($stmt, "sssiiiiiis", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
                 mysqli_stmt_execute($stmt);
                 $productID = mysqli_stmt_insert_id($stmt);
                 mysqli_stmt_close($stmt);
@@ -120,6 +121,12 @@ if (isset($_POST['productAdd'])) {
             <div class="mb-3">
                 <label for="productDescription" class="form-label">Product description</label>
                 <textarea name="productDescription" id="productDescription"></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="productTags" class="form-label">Product tags</label>
+                <input type="text" class="form-control" id="productTags" name="productTags" aria-describedby="productTagsHelp">
+                <div id="productTagsHelp" class="form-text">Separate tags with commas. Tags are used for searching products.</div>
             </div>
 
             <div class="mb-3">

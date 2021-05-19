@@ -6,6 +6,7 @@ $editProductID = $_GET['editProductID'];
 // Init variables
 $productName = '';
 $productDescription = '';
+$productTags = '';
 $productPrice = '';
 $productPriceSale = '';
 $stockManage = '';
@@ -24,6 +25,7 @@ if (isset($_POST['productEdit'])) {
 
         $productImages = $_POST['productImagesInput'];
         $productDescription = $_POST['productDescription'];
+        $productTags = $_POST['productTags'];
         $productCategories = $_POST['addProductCategory'] ?? 0;  // array with categories
         $productPrice = $_POST['editProductPrice'];
         $productSalePrice = $_POST['editProductSalePrice'];
@@ -47,8 +49,8 @@ if (isset($_POST['productEdit'])) {
 
 
             // Update products
-            $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "ssiiiiiiii", $productName, $productDescription, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
+            $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, tags = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "sssiiiiiiii", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 
@@ -109,6 +111,7 @@ if (is_numeric($editProductID)) {
     while ($row = mysqli_fetch_assoc($productResults)) {
         $productName = $row['name'];
         $productDescription = $row['description'];
+        $productTags = $row['tags'];
         $productPrice = $row['price'];
         $productPriceSale = $row['price_sale'];
         $stockManage = $row['stock_manage'];
@@ -226,6 +229,12 @@ if (is_numeric($editProductID)) {
             <div class="mb-3">
                 <label for="productDescription" class="form-label">Product description</label>
                 <textarea name="productDescription" id="productDescription"><?=$productDescription?></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label for="productTags" class="form-label">Product tags</label>
+                <input type="text" class="form-control" id="productTags" name="productTags" aria-describedby="productTagsHelp" value="<?=$productTags?>">
+                <div id="productTagsHelp" class="form-text">Separate tags with commas. Tags are used for searching products.</div>
             </div>
 
             <div class="mb-3">
