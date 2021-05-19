@@ -2,19 +2,18 @@
 $errors = [];
 $success = false;
 
-// TODO multiple purchases of 1 product
 if (isset($_POST['productAdd'])) {
     $productName = $_POST['addProductName'];
     if (!empty($productName)) {
 
-        $productImages = $_POST['addProductImages'];
-        $productDescription = $_POST['addProductDescription'];
+        $productImages = $_POST['productImagesInput'];
+        $productDescription = $_POST['productDescription'];
         $productCategories = $_POST['addProductCategory'] ?? 0;  // array with categories
         $productPrice = $_POST['addProductPrice'];
         $productSalePrice = $_POST['addProductSalePrice'];
         $productSalePrice = $productSalePrice > 0 ? $productSalePrice: -1;
         if (!empty($productPrice) && is_numeric($productPrice) && is_numeric($productSalePrice)) {
-            $productManageStock = $_POST['addProductManageStock'] ?? 0;
+            $productManageStock = $_POST['productManageStock'] ?? 0;
             if ($productManageStock) {
                 $productManageStock = 1;
                 $addProductStockStatus = -1;
@@ -112,36 +111,21 @@ if (isset($_POST['productAdd'])) {
                 </div>
                 <div class="container-images-draggable">
                     <ul id="containerImagesDraggable" class="selected-product-images"></ul>
-                    <input type="hidden" id="addProductImages" name="addProductImages" value="">
+                    <input type="hidden" id="productImagesInput" name="productImagesInput" value="">
                 </div>
 
                 <a href="#" id="showProductImagesModal">Select product images</a>
             </div>
 
             <div class="mb-3">
-                <label for="addProductDescription" class="form-label">Product description</label>
-                <textarea name="addProductDescription" id="addProductDescription"></textarea>
+                <label for="productDescription" class="form-label">Product description</label>
+                <textarea name="productDescription" id="productDescription"></textarea>
             </div>
 
             <div class="mb-3">
                 <label for="addProductCategory" class="form-label">Product categories</label>
                 <ul id="addProductCategory" class="select-product-category list-unstyled">
                 <?php
-                function categoriesHierarchyInProducts($db, $currentParentID, $parentID = 0, $hierarchy = '') {
-                    $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
-
-                    if (mysqli_num_rows($categoriesQuery) > 0) {
-                        while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
-                            ?>
-                            <li>
-                                <input type="checkbox" class="form-check-input" id="addProductCategory-<?=$categoriesResult['category_id']?>" name="addProductCategory[]" value="<?=$categoriesResult['category_id']?>">
-                                <label class="form-check-label" for="addProductCategory-<?=$categoriesResult['category_id']?>"><?=$hierarchy.$categoriesResult['category_name']?></label>
-                            </li>
-                            <?php
-                            categoriesHierarchyInProducts($db, $currentParentID, $categoriesResult['category_id'], $hierarchy.'—');
-                        }
-                    }
-                }
                 categoriesHierarchyInProducts($db, 0)
                 ?>
                 </ul>
@@ -161,8 +145,8 @@ if (isset($_POST['productAdd'])) {
 
 
             <div class="mb-3">
-                <input type="checkbox" class="form-check-input" id="addProductManageStock" name="addProductManageStock">
-                <label class="form-check-label" for="addProductManageStock">Manage stock?</label>
+                <input type="checkbox" class="form-check-input" id="productManageStock" name="productManageStock">
+                <label class="form-check-label" for="productManageStock">Manage stock?</label>
             </div>
 
             <div class="mb-3">

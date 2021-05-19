@@ -39,7 +39,9 @@ require_once('common/header.php');
 
 
             case 'products':
-                if(isset($_GET['addProduct'])) {
+                if (isset($_GET['editProductID'])) {
+                    include 'product_edit.php';
+                } elseif (isset($_GET['addProduct'])) {
                     include 'product_add.php';
                 } else {
                     include 'products.php';
