@@ -96,7 +96,7 @@ if (isset($_POST['imageBulkOption'])) {
             </div>
 
             <div class="col-12">
-                <button type="button" class="btn btn-primary" name="imageBulkDelete" onclick="bulkDeleteModal('imageBulkDeleteForm', 'imageBulkOption')">Submit</button>
+                <button type="button" class="btn btn-primary" name="imageBulkDelete" onclick="bulkDeleteModal('imageBulkDeleteForm', 'imageBulkOption', 'modalImageDeleteWarning', 'deleteImageConfirm')">Submit</button>
             </div>
 
 

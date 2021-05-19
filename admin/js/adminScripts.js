@@ -45,13 +45,13 @@ function selectCheckboxes(checkboxSelectAllID, checkboxSelectName) {
 
 
 /** Show modal when bulk deleting images **/
-function bulkDeleteModal(formID, selectID) {
+function bulkDeleteModal(formID, selectID, modalID, confirmBtnID) {
     const form = document.getElementById(formID);
     const select = document.getElementById(selectID).value;
 
     if (select == 1) {
-        new bootstrap.Modal(document.getElementById('modalImageDeleteWarning')).toggle();
-        document.getElementById('deleteImageConfirm').onclick = function () {
+        new bootstrap.Modal(document.getElementById(modalID)).toggle();
+        document.getElementById(confirmBtnID).onclick = function () {
             form.submit();
         }
     }
