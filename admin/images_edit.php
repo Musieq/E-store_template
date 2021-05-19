@@ -6,12 +6,16 @@ $editImageID = $_GET['editImageID'];
 
 /** Update image info **/
 if (isset($_POST['editImageButton'])) {
-    $editImageAlt = $_POST['editImageAlt'];
-    $editImageTitle = $_POST['editImageTitle'];
+    if (is_numeric($editImageID)) {
+        $editImageAlt = $_POST['editImageAlt'];
+        $editImageTitle = $_POST['editImageTitle'];
 
-    mysqli_query($db, "UPDATE images SET title = '$editImageTitle', alt = '$editImageAlt' WHERE id = $editImageID");
+        mysqli_query($db, "UPDATE images SET title = '$editImageTitle', alt = '$editImageAlt' WHERE id = $editImageID");
 
-    $success = true;
+        $success = true;
+    } else {
+        array_push($errors, "Given image ID isn't a numeric value.");
+    }
 }
 
 
