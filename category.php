@@ -84,7 +84,7 @@ $pages =  ceil($productCount / $limit);
         <div class="products">
 
             <?php
-
+            // TODO sort by price etc.
             if (isset($_GET['categoryID'])) {
                 $categoryID = $_GET['categoryID'];
                 if (is_numeric($categoryID)) {

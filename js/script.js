@@ -1,3 +1,4 @@
+/** Change product quantity with buttons **/
 (function () {
     const btnMinus = document.querySelector('.btn-step.minus');
     const btnPlus = document.querySelector('.btn-step.plus');

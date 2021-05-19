@@ -201,9 +201,6 @@ ul.selected-product-images {
   flex-direction: row;
   padding-inline-start: 0;
   flex-wrap: wrap;
-  /*  display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 10px;*/
 }
 ul.selected-product-images li.imageList {
   margin: 0.5rem;
@@ -256,6 +253,15 @@ ul.product-images div.admin-image-container {
 }
 ul.product-images nav {
   width: 100%;
+}
+
+/* Display products */
+div.admin-image-container {
+  width: 200px;
+  height: 112.5px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
 }
 
 /* Admin container and sidebar */
