@@ -39,7 +39,7 @@ $errors = [];
                 $published = $resArr['published'];
 
                 // check if product is published
-                if ($published == 1) {
+                if ($published == 1 || $_SESSION['userRole'] == 'admin') {
                     // get images for this product
                     $stmt = mysqli_prepare($db, "SELECT * FROM product_image_order WHERE product_id = ? ORDER BY image_order");
                     mysqli_stmt_bind_param($stmt, 'i', $productID);
