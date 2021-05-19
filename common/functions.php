@@ -373,4 +373,18 @@ function getImageFields($displayImagesResults): array {
         'imageUploadDate' => $uploadDate, 'path' => $path, 'extension' => $extension, 'fullPath' => $fullPath];
 }
 
+function categoriesHierarchyInProducts($db, $currentParentID, $parentID = 0, $hierarchy = '') {
+    $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
 
+    if (mysqli_num_rows($categoriesQuery) > 0) {
+        while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
+            ?>
+            <li>
+                <input type="checkbox" class="form-check-input" id="addProductCategory-<?=$categoriesResult['category_id']?>" name="addProductCategory[]" value="<?=$categoriesResult['category_id']?>">
+                <label class="form-check-label" for="addProductCategory-<?=$categoriesResult['category_id']?>"><?=$hierarchy.$categoriesResult['category_name']?></label>
+            </li>
+            <?php
+            categoriesHierarchyInProducts($db, $currentParentID, $categoriesResult['category_id'], $hierarchy.'—');
+        }
+    }
+}

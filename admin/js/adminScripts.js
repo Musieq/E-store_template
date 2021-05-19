@@ -140,10 +140,10 @@ ajaxFilterImages();
     const showModalBtn = document.getElementById('showProductImagesModal');
     const chooseImagesBtn = document.getElementById('chooseImagesBtn');
     const selectedImagesContainer = document.getElementById('containerImagesDraggable');
-    const imageInput = document.getElementById('addProductImages');
+    const imageInput = document.getElementById('productImagesInput');
 
     // Show modal on click
-    showModal()
+    showModal();
 
     // Add listener for submitting selected images
     if (!chooseImagesBtn) {
@@ -247,6 +247,7 @@ ajaxFilterImages();
             })
         })
     }
+    removeSelectedImage();
 
     function updateInputValue() {
         imageInput.value = '';
@@ -343,13 +344,13 @@ ajaxFilterImages();
         let cols = document.querySelectorAll('.selected-product-images .imageList');
         [].forEach.call(cols, addDnDHandlers);
     }
-
+    dragAndDrop();
 
 })();
 
 /** Display stock or stock status input fields depending on manage stock? checkbox **/
 (function () {
-    const manageStockCheckbox = document.getElementById('addProductManageStock');
+    const manageStockCheckbox = document.getElementById('productManageStock');
     const noStockManagement = document.getElementById('noStockManagement');
     const stockManagement = document.getElementById('stockManagement');
     if (!manageStockCheckbox || !noStockManagement || !stockManagement) {
@@ -369,7 +370,7 @@ ajaxFilterImages();
 
 
 /** Initialize CKEditor **/
-const CKEditorElement = document.querySelector( '#addProductDescription');
+const CKEditorElement = document.querySelector( '#productDescription');
 if (CKEditorElement) {
     ClassicEditor
         .create( CKEditorElement, {
