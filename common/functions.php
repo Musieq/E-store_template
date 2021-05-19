@@ -152,6 +152,7 @@ function deleteImage($db, $imageID) {
         mysqli_stmt_bind_param($stmt, 'i', $imageID);
         mysqli_stmt_execute($stmt);
         $stmtResults = mysqli_stmt_get_result($stmt);
+        mysqli_stmt_close($stmt);
         if (mysqli_num_rows($stmtResults) == 1) {
             $deleteImageResults = mysqli_fetch_assoc($stmtResults);
 
@@ -171,7 +172,11 @@ function deleteImage($db, $imageID) {
                 }
             }
 
-            // TODO remove connection to products in DB
+            // Delete from product_image_order
+            $stmt = mysqli_prepare($db, "DELETE FROM product_image_order WHERE image_id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $imageID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
             // 5. Delete DB entry
             $stmt = mysqli_prepare($db, "DELETE FROM images WHERE id = ?");
