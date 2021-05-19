@@ -145,8 +145,9 @@ if (isset($_POST['productAdd'])) {
 
 
             <div class="mb-3">
-                <input type="checkbox" class="form-check-input" id="productManageStock" name="productManageStock">
+                <input type="checkbox" class="form-check-input" id="productManageStock" name="productManageStock" aria-describedby="manageStockHelp">
                 <label class="form-check-label" for="productManageStock">Manage stock?</label>
+                <div id="manageStockHelp" class="form-text">Check if you want to input exact stock for this products.</div>
             </div>
 
             <div class="mb-3">
@@ -165,8 +166,9 @@ if (isset($_POST['productAdd'])) {
             </div>
 
             <div class="mb-3">
-                <input type="checkbox" class="form-check-input" id="addProductAllowMultiplePurchases" name="addProductAllowMultiplePurchases">
+                <input type="checkbox" class="form-check-input" id="addProductAllowMultiplePurchases" name="addProductAllowMultiplePurchases" aria-describedby="multipleHelp">
                 <label class="form-check-label" for="addProductAllowMultiplePurchases">Allow multiple purchases?</label>
+                <div id="multipleHelp" class="form-text">Check if you want to allow clients to select quantity when purchasing this product.</div>
             </div>
 
             <div class="mb-3">
