@@ -115,7 +115,7 @@ if (isset($_GET['deleteCatID'])) {
                     <tr>
                         <th scope="col">Name</th>
                         <th scope="col">Slug</th>
-                        <th scope="col">Count</th>
+                        <th scope="col">Products</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
                     </tr>
@@ -128,11 +128,14 @@ if (isset($_GET['deleteCatID'])) {
 
                     if (mysqli_num_rows($categoriesQuery) > 0) {
                         while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
+                            $curCatID = $categoriesResult['category_id'];
+                            $productCountQuery = mysqli_query($db, "SELECT product_id FROM product_category WHERE category_id = $curCatID");
+                            $productCount = mysqli_num_rows($productCountQuery);
                             ?>
                             <tr>
                                 <td><?php echo $hierarchy.' '.$categoriesResult['category_name']; ?></td>
                                 <td><?php echo $categoriesResult['category_slug'] ?></td>
-                                <td>count</td> <!-- TODO count how many products are in this category -->
+                                <td><?=$productCount?></td>
                                 <td><a href="index.php?source=categories&editCatID=<?php echo $categoriesResult['category_id'] ?>">Edit</a></td>
                                 <td><a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>" class="link-danger delete-category-link" data-bs-toggle="modal" data-bs-target="#modalCatDeleteWarning">Delete</a></td>
                             </tr>
