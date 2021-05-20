@@ -50,7 +50,7 @@ if (isset($_POST['productEdit'])) {
 
             // Update products
             $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, tags = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssiiiiiiii", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
+            mysqli_stmt_bind_param($stmt, "sssddiiiiii", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
 

@@ -33,7 +33,7 @@ if (isset($_POST['productAdd'])) {
 
             // Insert into product table
                 $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, tags, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "sssiiiiiis", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
+                mysqli_stmt_bind_param($stmt, "sssddiiiis", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
                 mysqli_stmt_execute($stmt);
                 $productID = mysqli_stmt_insert_id($stmt);
                 mysqli_stmt_close($stmt);

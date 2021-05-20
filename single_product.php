@@ -1,7 +1,20 @@
 <?php
 $errors = [];
 
+/** Add to cart **/
+if(isset($_POST['productAddToCart'])) {
+    $productQuantity = 1;
+    if (isset($_POST['quantity'])) {
+        $productQuantity = $_POST['quantity'];
+    }
+    $productID = $_GET['productID'];
+    if (isset($_SESSION['cart'])) {
+        $_SESSION['cart'][$productID] = $productQuantity;
+    } else {
+        $_SESSION['cart'] = [$productID => $productQuantity];
+    }
 
+}
 ?>
 
 <div class="container-fluid container-xl mt-3">
@@ -98,13 +111,14 @@ $errors = [];
                                 ?>
                             </span>
 
-                            <form class="product-add-to-cart" action="#" method="post">
+                            <form id="addToCartForm" class="product-add-to-cart" action="index.php?<?php echo http_build_query($_GET) ?>" method="post">
                                 <?php
                                 if (($stockManage == 1 && $stock > 1 && $allowMultiplePurchases == 1 ) || ($stockManage == 0 && $stockStatus == 1 && $allowMultiplePurchases == 1)) :
+                                    $max = $stock == -1 ? 1 : $stock;
                                 ?>
                                 <div class="d-flex flex-row mb-3">
                                     <input class="btn btn-primary btn-step minus" type="button" value="-">
-                                    <input type="number" id="productQuantity" class="product-quantity form-control" step="1" min="1" max="<?=$stock?>" name="quantity" value="1" aria-label="Quantity">
+                                    <input type="number" id="productQuantity" class="product-quantity form-control" step="1" min="1" max="<?=$max?>" name="quantity" value="1" aria-label="Quantity">
                                     <input class="btn btn-primary btn-step plus" type="button" value="+">
                                 </div>
                                 <?php
@@ -155,3 +169,20 @@ $errors = [];
     </div>
 </div>
 
+<div class="modal fade" tabindex="-1" id="modalAddedToCart" aria-labelledby="modalAddedToCartTitle" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAddedToCartTitle">Product added</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>You have added this product to a cart.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="index.php?source=cart" class="btn btn-primary">Go to cart</a>
+            </div>
+        </div>
+    </div>
+</div>
