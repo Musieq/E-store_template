@@ -1,5 +1,13 @@
 .products {
 
+  .products-top-bar {
+    display: flex;
+
+    :last-child {
+      margin-left: auto;
+    }
+  }
+
   .product-wrapper {
     padding: 1rem;
     border-radius: 0.5rem;
@@ -15,7 +23,7 @@
 
       .image-wrapper {
         min-width: 85%;
-        min-height: 200px;
+        min-height: 140.625px;
         margin-left: auto;
         margin-right: auto;
 

@@ -8,6 +8,28 @@ $productCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM products WHERE pub
 $productCount = mysqli_fetch_array($productCountQuery)[0];
 $pages =  ceil($productCount / $limit);
 
+
+function sortBy(): string {
+    $order = '';
+    if (isset($_GET['order'])) {
+        $order = $_GET['order'];
+    }
+    switch ($order) {
+        case 'price':
+            $prepQuery = " ORDER BY curPrice";
+            break;
+
+        case 'priceDesc':
+            $prepQuery = " ORDER BY curPrice DESC";
+            break;
+
+        default:
+            $prepQuery = " ORDER BY id DESC";
+            break;
+    }
+
+    return $prepQuery;
+}
 ?>
 
 <div class="container-fluid container-xl mt-3">
@@ -83,13 +105,18 @@ $pages =  ceil($productCount / $limit);
     <div class="col-lg-8">
         <div class="products">
 
+            <div class="products-top-bar">
             <?php
+
             // TODO sort by price etc.
             if (isset($_GET['categoryID'])) {
                 $categoryID = $_GET['categoryID'];
                 if (is_numeric($categoryID)) {
                     // Show products from this category
-                    $stmt = mysqli_prepare($db, "SELECT * FROM products, product_category WHERE products.published = 1 AND product_category.category_id LIKE ? AND products.id = product_category.product_id ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                    $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products, product_category WHERE products.published = 1 AND product_category.category_id LIKE ? AND products.id = product_category.product_id";
+                    $prepQuery .= sortBy();
+                    $prepQuery .= " LIMIT $limit OFFSET $offset";
+                    $stmt = mysqli_prepare($db, $prepQuery);
                     mysqli_stmt_bind_param($stmt, 'i', $categoryID);
                     mysqli_stmt_execute($stmt);
                     $productsQuery = mysqli_stmt_get_result($stmt);
@@ -100,8 +127,12 @@ $pages =  ceil($productCount / $limit);
             } elseif (isset($_GET['query'])) {
                 // Show found products
                 $query = $_GET['query'];
+                echo "<h2 class='mb-3'>Search results for: $query</h2>";
                 $query = '%'.$query.'%';
-                $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE published = 1 AND (name LIKE ? OR tags LIKE ?) ORDER BY id DESC LIMIT $limit OFFSET $offset");
+                $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products WHERE published = 1 AND (name LIKE ? OR tags LIKE ?)";
+                $prepQuery .= sortBy();
+                $prepQuery .= " LIMIT $limit OFFSET $offset";
+                $stmt = mysqli_prepare($db, $prepQuery);
                 mysqli_stmt_bind_param($stmt, 'ss', $query, $query);
                 mysqli_stmt_execute($stmt);
                 $productsQuery = mysqli_stmt_get_result($stmt);
@@ -109,9 +140,32 @@ $pages =  ceil($productCount / $limit);
             } else {
                 // Show all newest products
                 echo "<h2 class='mb-3'>Recent products</h2>";
-                $productsQuery = mysqli_query($db, "SELECT * FROM products WHERE published = 1 ORDER BY id DESC LIMIT $limit OFFSET $offset");
-
+                $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products WHERE published = 1";
+                $prepQuery .= sortBy();
+                $prepQuery .= " LIMIT $limit OFFSET $offset";
+                $productsQuery = mysqli_query($db, $prepQuery);
             }
+
+            ?>
+            <form action="index.php" method="get">
+                <?php
+                foreach ($_GET as $key => $value) {
+                    if ($key != 'page' || $key != 'order') {
+                        echo "<input type='hidden' name='$key' value='$value'>";
+                    }
+                }
+                ?>
+                <div class="mb-3">
+                    <label for="order" class="form-label">Sort by</label>
+                    <select class="form-select" id="order" name="order" onchange="this.form.submit()">
+                        <option value="id" <?php if (isset($_GET['order']) && $_GET['order'] == 'id') echo 'selected'; ?>>Newest products</option>
+                        <option value="price" <?php if (isset($_GET['order']) && $_GET['order'] == 'price') echo 'selected'; ?>>Price low to high</option>
+                        <option value="priceDesc" <?php if (isset($_GET['order']) && $_GET['order'] == 'priceDesc') echo 'selected'; ?>>Price high to low</option>
+                    </select>
+                </div>
+            </form>
+            </div>
+            <?php
 
 
             if (mysqli_num_rows($productsQuery) > 0) {

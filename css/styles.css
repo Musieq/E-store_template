@@ -370,6 +370,12 @@ div.admin-image-container {
   -moz-appearance: textfield;
 }
 
+.products .products-top-bar {
+  display: flex;
+}
+.products .products-top-bar :last-child {
+  margin-left: auto;
+}
 .products .product-wrapper {
   padding: 1rem;
   border-radius: 0.5rem;
@@ -387,7 +393,7 @@ div.admin-image-container {
 }
 .products .product-wrapper > a .image-wrapper {
   min-width: 85%;
-  min-height: 200px;
+  min-height: 140.625px;
   margin-left: auto;
   margin-right: auto;
 }
