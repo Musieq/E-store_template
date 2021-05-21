@@ -135,6 +135,19 @@ display: flex;
 
               div.tab-content {
                 padding: 1.5rem 2rem;
+                position: relative;
+
+                .tab-exit-container {
+                  position: absolute;
+                  top: 1rem;
+                  right: 2rem;
+                }
+
+                .callout {
+                  p:last-of-type {
+                    margin-bottom: 0;
+                  }
+                }
               }
             }
           }

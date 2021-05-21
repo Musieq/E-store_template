@@ -2,6 +2,8 @@
 require_once('../common/db_connection.php');
 require_once ('../common/functions.php');
 
+$errors = [];
+
 if(!isset($_SESSION['userRole']) || $_SESSION['userRole'] != 'admin') {
     header("Location: ../index.php");
     exit;

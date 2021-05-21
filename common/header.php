@@ -2,10 +2,21 @@
 require_once ('common/db_connection.php');
 require_once ('common/functions.php');
 
+$loginErrors = [];
+$registerErrors = [];
+
 // Include login/register page when not logged in.
 if (!isset($_SESSION['userID'])) {
     require_once ('common/login.php');
     require_once ('common/register.php');
+
+    ?>
+    <script>
+        /** Get login/register errors **/
+        let loginErrors = <?php echo json_encode($loginErrors); ?>;
+        let registerErrors = <?php echo json_encode($registerErrors); ?>;
+    </script>
+<?php
 }
 
 if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 1800)) {
@@ -42,7 +53,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
 
         <div class="order-4 order-lg-1">
-            <form class="d-flex" method="get" action="index.php">
+            <form class="d-flex" method="get" action="index.php" style="margin-block-end: 0;">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
                 <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
@@ -73,7 +84,6 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
 
                     <?php
-                    // TODO move to login.php / register.php and include
                     if (!isset($_SESSION['userID'])) :
                     ?>
 
@@ -92,18 +102,26 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                 </ul>
 
                                 <div class="tab-content" id="myTabContent">
+
+                                    <div class="tab-exit-container">
+                                        <button type="button" class="btn-close" id="closeLoginWindow"></button>
+                                    </div>
+
                                     <div class="tab-pane fade show active" id="login" role="tabpanel" aria-labelledby="login-tab">
 
+                                        <?php
+                                        displayErrors($loginErrors);
+                                        ?>
 
                                         <h1 class="text-center">Login</h1>
-                                        <form method="post" action="">
+                                        <form method="post" action="index.php?<?=http_build_query($_GET)?>">
                                             <div class="mb-3">
                                                 <label for="loginEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail">
+                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="loginPassword" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="loginPassword" name="loginPassword">
+                                                <input type="password" class="form-control" id="loginPassword" name="loginPassword" minlength="7" required>
                                             </div>
                                             <div class="mb-3 form-check">
                                                 <input type="checkbox" class="form-check-input" id="loginRememberMe" name="loginRememberMe">
@@ -117,17 +135,21 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
                                     <div class="tab-pane fade" id="register" role="tabpanel" aria-labelledby="register-tab">
 
+                                        <?php
+                                        displayErrors($registerErrors);
+                                        ?>
+
                                         <!-- TODO validate form -->
                                         <!-- TODO autocomplete dla formularzy / https://developers.google.com/web/fundamentals/design-and-ux/input/forms -->
                                         <h1 class="text-center">Register</h1>
                                         <form method="post" action="">
                                             <div class="mb-3">
                                                 <label for="registerEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail">
+                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="registerPassword" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="registerPassword" name="registerPassword">
+                                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" minlength="7" required>
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm">
@@ -165,8 +187,8 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                             </div>
 
                                             <div class="mb-3 form-check">
-                                                <input type="checkbox" class="form-check-input" id="registerAgree" name="registerAgree">
-                                                <label class="form-check-label" for="registerAgree">I agree to to the terms of service</label>
+                                                <input type="checkbox" class="form-check-input" id="registerAgree" name="registerAgree" required>
+                                                <label class="form-check-label" for="registerAgree">I agree to the terms of service</label>
                                             </div>
 
                                             <button type="submit" class="btn btn-primary" name="btnRegister">Register</button>
@@ -183,7 +205,6 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                     else :
                     ?>
 
-                    <!-- TODO my account links on hover -->
 
                     <div class="my-account-links shadow">
                         <ul>

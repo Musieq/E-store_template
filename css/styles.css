@@ -124,6 +124,15 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper .my-account-login-wra
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper .my-account-login-wrap .my-account-login-form-wrap .my-account-login-form div.tab-content {
   padding: 1.5rem 2rem;
+  position: relative;
+}
+nav.navbar div.navbar-no-collapse ul li.my-account-wrapper .my-account-login-wrap .my-account-login-form-wrap .my-account-login-form div.tab-content .tab-exit-container {
+  position: absolute;
+  top: 1rem;
+  right: 2rem;
+}
+nav.navbar div.navbar-no-collapse ul li.my-account-wrapper .my-account-login-wrap .my-account-login-form-wrap .my-account-login-form div.tab-content .callout p:last-of-type {
+  margin-bottom: 0;
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links {
   position: absolute;

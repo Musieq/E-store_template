@@ -3,8 +3,6 @@
 
 if (isset($_POST['btnRegister'])) {
 
-    $errors = [];
-
     $email = $_POST['registerEmail'];
     $password = $_POST['registerPassword'];
     $firstName = $_POST['registerFirstName'];
@@ -17,12 +15,19 @@ if (isset($_POST['btnRegister'])) {
     $agreement = '';
     if(isset($_POST['registerAgree'])) { $agreement = $_POST['registerAgree']; };
 
-    // TODO variable vaildation
 
     // Check for required fields
-    if (empty($email)) { array_push($errors, 'Email is required'); }
-    if (empty($password)) { array_push($errors, 'Password is required'); }
-    if (!$agreement) { array_push($errors, 'You have to accept our regulamin'); }
+    if (empty($email)) { array_push($registerErrors, 'Email is required'); }
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        array_push($registerErrors, 'Invalid email');
+    }
+
+    if (empty($password)) { array_push($registerErrors, 'Password is required'); }
+    if (strlen($password) < 7) {
+        array_push($registerErrors, 'Password is too short');
+    }
+
+    if (!$agreement) { array_push($registerErrors, 'You have to accept our terms of service'); }
 
     // Check if email exists
     $stmt = mysqli_prepare($db, "SELECT COUNT(email) FROM users WHERE email=?");
@@ -33,13 +38,13 @@ if (isset($_POST['btnRegister'])) {
     mysqli_stmt_fetch($stmt);
 
     if ($result > 0) {
-        array_push($errors, 'User with this email already exists.');
+        array_push($registerErrors, 'User with this email already exists.');
     }
 
     mysqli_stmt_close($stmt);
 
     // Create account if there are no errors
-    if (count($errors) == 0) {
+    if (count($registerErrors) == 0) {
         $password = password_hash($password, PASSWORD_DEFAULT);
 
         $stmt = mysqli_prepare($db,"INSERT INTO users(email, password) VALUES (?, ?)");
@@ -56,8 +61,4 @@ if (isset($_POST['btnRegister'])) {
 
     }
 
-    // TODO display errors in register window
-    print_r($errors);
-
-    // TODO login after registering and display a windows with "login successful"
 }

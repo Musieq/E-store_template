@@ -2,17 +2,15 @@
 
 if (isset($_POST['btnLogin'])) {
 
-    $errors = [];
-
     $email = $_POST['loginEmail'];
     $password = $_POST['loginPassword'];
     $rememberMe = '';
     if(isset($_POST['loginRememberMe'])) { $rememberMe = $_POST['loginRememberMe']; };
 
-    if (empty($email)) { array_push($errors, 'Email is required'); }
-    if (empty($password)) { array_push($errors, 'Password is required'); }
+    if (empty($email)) { array_push($loginErrors, 'Email is required'); }
+    if (empty($password)) { array_push($loginErrors, 'Password is required'); }
 
-    if (count($errors) == 0) {
+    if (count($loginErrors) == 0) {
         $stmt = mysqli_prepare($db, "SELECT user_id, password, role FROM users WHERE email = ?");
         mysqli_stmt_bind_param($stmt, "s", $email);
         mysqli_stmt_execute($stmt);
@@ -38,12 +36,7 @@ if (isset($_POST['btnLogin'])) {
             }
 
         } else {
-            array_push($errors, 'Incorrect account details.');
-            print_r($errors);
-            // TODO display login error
+            array_push($loginErrors, 'Incorrect account details.');
         }
-    } else {
-        print_r($errors);
-        // TODO display login errors
     }
 }
