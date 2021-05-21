@@ -36,7 +36,6 @@ if (isset($_POST['btnLogin'])) {
             if (!isset($_POST['loginRememberMe'])) {
                 $_SESSION['lastActivity'] = time();
             }
-            // TODO remember me
 
         } else {
             array_push($errors, 'Incorrect account details.');
