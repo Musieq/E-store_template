@@ -33,7 +33,22 @@ a.link-location {
   text-decoration: none;
 }
 
+.btn-primary {
+  background-color: $mainThemeColor;
 
+  &:hover, &:focus, &:active {
+    background-color: darken($mainThemeColor, 7%);
+  }
+}
+
+.btn-outline-primary {
+  border-color: $mainThemeColor;
+  color: $mainThemeColor;
+
+  &:hover {
+    background-color: $mainThemeColor;
+  }
+}
 
 
 

@@ -1,7 +1,33 @@
 <?php
 $errors = [];
+$totalCost = 0;
 //unset($_SESSION['cart']);
 //print_r($_SESSION['cart']);
+
+if (isset($_GET['removeProduct'])) {
+    $removeProductID = $_GET['removeProduct'];
+    if (is_numeric($removeProductID)) {
+        unset($_SESSION['cart'][$removeProductID]);
+    }
+    header("Location: index.php?source=cart");
+}
+
+if (isset($_POST['updateCartBtn'])) {
+    $quantity = $_POST['quantity'];
+    $productID = $_POST['productID'];
+
+    if (count($quantity) == count($productID)) {
+        $arr = array_combine($productID, $quantity);
+
+        foreach ($arr as $productID => $quantity) {
+            if (isset($_SESSION['cart'])) {
+                $_SESSION['cart'][$productID] = $quantity;
+            } else {
+                $_SESSION['cart'] = [$productID => $quantity];
+            }
+        }
+    }
+}
 
 ?>
 
@@ -16,7 +42,8 @@ $errors = [];
             <?php
         } else {
             ?>
-            <div class="cart-wrapper d-flex flex-wrap shadow-sm">
+            <form action="index.php?source=cart" method="post">
+            <div class="cart-wrapper d-flex flex-wrap shadow-sm mb-3">
 
 
                 <?php
@@ -39,7 +66,17 @@ $errors = [];
                             $allowMultiplePurchases = $row['allow_multiple_purchases'];
                             $published = $row['published'];
 
+                            // Calculate total cost
+                            if ($priceSale != -1) {
+                                $totalCost += $priceSale * $quantity;
+                            } else {
+                                $totalCost += $price * $quantity;
+                            }
+
                             if ($published == 1 && ($stock > 0 || $stockStatus == 1)) {
+                                if ($stockStatus == 1) {
+                                    $stock = 999;
+                                }
                                 // Get image
                                 $stmt = mysqli_prepare($db, "SELECT title, alt, path FROM images INNER JOIN product_image_order ON product_image_order.image_id = images.id WHERE product_image_order.product_id = ? ORDER BY product_image_order.image_order LIMIT 1");
                                 mysqli_stmt_bind_param($stmt, 'i', $productID);
@@ -79,13 +116,14 @@ $errors = [];
                                     </div>
 
                                     <div class="cart-quantity-wrapper">
+                                        <input type="hidden" name="productID[]" value="<?=$productID?>">
                                         <?php
                                         // check if buying multiple products is allowed
                                         if ($allowMultiplePurchases == 1) {
                                             ?>
                                             <div class="d-flex flex-row">
                                                 <input class="btn btn-primary btn-step minus" type="button" value="-">
-                                                <input type="number" id="productQuantity" class="product-quantity form-control" step="1" min="1" max="<?=$stock?>" name="quantity[]" value="<?=$quantity?>" aria-label="Quantity of <?=$name?>">
+                                                <input type="number" id="productQuantity-<?=$productID?>" class="product-quantity form-control" step="1" min="1" max="<?=$stock?>" name="quantity[]" value="<?=$quantity?>" aria-label="Quantity of <?=$name?>">
                                                 <input class="btn btn-primary btn-step plus" type="button" value="+">
                                             </div>
 
@@ -101,19 +139,25 @@ $errors = [];
                                     <div class="cart-subtotal">
                                         <?php
                                         if ($priceSale != -1) {
-                                            if ($allowMultiplePurchases == 1) {
-                                                echo number_format($priceSale * $quantity, 2)." $";
+                                            if ($allowMultiplePurchases == 1 && $quantity > 1) {
+                                                echo "<div class='priceQty'>".number_format($priceSale * $quantity, 2)." $</div>";
+                                                echo "<div class='priceEach'>".number_format($priceSale, 2)." $ each</div>";
                                             } else {
-                                                echo number_format($priceSale, 2)." $";
+                                                echo "<div class='priceSingleQty'>".number_format($priceSale, 2)." $</div>";
                                             }
                                         } else {
-                                            if ($allowMultiplePurchases == 1) {
-                                                echo number_format($price * $quantity, 2)." $";
+                                            if ($allowMultiplePurchases == 1 && $quantity > 1) {
+                                                echo "<div class='priceQty'>".number_format($price * $quantity, 2)." $</div>";
+                                                echo "<div class='priceEach'>".number_format($price, 2)." $ each</div>";
                                             } else {
-                                                echo number_format($price, 2)." $";
+                                                echo "<div class='priceSingleQty'>".number_format($price, 2)." $</div>";
                                             }
                                         }
                                         ?>
+                                    </div>
+
+                                    <div class="cart-remove-product">
+                                        <button class="btn" name="cartRemoveProduct" value="<?=$productID?>"></button>
                                     </div>
 
                                 </div>
@@ -139,11 +183,28 @@ $errors = [];
                 </div>
 
             </div>
+                <div class="cart-button-wrapper d-flex">
+                    <input type="submit" name="updateCartBtn" class="btn btn-primary ms-auto" value="Update cart">
+                </div>
+
+            </form>
             <?php
         }
         ?>
 
+        <div class="col-12">
+            <div class="cart-summary-wrapper">
+                <div class="cart-summary-total">
+                    <div class="price-total">
+                        Total cost: <?=number_format($totalCost,2)?> $
+                    </div>
+                </div>
 
+                <div class="cart-summary-checkout">
+                    <a href="index.php?source=checkout" type="button" class="btn btn-primary">Proceed to checkout</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

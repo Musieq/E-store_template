@@ -114,7 +114,7 @@ if(isset($_POST['productAddToCart'])) {
                             <form id="addToCartForm" class="product-add-to-cart" action="index.php?<?php echo http_build_query($_GET) ?>" method="post">
                                 <?php
                                 if (($stockManage == 1 && $stock > 1 && $allowMultiplePurchases == 1 ) || ($stockManage == 0 && $stockStatus == 1 && $allowMultiplePurchases == 1)) :
-                                    $max = $stock == -1 ? 1 : $stock;
+                                    $max = $stock == -1 ? 999 : $stock;
                                 ?>
                                 <div class="d-flex flex-row mb-3">
                                     <input class="btn btn-primary btn-step minus" type="button" value="-">
