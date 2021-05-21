@@ -33,6 +33,9 @@ if (isset($_POST['btnLogin'])) {
             $_SESSION['userRole'] = $userRole;
 
             // "Remember me" button
+            if (!isset($_POST['loginRememberMe'])) {
+                $_SESSION['lastActivity'] = time();
+            }
             // TODO remember me
 
         } else {

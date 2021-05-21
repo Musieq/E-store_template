@@ -8,6 +8,12 @@ if (!isset($_SESSION['userID'])) {
     require_once ('common/register.php');
 }
 
+if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 1800)) {
+    header("Location: common/logout.php");
+} elseif (isset($_SESSION['lastActivity'])) {
+    $_SESSION['lastActivity'] = time();
+}
+
 ?>
 
 <!doctype html>
