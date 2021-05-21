@@ -188,23 +188,24 @@ if (isset($_POST['updateCartBtn'])) {
                 </div>
 
             </form>
+
+
+            <div class="col-12">
+                <div class="cart-summary-wrapper">
+                    <div class="cart-summary-total">
+                        <div class="price-total">
+                            Total cost: <?=number_format($totalCost,2)?> $
+                        </div>
+                    </div>
+
+                    <div class="cart-summary-checkout">
+                        <a href="index.php?source=checkout" type="button" class="btn btn-primary">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
             <?php
         }
         ?>
-
-        <div class="col-12">
-            <div class="cart-summary-wrapper">
-                <div class="cart-summary-total">
-                    <div class="price-total">
-                        Total cost: <?=number_format($totalCost,2)?> $
-                    </div>
-                </div>
-
-                <div class="cart-summary-checkout">
-                    <a href="index.php?source=checkout" type="button" class="btn btn-primary">Proceed to checkout</a>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 

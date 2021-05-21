@@ -108,7 +108,6 @@ function sortBy(): string {
             <div class="products-top-bar">
             <?php
 
-            // TODO sort by price etc.
             if (isset($_GET['categoryID'])) {
                 $categoryID = $_GET['categoryID'];
                 if (is_numeric($categoryID)) {
