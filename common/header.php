@@ -9,7 +9,6 @@ $registerErrors = [];
 if (!isset($_SESSION['userID'])) {
     require_once ('common/login.php');
     require_once ('common/register.php');
-
     ?>
     <script>
         /** Get login/register errors **/
@@ -18,6 +17,8 @@ if (!isset($_SESSION['userID'])) {
     </script>
 <?php
 }
+
+
 
 if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 1800)) {
     header("Location: common/logout.php");
@@ -69,6 +70,8 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
                             <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5zM3.102 4l1.313 7h8.17l1.313-7H3.102zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4zm-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2zm7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
                         </svg>
+
+                        <div class="cart-count" id="cartCount"></div>
                     </a>
                 </li>
 
@@ -117,11 +120,11 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                         <form method="post" action="index.php?<?=http_build_query($_GET)?>">
                                             <div class="mb-3">
                                                 <label for="loginEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" required>
+                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" autocomplete="username" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="loginPassword" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="loginPassword" name="loginPassword" minlength="7" required>
+                                                <input type="password" class="form-control" id="loginPassword" name="loginPassword" autocomplete="password" minlength="7" required>
                                             </div>
                                             <div class="mb-3 form-check">
                                                 <input type="checkbox" class="form-check-input" id="loginRememberMe" name="loginRememberMe">
@@ -139,50 +142,49 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                         displayErrors($registerErrors);
                                         ?>
 
-                                        <!-- TODO validate form -->
-                                        <!-- TODO autocomplete dla formularzy / https://developers.google.com/web/fundamentals/design-and-ux/input/forms -->
+                                        <!-- autocomplete dla formularzy / https://developers.google.com/web/fundamentals/design-and-ux/input/forms -->
                                         <h1 class="text-center">Register</h1>
                                         <form method="post" action="">
                                             <div class="mb-3">
                                                 <label for="registerEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" required>
+                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" autocomplete="email" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="registerPassword" class="form-label">Password</label>
-                                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" minlength="7" required>
+                                                <input type="password" class="form-control" id="registerPassword" name="registerPassword" autocomplete="new-password" minlength="7" required>
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm">
                                                     <label for="registerFirstName" class="form-label">First name</label>
-                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName">
+                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" autocomplete="given-name">
                                                 </div>
                                                 <div class="col-sm">
                                                     <label for="registerLastName" class="form-label">Last name</label>
-                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName">
+                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName" autocomplete="family-name">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="registerPhone" class="form-label">Phone number</label>
-                                                <input type="text" class="form-control" id="registerPhone" name="registerPhone">
+                                                <input type="text" class="form-control" id="registerPhone" name="registerPhone" autocomplete="tel">
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm-8">
                                                     <label for="registerCity" class="form-label">City</label>
-                                                    <input type="text" class="form-control" id="registerCity" name="registerCity">
+                                                    <input type="text" class="form-control" id="registerCity" name="registerCity" autocomplete="address-level2">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="registerZip" class="form-label">Zip</label>
-                                                    <input type="text" class="form-control" id="registerZip" name="registerZip">
+                                                    <input type="text" class="form-control" id="registerZip" name="registerZip" autocomplete="postal-code">
                                                 </div>
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm-8">
                                                     <label for="registerStreet" class="form-label">Street</label>
-                                                    <input type="text" class="form-control" id="registerStreet" name="registerStreet">
+                                                    <input type="text" class="form-control" id="registerStreet" name="registerStreet" autocomplete="address-line1">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="registerApartment" class="form-label">Apartment</label>
-                                                    <input type="text" class="form-control" id="registerApartment" name="registerApartment">
+                                                    <input type="text" class="form-control" id="registerApartment" name="registerApartment" autocomplete="address-line2">
                                                 </div>
                                             </div>
 

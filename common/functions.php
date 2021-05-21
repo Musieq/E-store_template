@@ -388,3 +388,4 @@ function categoriesHierarchyInProducts($db, $currentParentID, $parentID = 0, $hi
         }
     }
 }
+

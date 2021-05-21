@@ -46,11 +46,13 @@
                     let modalAddedToCart = new bootstrap.Modal(document.getElementById('modalAddedToCart'));
                     modalAddedToCart.show();
                 });
+
             // TODO .then update cart count in header
 
             e.preventDefault();
         });
     }
+
 })();
 
 

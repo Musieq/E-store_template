@@ -8,8 +8,14 @@ if (isset($_GET['removeProduct'])) {
     $removeProductID = $_GET['removeProduct'];
     if (is_numeric($removeProductID)) {
         unset($_SESSION['cart'][$removeProductID]);
+
+        if (count($_SESSION['cart']) == 0) {
+            unset($_SESSION['cart']);
+        }
     }
-    header("Location: index.php?source=cart");
+    ?>
+    <script> location.replace("index.php?source=cart"); </script>
+<?php
 }
 
 if (isset($_POST['updateCartBtn'])) {
@@ -157,7 +163,7 @@ if (isset($_POST['updateCartBtn'])) {
                                     </div>
 
                                     <div class="cart-remove-product">
-                                        <button class="btn" name="cartRemoveProduct" value="<?=$productID?>"></button>
+                                        <button type="button" class="btn" name="cartRemoveProduct" value="<?=$productID?>"></button>
                                     </div>
 
                                 </div>
