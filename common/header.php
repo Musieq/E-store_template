@@ -120,7 +120,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                         <form method="post" action="index.php?<?=http_build_query($_GET)?>">
                                             <div class="mb-3">
                                                 <label for="loginEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" autocomplete="username" required>
+                                                <input type="email" class="form-control" id="loginEmail" name="loginEmail" maxlength="60" autocomplete="username" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="loginPassword" class="form-label">Password</label>

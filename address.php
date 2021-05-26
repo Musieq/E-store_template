@@ -27,6 +27,8 @@ if (isset($_POST['addressSubmit'])) {
         mysqli_stmt_execute($stmt);
         mysqli_stmt_close($stmt);
 
+        $_SESSION['userFirstName'] = $firstName;
+
         $success = true;
     }
 }
