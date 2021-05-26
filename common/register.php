@@ -29,6 +29,17 @@ if (isset($_POST['btnRegister'])) {
 
     if (!$agreement) { array_push($registerErrors, 'You have to accept our terms of service'); }
 
+
+    // Check if data is not too long
+    if (strlen($firstName) > 50) { array_push($registerErrors, "First name is too long. Max 50 characters."); }
+    if (strlen($lastName) > 50) { array_push($registerErrors, "Last name is too long. Max 50 characters."); }
+    if (strlen($phoneNumber) > 20) { array_push($registerErrors, "Phone number is too long. Max 20 characters."); }
+    if (strlen($city) > 100) { array_push($registerErrors, "City is too long. Max 100 characters."); }
+    if (strlen($zip) > 10) { array_push($registerErrors, "Postal code is too long. Max 10 characters."); }
+    if (strlen($street) > 100) { array_push($registerErrors, "Street is too long. Max 100 characters."); }
+    if (strlen($apartment) > 25) { array_push($registerErrors, "Apartment is too long. Max 25 characters."); }
+    if (strlen($email) > 60) { array_push($registerErrors, "Email is too long. Max 60 characters."); }
+
     // Check if email exists
     $stmt = mysqli_prepare($db, "SELECT COUNT(email) FROM users WHERE email=?");
 

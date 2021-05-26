@@ -20,13 +20,14 @@ if (isset($_POST['btnLogin'])) {
 
         // Check if passwords match
         if(password_verify($password, $passwordDB)) {
-            // Fetch account data
+            // Fetch user first name
             $query = mysqli_query($db, "SELECT first_name FROM user_informations WHERE user_id = '$userID'");
 
             // Create session variables
             while ($result = mysqli_fetch_assoc($query)) {
                 $_SESSION['userFirstName'] = $result['first_name'];
             }
+            $_SESSION['userEmail'] = $email;
             $_SESSION['userID'] = $userID;
             $_SESSION['userRole'] = $userRole;
 
