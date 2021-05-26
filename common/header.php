@@ -77,7 +77,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
                 <li class="my-account-wrapper position-relative">
 
-                    <a href="<?php echo !isset($_SESSION['userID']) ? '#' : 'myaccount.php'; ?>" id="my-account-show-login-form">
+                    <a href="<?php echo !isset($_SESSION['userID']) ? '#' : 'my-account.php'; ?>" id="my-account-show-login-form">
                         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
                             <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0z"/>
                             <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8zm8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1z"/>
@@ -142,12 +142,11 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                         displayErrors($registerErrors);
                                         ?>
 
-                                        <!-- autocomplete dla formularzy / https://developers.google.com/web/fundamentals/design-and-ux/input/forms -->
                                         <h1 class="text-center">Register</h1>
                                         <form method="post" action="">
                                             <div class="mb-3">
                                                 <label for="registerEmail" class="form-label">Email address</label>
-                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" autocomplete="email" required>
+                                                <input type="email" class="form-control" id="registerEmail" name="registerEmail" maxlength="60" autocomplete="email" required>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="registerPassword" class="form-label">Password</label>
@@ -156,35 +155,35 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm">
                                                     <label for="registerFirstName" class="form-label">First name</label>
-                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" autocomplete="given-name">
+                                                    <input type="text" class="form-control" id="registerFirstName" name="registerFirstName" maxlength="50" autocomplete="given-name">
                                                 </div>
                                                 <div class="col-sm">
                                                     <label for="registerLastName" class="form-label">Last name</label>
-                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName" autocomplete="family-name">
+                                                    <input type="text" class="form-control" id="registerLastName" name="registerLastName" maxlength="50" autocomplete="family-name">
                                                 </div>
                                             </div>
                                             <div class="mb-3">
                                                 <label for="registerPhone" class="form-label">Phone number</label>
-                                                <input type="text" class="form-control" id="registerPhone" name="registerPhone" autocomplete="tel">
+                                                <input type="text" class="form-control" id="registerPhone" name="registerPhone" maxlength="20" autocomplete="tel">
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm-8">
                                                     <label for="registerCity" class="form-label">City</label>
-                                                    <input type="text" class="form-control" id="registerCity" name="registerCity" autocomplete="address-level2">
+                                                    <input type="text" class="form-control" id="registerCity" name="registerCity" maxlength="100" autocomplete="address-level2">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="registerZip" class="form-label">Zip</label>
-                                                    <input type="text" class="form-control" id="registerZip" name="registerZip" autocomplete="postal-code">
+                                                    <input type="text" class="form-control" id="registerZip" name="registerZip" maxlength="10" autocomplete="postal-code">
                                                 </div>
                                             </div>
                                             <div class="row g-3 mb-3">
                                                 <div class="col-sm-8">
                                                     <label for="registerStreet" class="form-label">Street</label>
-                                                    <input type="text" class="form-control" id="registerStreet" name="registerStreet" autocomplete="address-line1">
+                                                    <input type="text" class="form-control" id="registerStreet" name="registerStreet" maxlength="100" autocomplete="address-line1">
                                                 </div>
                                                 <div class="col-sm-4">
                                                     <label for="registerApartment" class="form-label">Apartment</label>
-                                                    <input type="text" class="form-control" id="registerApartment" name="registerApartment" autocomplete="address-line2">
+                                                    <input type="text" class="form-control" id="registerApartment" name="registerApartment" maxlength="25" autocomplete="address-line2">
                                                 </div>
                                             </div>
 
@@ -210,12 +209,41 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
                     <div class="my-account-links shadow">
                         <ul>
+
+                            <?php
+                            if (!empty($_SESSION['userFirstName'])) :
+                            ?>
                             <li class="nav-item">
-                                <a class="nav-link active" href="admin">Panel administratora</a>
+                                <h5>Hello <?=$_SESSION['userFirstName']?>!</h5>
+                            </li>
+                            <?php
+                            endif;
+                            ?>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="my-account.php?source=orders">Orders</a>
                             </li>
 
                             <li class="nav-item">
-                                <a class="nav-link active" href="common/logout.php">Logout</a>
+                                <a class="nav-link" href="my-account.php?source=address">Address</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="my-account.php?source=account-details">Account details</a>
+                            </li>
+
+                            <?php
+                            if (isset($_SESSION['userRole']) && $_SESSION['userRole'] == 'admin') :
+                            ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="admin">Admin panel</a>
+                            </li>
+                            <?php
+                            endif;
+                            ?>
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="common/logout.php">Logout</a>
                             </li>
                         </ul>
 

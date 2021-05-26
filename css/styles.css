@@ -155,9 +155,7 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links 
   opacity: 0;
   right: 0;
   min-width: 150px;
-  min-height: 250px;
   border-radius: 0.75em;
-  padding: 1em 1.5em;
   background-color: #fff;
   transition: visibility 0.3s, opacity 0.3s;
   animation-duration: 0.3s;
@@ -169,12 +167,17 @@ nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links 
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li {
   margin-right: 0;
+  border-bottom: 1px solid #cccccc;
 }
-nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li:last-child {
+nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li a, nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li h5 {
+  padding: 0.65rem 2rem;
   text-align: center;
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li:last-child a {
   color: red;
+}
+nav.navbar div.navbar-no-collapse ul li.my-account-wrapper div.my-account-links ul li:last-of-type {
+  border-bottom: none;
 }
 nav.navbar div.navbar-no-collapse ul li.my-account-wrapper:hover .my-account-links {
   visibility: visible;
@@ -465,14 +468,16 @@ div.admin-image-container {
   font-weight: 500;
 }
 
-a.categories-back {
+.sidebar-wrapper {
+  border-radius: 0.5rem;
+}
+.sidebar-wrapper a.categories-back {
   color: black;
 }
-
-ul.nav.categories li {
+.sidebar-wrapper ul.nav.categories li {
   margin-bottom: 0.25rem;
 }
-ul.nav.categories li a {
+.sidebar-wrapper ul.nav.categories li a {
   color: black;
   padding: 0;
 }
@@ -480,10 +485,12 @@ ul.nav.categories li a {
 .cart-wrapper {
   display: flex;
   flex-wrap: wrap;
+  border-radius: 0.5rem;
 }
 .cart-wrapper .break {
   flex-basis: 100%;
   background-color: #828282;
+  margin: 1rem;
 }
 .cart-wrapper .break:last-of-type {
   display: none;
@@ -657,6 +664,7 @@ ul.nav.categories li a {
   width: 36px;
   height: 36px;
   background-repeat: no-repeat;
+  background-size: 36px;
 }
 
 .cart-summary-wrapper {
@@ -674,6 +682,56 @@ ul.nav.categories li a {
 }
 .cart-summary-wrapper .cart-summary-checkout {
   margin-left: auto;
+}
+
+.my-account-sidebar-wrapper .my-account-toggle-container a {
+  color: #23282d;
+  text-decoration: none;
+}
+.my-account-sidebar-wrapper .my-account-sidebar {
+  border-radius: 0.5em;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links {
+  background-color: #fff;
+  border-radius: 0.5em;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul {
+  flex-direction: column;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul li {
+  margin-right: 0;
+  border-bottom: 1px solid #cccccc;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul li a {
+  padding: 0.65rem 2rem;
+  text-align: center;
+  color: #23282d;
+  font-weight: 500;
+  font-size: 1.15rem;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul li:last-child {
+  text-align: center;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul li:last-child a {
+  color: red;
+}
+.my-account-sidebar-wrapper .my-account-sidebar .my-account-links ul li:last-of-type {
+  border-bottom: none;
+}
+
+.orders-wrapper {
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+}
+
+.addresses-wrapper {
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
+}
+
+.account-details-wrapper {
+  border-radius: 0.5rem;
+  padding: 1rem 2rem;
 }
 
 /* Root */
@@ -709,6 +767,10 @@ a.link-location {
 }
 .btn-outline-primary:hover {
   background-color: #0d6efd;
+}
+
+.callout p:last-of-type {
+  margin-bottom: 0;
 }
 
 /* Animations */

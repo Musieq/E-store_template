@@ -1,0 +1,65 @@
+.my-account-sidebar-wrapper {
+  .my-account-toggle-container {
+    a {
+      color: $link;
+      text-decoration: none;
+    }
+  }
+
+  .my-account-sidebar {
+    border-radius: .5em;
+
+    .my-account-links {
+      background-color: $primaryBackground;
+      border-radius: .5em;
+
+      ul {
+        flex-direction: column;
+
+        li {
+          margin-right: 0;
+          border-bottom: 1px solid #cccccc;
+
+          a {
+            padding: .65rem 2rem;
+            text-align: center;
+            color: $link;
+            font-weight: 500;
+            font-size: 1.15rem;
+          }
+
+          &:last-child {
+            text-align: center;
+
+
+            a {
+              color: red;
+
+            }
+          }
+
+          &:last-of-type {
+            border-bottom: none;
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.orders-wrapper {
+  border-radius: .5rem;
+  padding: 1rem 2rem;
+}
+
+.addresses-wrapper {
+  border-radius: .5rem;
+  padding: 1rem 2rem;
+}
+
+
+.account-details-wrapper {
+  border-radius: .5rem;
+  padding: 1rem 2rem;
+}

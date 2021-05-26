@@ -4,6 +4,7 @@
 @import "singleProduct";
 @import "products";
 @import "cart";
+@import "myAccount";
 
 
 /* Root */
@@ -50,6 +51,12 @@ a.link-location {
   }
 }
 
+
+.callout {
+  p:last-of-type {
+    margin-bottom: 0;
+  }
+}
 
 
 

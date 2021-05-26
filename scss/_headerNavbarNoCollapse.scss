@@ -182,9 +182,7 @@ display: flex;
           opacity: 0;
           right: 0;
           min-width: 150px;
-          min-height: 250px;
           border-radius: .75em;
-          padding: 1em 1.5em;
           background-color: $primaryBackground;
           transition: visibility 0.3s, opacity 0.3s;
           animation-duration: 0.3s;
@@ -193,16 +191,26 @@ display: flex;
 
           ul {
             flex-direction: column;
+
             li {
               margin-right: 0;
+              border-bottom: 1px solid #cccccc;
+
+              a, h5 {
+                padding: .65rem 2rem;
+                text-align: center;
+              }
 
               &:last-child {
-                text-align: center;
-
 
                 a {
                   color: red;
+
                 }
+              }
+
+              &:last-of-type {
+                border-bottom: none;
               }
             }
           }

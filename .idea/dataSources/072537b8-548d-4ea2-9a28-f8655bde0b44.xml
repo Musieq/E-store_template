@@ -1440,86 +1440,75 @@ test\\_%|schema||&apos;&apos;||UPDATE|G</Grants>
       <ColNames>id</ColNames>
       <Primary>1</Primary>
     </key>
-    <column id="377" parent="346" name="user_informations_id">
+    <column id="377" parent="346" name="user_id">
       <Position>1</Position>
       <DataType>int(9)|0s</DataType>
       <NotNull>1</NotNull>
-      <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="378" parent="346" name="user_id">
+    <column id="378" parent="346" name="first_name">
       <Position>2</Position>
-      <DataType>int(9)|0s</DataType>
+      <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="379" parent="346" name="first_name">
+    <column id="379" parent="346" name="last_name">
       <Position>3</Position>
       <DataType>varchar(50)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="380" parent="346" name="last_name">
+    <column id="380" parent="346" name="city">
       <Position>4</Position>
-      <DataType>varchar(50)|0s</DataType>
+      <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="381" parent="346" name="city">
+    <column id="381" parent="346" name="street">
       <Position>5</Position>
       <DataType>varchar(100)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="382" parent="346" name="street">
+    <column id="382" parent="346" name="postal_code">
       <Position>6</Position>
-      <DataType>varchar(100)|0s</DataType>
-      <NotNull>1</NotNull>
-    </column>
-    <column id="383" parent="346" name="postal_code">
-      <Position>7</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="384" parent="346" name="apartment">
-      <Position>8</Position>
+    <column id="383" parent="346" name="apartment">
+      <Position>7</Position>
       <DataType>varchar(25)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="385" parent="346" name="telephone">
-      <Position>9</Position>
+    <column id="384" parent="346" name="telephone">
+      <Position>8</Position>
       <DataType>varchar(12)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <key id="386" parent="346" name="PRIMARY">
-      <NameSurrogate>1</NameSurrogate>
-      <ColNames>user_informations_id</ColNames>
-      <Primary>1</Primary>
-    </key>
-    <column id="387" parent="347" name="user_id">
+    <column id="385" parent="347" name="user_id">
       <Position>1</Position>
       <DataType>int(8)|0s</DataType>
       <NotNull>1</NotNull>
       <SequenceIdentity>null</SequenceIdentity>
     </column>
-    <column id="388" parent="347" name="password">
+    <column id="386" parent="347" name="password">
       <Position>2</Position>
       <DataType>varchar(255)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="389" parent="347" name="email">
+    <column id="387" parent="347" name="email">
       <Position>3</Position>
       <DataType>varchar(60)|0s</DataType>
       <NotNull>1</NotNull>
     </column>
-    <column id="390" parent="347" name="creation_date">
+    <column id="388" parent="347" name="creation_date">
       <Position>4</Position>
       <DataType>timestamp|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>current_timestamp()</DefaultExpression>
     </column>
-    <column id="391" parent="347" name="role">
+    <column id="389" parent="347" name="role">
       <Position>5</Position>
       <DataType>varchar(10)|0s</DataType>
       <NotNull>1</NotNull>
       <DefaultExpression>&apos;user&apos;</DefaultExpression>
     </column>
-    <key id="392" parent="347" name="PRIMARY">
+    <key id="390" parent="347" name="PRIMARY">
       <NameSurrogate>1</NameSurrogate>
       <ColNames>user_id</ColNames>
       <Primary>1</Primary>
