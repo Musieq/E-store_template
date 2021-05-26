@@ -23,32 +23,35 @@ if (isset($_POST['addImageButton'])) {
             $imageTitle = $_POST['addImageTitle'];
             $imageTitle = empty($imageTitle) ? str_replace('.'.$imageExtension,'', $imageName) : $imageTitle;
 
-            // Generate unique name for file
-            $uniqueImageName = uniqid('',true);
-            $uniqueImageNameExtension = $uniqueImageName.'.'.$imageExtension;
+            if (strlen($imageAlt) > 255) { array_push($errors, "Image alternative text is too long. Max 255 characters."); }
+            if (strlen($imageTitle) > 255) { array_push($errors, "Image title is too long. Max 255 characters."); }
 
-            // Create folders for storing images if doesn't exist
-            $imageDestination = 'uploaded_images/'.date('Y').'/'.date('m');
-            if (!file_exists('../'.$imageDestination)) {
-                mkdir('../'.$imageDestination, 0777, true);
+            if (count($errors) == 0) {
+                // Generate unique name for file
+                $uniqueImageName = uniqid('',true);
+                $uniqueImageNameExtension = $uniqueImageName.'.'.$imageExtension;
+
+                // Create folders for storing images if doesn't exist
+                $imageDestination = 'uploaded_images/'.date('Y').'/'.date('m');
+                if (!file_exists('../'.$imageDestination)) {
+                    mkdir('../'.$imageDestination, 0777, true);
+                }
+
+                $imageFullDestination = $imageDestination.'/'.$uniqueImageNameExtension;
+
+
+                // Create copies of this image with lower resolution
+                resizeUploadedImages($imageUpload, $uniqueImageName, $imageExtension, $imageType, $imageDestination);
+
+
+                // Upload image
+                move_uploaded_file($imageTmpName, '../'.$imageFullDestination);
+
+                // Update database with image informations
+                mysqli_query($db, "INSERT INTO images (unique_name, title, alt, path) VALUES ('$uniqueImageNameExtension', '$imageTitle', '$imageAlt', '$imageFullDestination')");
+
+                $success = true;
             }
-
-            $imageFullDestination = $imageDestination.'/'.$uniqueImageNameExtension;
-
-
-            // Create copies of this image with lower resolution
-            resizeUploadedImages($imageUpload, $uniqueImageName, $imageExtension, $imageType, $imageDestination);
-
-
-            // Upload image
-            move_uploaded_file($imageTmpName, '../'.$imageFullDestination);
-
-            // Update database with image informations
-            mysqli_query($db, "INSERT INTO images (unique_name, title, alt, path) VALUES ('$uniqueImageNameExtension', '$imageTitle', '$imageAlt', '$imageFullDestination')");
-
-            $success = true;
-
-
         } else {
             array_push($errors, "Wrong file type. Allowed types: jpg, jpeg, png, gif.");
         }
@@ -96,13 +99,13 @@ if (isset($_POST['addImageButton'])) {
 
             <div class="mb-3">
                 <label for="addImageAlt" class="form-label">Image alternative text</label>
-                <input type="text" class="form-control" id="addImageAlt" name="addImageAlt" aria-describedby="altHelp">
+                <input type="text" class="form-control" id="addImageAlt" name="addImageAlt" aria-describedby="altHelp" maxlength="255">
                 <div id="altHelp" class="form-text">The alt attribute provides alternative information for an image if a user for some reason cannot view it. Leave empty if image is only decorative.</div>
             </div>
 
             <div class="mb-3">
                 <label for="addImageTitle" class="form-label">Image title</label>
-                <input type="text" class="form-control" id="addImageTitle" name="addImageTitle" aria-describedby="titleHelp">
+                <input type="text" class="form-control" id="addImageTitle" name="addImageTitle" aria-describedby="titleHelp" maxlength="255">
                 <div id="titleHelp" class="form-text">If empty, file name will be the image title.</div>
             </div>
 

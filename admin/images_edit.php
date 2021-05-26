@@ -10,9 +10,14 @@ if (isset($_POST['editImageButton'])) {
         $editImageAlt = $_POST['editImageAlt'];
         $editImageTitle = $_POST['editImageTitle'];
 
-        mysqli_query($db, "UPDATE images SET title = '$editImageTitle', alt = '$editImageAlt' WHERE id = $editImageID");
+        if (strlen($editImageAlt) > 255) { array_push($errors, "Image alternative text is too long. Max 255 characters."); }
+        if (strlen($editImageTitle) > 255) { array_push($errors, "Image title is too long. Max 255 characters."); }
 
-        $success = true;
+        if (count($errors) == 0) {
+            mysqli_query($db, "UPDATE images SET title = '$editImageTitle', alt = '$editImageAlt' WHERE id = $editImageID");
+
+            $success = true;
+        }
     } else {
         array_push($errors, "Given image ID isn't a numeric value.");
     }
@@ -81,13 +86,13 @@ if (is_numeric($editImageID)) {
 
             <div class="mb-3">
                 <label for="editImageAlt" class="form-label">Image alternative text</label>
-                <input type="text" class="form-control" id="editImageAlt" name="editImageAlt" aria-describedby="altHelp" value="<?=$getImageAlt?>">
+                <input type="text" class="form-control" id="editImageAlt" name="editImageAlt" aria-describedby="altHelp" maxlength="255" value="<?=$getImageAlt?>">
                 <div id="altHelp" class="form-text">The alt attribute provides alternative information for an image if a user for some reason cannot view it. Leave empty if image is only decorative.</div>
             </div>
 
             <div class="mb-3">
                 <label for="editImageTitle" class="form-label">Image title</label>
-                <input type="text" class="form-control" id="editImageTitle" name="editImageTitle" aria-describedby="titleHelp" value="<?=$getImageTitle?>">
+                <input type="text" class="form-control" id="editImageTitle" name="editImageTitle" aria-describedby="titleHelp" maxlength="255" value="<?=$getImageTitle?>">
                 <div id="titleHelp" class="form-text">If empty, file name will be the image title.</div>
             </div>
 

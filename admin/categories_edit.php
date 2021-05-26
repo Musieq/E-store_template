@@ -13,13 +13,15 @@ if (isset($_POST['categoryEdit']) && is_numeric($editCatID)) {
         $editCatSlug = $_POST['EditCategorySlug'];
         $editCatParent = $_POST['EditCategoryParent'];
 
+        if (strlen($editCatName) > 100) { array_push($errors, "Category name is too long. Max 100 characters."); }
+        if (strlen($editCatSlug) > 150) { array_push($errors, "Category name is too long. Max 150 characters."); }
+
+        if (count($errors) == 0) {
+            mysqli_query($db, "UPDATE categories SET category_name = '$editCatName', category_slug = '$editCatSlug', parent_id = $editCatParent WHERE category_id = $editCatID");
 
 
-        mysqli_query($db, "UPDATE categories SET category_name = '$editCatName', category_slug = '$editCatSlug', parent_id = $editCatParent WHERE category_id = $editCatID");
-
-
-        $success = true;
-
+            $success = true;
+        }
     } else {
         array_push($errors, "Category name is required");
     }
@@ -64,14 +66,14 @@ if (!is_numeric($editCatID)) {
         <form class="form-width-700" method="post" action="index.php?source=categories&editCatID=<?php echo $_GET['editCatID'] ?>">
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="EditCategoryName" class="form-label">Category name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="EditCategoryName" name="EditCategoryName" aria-describedby="categoryNameHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_name']; } ?>">
+                <input type="text" class="form-control" id="EditCategoryName" name="EditCategoryName" maxlength="100" aria-describedby="categoryNameHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_name']; } ?>">
                 <div id="categoryNameHelp" class="form-text">Category name is the one visible on website.</div>
             </div>
 
             <!-- TODO pretty links - category slug names required? Maybe auto generate them. -->
             <div class="mb-3">
                 <label for="EditCategorySlug" class="form-label">Category slug</label>
-                <input type="text" class="form-control" id="EditCategorySlug" name="EditCategorySlug" aria-describedby="slugHelp" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_slug']; } ?>">
+                <input type="text" class="form-control" id="EditCategorySlug" name="EditCategorySlug" aria-describedby="slugHelp" maxlength="150" value="<?php if (is_numeric($editCatID)) { echo $editCatResult['category_slug']; } ?>">
                 <div id="slugHelp" class="form-text">Category slug is short name of your category which will be used in URLs. It can't contain special characters. For example slug name for category name "Car parts" could be "car-parts". Leave empty to automatically generate.</div>
             </div>
 

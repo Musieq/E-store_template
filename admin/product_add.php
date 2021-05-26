@@ -14,53 +14,61 @@ if (isset($_POST['productAdd'])) {
         $productSalePrice = $_POST['addProductSalePrice'];
         $productSalePrice = $productSalePrice > 0 ? $productSalePrice: -1;
         if (!empty($productPrice) && is_numeric($productPrice) && is_numeric($productSalePrice)) {
-            $productManageStock = $_POST['productManageStock'] ?? 0;
-            if ($productManageStock) {
-                $productManageStock = 1;
-                $addProductStockStatus = -1;
-                $addProductStock = $_POST['addProductStock'];
-            } else {
-                $addProductStockStatus = $_POST['addProductStockStatus'];
-                $addProductStock = -1;
-            }
-            $addProductStatus = $_POST['addProductStatus'];
-            if (isset($_POST['addProductAllowMultiplePurchases'])) {
-                $allowMultiplePurchases = 1;
-            } else {
-                $allowMultiplePurchases = 0;
-            }
 
+            if (strlen($productName) <= 255) {
 
-            // Insert into product table
-                $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, tags, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "sssddiiiis", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
-                mysqli_stmt_execute($stmt);
-                $productID = mysqli_stmt_insert_id($stmt);
-                mysqli_stmt_close($stmt);
-
-                // Insert into images table
-                if (!empty($productImages)) {
-                    $productImagesArray = explode(',', $productImages);
-                    foreach ($productImagesArray as $imageOrder => $imageID) {
-                        $stmt = mysqli_prepare($db, "INSERT INTO product_image_order (product_id, image_id, image_order) VALUES (?, ?, ?)");
-                        mysqli_stmt_bind_param($stmt, "iii", $productID, $imageID, $imageOrder);
-                        mysqli_stmt_execute($stmt);
-                        mysqli_stmt_close($stmt);
-                    }
+                $productManageStock = $_POST['productManageStock'] ?? 0;
+                if ($productManageStock) {
+                    $productManageStock = 1;
+                    $addProductStockStatus = -1;
+                    $addProductStock = $_POST['addProductStock'];
+                } else {
+                    $addProductStockStatus = $_POST['addProductStockStatus'];
+                    $addProductStock = -1;
+                }
+                $addProductStatus = $_POST['addProductStatus'];
+                if (isset($_POST['addProductAllowMultiplePurchases'])) {
+                    $allowMultiplePurchases = 1;
+                } else {
+                    $allowMultiplePurchases = 0;
                 }
 
-                // Insert into categories table
-                if(!empty($productCategories)) {
-                    foreach ($productCategories as $productCategory) {
-                        $stmt = mysqli_prepare($db, "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)");
-                        mysqli_stmt_bind_param($stmt, "ii", $productID, $productCategory);
-                        mysqli_stmt_execute($stmt);
-                        mysqli_stmt_close($stmt);
+                if ($addProductStock != -1 && $addProductStock < 99999) {
+                    // Insert into product table
+                    $stmt = mysqli_prepare($db, "INSERT INTO products (name, description, tags, price, price_sale, stock, stock_status, stock_manage, allow_multiple_purchases, published) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    mysqli_stmt_bind_param($stmt, "sssddiiiis", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $addProductStock, $addProductStockStatus, $productManageStock, $allowMultiplePurchases, $addProductStatus);
+                    mysqli_stmt_execute($stmt);
+                    $productID = mysqli_stmt_insert_id($stmt);
+                    mysqli_stmt_close($stmt);
+
+                    // Insert into images table
+                    if (!empty($productImages)) {
+                        $productImagesArray = explode(',', $productImages);
+                        foreach ($productImagesArray as $imageOrder => $imageID) {
+                            $stmt = mysqli_prepare($db, "INSERT INTO product_image_order (product_id, image_id, image_order) VALUES (?, ?, ?)");
+                            mysqli_stmt_bind_param($stmt, "iii", $productID, $imageID, $imageOrder);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+                        }
                     }
+
+                    // Insert into categories table
+                    if(!empty($productCategories)) {
+                        foreach ($productCategories as $productCategory) {
+                            $stmt = mysqli_prepare($db, "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)");
+                            mysqli_stmt_bind_param($stmt, "ii", $productID, $productCategory);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+                        }
+                    }
+
+                    $success = true;
+                } else {
+                    array_push($errors, 'Max stock is 99999.');
                 }
-
-            $success = true;
-
+            } else {
+                array_push($errors, 'Product name is too long. Max 255 characters.');
+            }
         } else {
             array_push($errors, 'Price cannot be empty');
         }
@@ -102,7 +110,7 @@ if (isset($_POST['productAdd'])) {
 
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="addProductName" class="form-label">Product name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="addProductName" name="addProductName">
+                <input type="text" class="form-control" id="addProductName" name="addProductName" maxlength="255">
             </div>
 
             <div class="mb-3">
@@ -168,7 +176,7 @@ if (isset($_POST['productAdd'])) {
 
                 <div id="stockManagement" style="display: none">
                     <div class="d-flex flex-row"><label for="addProductStock" class="form-label">Stock</label><div class="required">*</div></div>
-                    <input type="number" class="form-control" id="addProductStock" name="addProductStock">
+                    <input type="number" class="form-control" id="addProductStock" name="addProductStock" max="99999">
                 </div>
             </div>
 

@@ -10,11 +10,16 @@ if (isset($_POST['categoryAdd'])) {
 
     if (!empty($catName)) {
 
-        // Insert category
-        $stmt = mysqli_prepare($db, "INSERT INTO categories(parent_id, category_name, category_slug) VALUES (?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "iss", $catParent, $catName, $catSlug);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        if (strlen($catName) > 100) { array_push($errors, "Category name is too long. Max 100 characters."); }
+        if (strlen($catSlug) > 150) { array_push($errors, "Category name is too long. Max 150 characters."); }
+
+        if (count($errors) == 0) {
+            // Insert category
+            $stmt = mysqli_prepare($db, "INSERT INTO categories(parent_id, category_name, category_slug) VALUES (?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "iss", $catParent, $catName, $catSlug);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        }
     } else {
         array_push($errors, "Fill required fields");
     }
@@ -76,14 +81,14 @@ if (isset($_GET['deleteCatID'])) {
         <form method="post" action="index.php?source=categories">
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="AddCategoryName" class="form-label">Category name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="AddCategoryName" name="AddCategoryName" aria-describedby="categoryNameHelp">
+                <input type="text" class="form-control" id="AddCategoryName" name="AddCategoryName" maxlength="100" aria-describedby="categoryNameHelp">
                 <div id="categoryNameHelp" class="form-text">Category name is the one visible on website.</div>
             </div>
 
             <!-- TODO pretty links - category slug names required? Maybe auto generate them. -->
             <div class="mb-3">
                 <label for="AddCategorySlug" class="form-label">Category slug</label>
-                <input type="text" class="form-control" id="AddCategorySlug" name="AddCategorySlug" aria-describedby="slugHelp">
+                <input type="text" class="form-control" id="AddCategorySlug" name="AddCategorySlug" maxlength="150" aria-describedby="slugHelp">
                 <div id="slugHelp" class="form-text">Category slug is short name of your category which will be used in URLs. It can't contain special characters. For example slug name for category name "Car parts" could be "car-parts". Leave empty to automatically generate.</div>
             </div>
 

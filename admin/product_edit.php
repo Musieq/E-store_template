@@ -31,66 +31,76 @@ if (isset($_POST['productEdit'])) {
         $productSalePrice = $_POST['editProductSalePrice'];
         $productSalePrice = $productSalePrice > 0 ? $productSalePrice: -1;
         if (!empty($productPrice) && is_numeric($productPrice) && is_numeric($productSalePrice)) {
-            $productManageStock = $_POST['productManageStock'] ?? 0;
-            if ($productManageStock) {
-                $productManageStock = 1;
-                $productStockStatus = -1;
-                $productStock = $_POST['editProductStock'];
-            } else {
-                $productStockStatus = $_POST['editProductStockStatus'];
-                $productStock = -1;
-            }
-            $productStatus = $_POST['editProductStatus'];
-            if (isset($_POST['editProductAllowMultiplePurchases'])) {
-                $allowMultiplePurchases = 1;
-            } else {
-                $allowMultiplePurchases = 0;
-            }
 
+            if (strlen($productName) <= 255) {
 
-            // Update products
-            $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, tags = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
-            mysqli_stmt_bind_param($stmt, "sssddiiiiii", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
-            mysqli_stmt_execute($stmt);
-            mysqli_stmt_close($stmt);
+                $productManageStock = $_POST['productManageStock'] ?? 0;
+                if ($productManageStock) {
+                    $productManageStock = 1;
+                    $productStockStatus = -1;
+                    $productStock = $_POST['editProductStock'];
+                } else {
+                    $productStockStatus = $_POST['editProductStockStatus'];
+                    $productStock = -1;
+                }
+                $productStatus = $_POST['editProductStatus'];
+                if (isset($_POST['editProductAllowMultiplePurchases'])) {
+                    $allowMultiplePurchases = 1;
+                } else {
+                    $allowMultiplePurchases = 0;
+                }
 
-            // Update images table
-            if (!empty($productImages)) {
-                // Delete existing images for this products
-                $stmt = mysqli_prepare($db, "DELETE FROM product_image_order WHERE product_id = ?");
-                mysqli_stmt_bind_param($stmt, 'i', $editProductID);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_close($stmt);
+                if ($productStock != -1 && $productStock < 99999) {
 
-                // Insert selected images
-                $productImagesArray = explode(',', $productImages);
-                foreach ($productImagesArray as $imageOrder => $imageID) {
-                    $stmt = mysqli_prepare($db, "INSERT INTO product_image_order (product_id, image_id, image_order) VALUES (?, ?, ?)");
-                    mysqli_stmt_bind_param($stmt, "iii", $editProductID, $imageID, $imageOrder);
+                    // Update products
+                    $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, tags = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
+                    mysqli_stmt_bind_param($stmt, "sssddiiiiii", $productName, $productDescription, $productTags, $productPrice, $productSalePrice, $productStock, $productStockStatus, $productManageStock, $allowMultiplePurchases, $productStatus, $editProductID);
                     mysqli_stmt_execute($stmt);
                     mysqli_stmt_close($stmt);
+
+                    // Update images table
+                    if (!empty($productImages)) {
+                        // Delete existing images for this products
+                        $stmt = mysqli_prepare($db, "DELETE FROM product_image_order WHERE product_id = ?");
+                        mysqli_stmt_bind_param($stmt, 'i', $editProductID);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_close($stmt);
+
+                        // Insert selected images
+                        $productImagesArray = explode(',', $productImages);
+                        foreach ($productImagesArray as $imageOrder => $imageID) {
+                            $stmt = mysqli_prepare($db, "INSERT INTO product_image_order (product_id, image_id, image_order) VALUES (?, ?, ?)");
+                            mysqli_stmt_bind_param($stmt, "iii", $editProductID, $imageID, $imageOrder);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+                        }
+                    }
+
+                    // Insert into categories table
+                    if(!empty($productCategories)) {
+                        // Delete existing categories for this products
+                        $stmt = mysqli_prepare($db, "DELETE FROM product_category WHERE product_id = ?");
+                        mysqli_stmt_bind_param($stmt, 'i', $editProductID);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_close($stmt);
+
+                        // Insert selected categories
+                        foreach ($productCategories as $productCategory) {
+                            $stmt = mysqli_prepare($db, "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)");
+                            mysqli_stmt_bind_param($stmt, "ii", $editProductID, $productCategory);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+                        }
+                    }
+
+                    $success = true;
+
+                } else {
+                    array_push($errors, 'Max stock is 99999.');
                 }
+            } else {
+                array_push($errors, 'Product name is too long. Max 255 characters.');
             }
-
-            // Insert into categories table
-            if(!empty($productCategories)) {
-                // Delete existing categories for this products
-                $stmt = mysqli_prepare($db, "DELETE FROM product_category WHERE product_id = ?");
-                mysqli_stmt_bind_param($stmt, 'i', $editProductID);
-                mysqli_stmt_execute($stmt);
-                mysqli_stmt_close($stmt);
-
-                // Insert selected categories
-                foreach ($productCategories as $productCategory) {
-                    $stmt = mysqli_prepare($db, "INSERT INTO product_category (product_id, category_id) VALUES (?, ?)");
-                    mysqli_stmt_bind_param($stmt, "ii", $editProductID, $productCategory);
-                    mysqli_stmt_execute($stmt);
-                    mysqli_stmt_close($stmt);
-                }
-            }
-
-            $success = true;
-
         } else {
             array_push($errors, 'Price cannot be empty');
         }
@@ -186,7 +196,7 @@ if (is_numeric($editProductID)) {
 
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="editProductName" class="form-label">Product name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="editProductName" name="editProductName" value="<?=$productName?>">
+                <input type="text" class="form-control" id="editProductName" name="editProductName" maxlength="255" value="<?=$productName?>">
             </div>
 
             <div class="mb-3">
@@ -286,7 +296,7 @@ if (is_numeric($editProductID)) {
 
                 <div id="stockManagement" style="display: none">
                     <div class="d-flex flex-row"><label for="editProductStock" class="form-label">Stock</label><div class="required">*</div></div>
-                    <input type="number" class="form-control" id="editProductStock" name="editProductStock" value="<?php if ($stock != -1) echo $stock ?>">
+                    <input type="number" class="form-control" id="editProductStock" name="editProductStock" max="99999" value="<?php if ($stock != -1) echo $stock ?>">
                 </div>
             </div>
 
