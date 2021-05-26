@@ -82,18 +82,23 @@
 }
 
 
-a.categories-back {
-  color: black;
-}
+.sidebar-wrapper {
+  border-radius: .5rem;
 
-ul.nav.categories {
+  a.categories-back {
+    color: black;
+  }
 
-  li {
-    margin-bottom: .25rem;
+  ul.nav.categories {
 
-    a {
-      color: black;
-      padding: 0;
+    li {
+      margin-bottom: .25rem;
+
+      a {
+        color: black;
+        padding: 0;
+      }
     }
   }
 }
+

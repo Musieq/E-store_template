@@ -97,7 +97,7 @@ function sortBy(): string {
                 </ul>
             </div>
 
-            filters
+
         </div>
     </div>
 
