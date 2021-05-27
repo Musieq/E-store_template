@@ -60,13 +60,13 @@ $currentPage = $_GET['source'] ?? '';
                 </li>
 
                 <li class="nav-item">
-                    <a href="index.php?source=images" <?php if($currentPage == 'images') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'images') echo "active" ?>">
+                    <a href="index.php?source=images" <?php if($currentPage == 'images' && !isset($_GET['uploadImage'])) echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'images'  && !isset($_GET['uploadImage'])) echo "active" ?>">
                         Images
                     </a>
 
                     <ul class="nav nav-pills nav-child">
                         <li class="nav-item">
-                            <a href="index.php?source=images&uploadImage=1" class="nav-link text-white">
+                            <a href="index.php?source=images&uploadImage=1" <?php if($currentPage == 'images' && isset($_GET['uploadImage'])) echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'images'  && isset($_GET['uploadImage'])) echo "active" ?>">
                                 Upload image
                             </a>
                         </li>
@@ -74,17 +74,23 @@ $currentPage = $_GET['source'] ?? '';
                 </li>
 
                 <li class="nav-item">
-                    <a href="index.php?source=products" <?php if($currentPage == 'products') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'products') echo "active" ?>">
+                    <a href="index.php?source=products" <?php if($currentPage == 'products' && !isset($_GET['addProduct'])) echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'products' && !isset($_GET['addProduct'])) echo "active" ?>">
                         Products
                     </a>
 
                     <ul class="nav nav-pills nav-child">
                         <li class="nav-item">
-                            <a href="index.php?source=products&addProduct=1" class="nav-link text-white">
+                            <a href="index.php?source=products&addProduct=1" <?php if($currentPage == 'products' && isset($_GET['addProduct'])) echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'products' && isset($_GET['addProduct'])) echo "active" ?>">
                                 Add product
                             </a>
                         </li>
                     </ul>
+                </li>
+
+                <li class="nav-item">
+                    <a href="index.php?source=shippingOptions" <?php if($currentPage == 'shippingOptions') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == 'shippingOptions') echo "active" ?>">
+                        Shipping options
+                    </a>
                 </li>
 
                 <li class="nav-item">

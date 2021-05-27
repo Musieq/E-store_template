@@ -306,6 +306,9 @@ div.admin-image-container {
   div.admin-content .admin-sidebar .collapse ul {
     width: inherit;
   }
+  div.admin-content .admin-sidebar .collapse ul li {
+    width: inherit;
+  }
   div.admin-content > * {
     flex-shrink: 0;
   }
