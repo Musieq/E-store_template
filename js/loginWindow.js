@@ -8,6 +8,18 @@ if(showFormButton){
         e.preventDefault();
         showLoginMenu(formBackground, formContainer);
     });
+
+    // Show login form in checkout
+    const checkoutLoginBtn = document.getElementById('checkoutLogin');
+    if (checkoutLoginBtn) {
+        checkoutLoginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            showLoginMenu(formBackground, formContainer);
+        })
+    }
+
+
+
     formContainer.addEventListener('click', function() {hideLoginMenu(formBackground, formContainer)});
     formExitButton.addEventListener('click', function() {hideLoginMenu(formBackground, formContainer)});
     formContainerChild.addEventListener('click', function (e) { e.stopPropagation() })
