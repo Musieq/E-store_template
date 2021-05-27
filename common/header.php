@@ -145,11 +145,11 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
                                         <h1 class="text-center">Register</h1>
                                         <form method="post" action="">
                                             <div class="mb-3">
-                                                <label for="registerEmail" class="form-label">Email address</label>
+                                                <div class="d-flex flex-row"><label for="registerEmail" class="form-label">Email address</label><div class="required">*</div></div>
                                                 <input type="email" class="form-control" id="registerEmail" name="registerEmail" maxlength="60" autocomplete="email" required>
                                             </div>
                                             <div class="mb-3">
-                                                <label for="registerPassword" class="form-label">Password</label>
+                                                <div class="d-flex flex-row"><label for="registerPassword" class="form-label">Password</label><div class="required">*</div></div>
                                                 <input type="password" class="form-control" id="registerPassword" name="registerPassword" autocomplete="new-password" minlength="7" required>
                                             </div>
                                             <div class="row g-3 mb-3">
@@ -189,7 +189,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
 
                                             <div class="mb-3 form-check">
                                                 <input type="checkbox" class="form-check-input" id="registerAgree" name="registerAgree" required>
-                                                <label class="form-check-label" for="registerAgree">I agree to the terms of service</label>
+                                                <div class="d-flex flex-row"><label class="form-check-label" for="registerAgree">I agree to the terms of service</label><div class="required">*</div></div>
                                             </div>
 
                                             <button type="submit" class="btn btn-primary" name="btnRegister">Register</button>

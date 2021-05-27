@@ -77,7 +77,6 @@ if (isset($_GET['deleteCatID'])) {
 
     <div class="col-xl-5 mb-3 mb-xl-0">
         <h2>Add new category</h2>
-        <!-- TODO form validation -->
         <form method="post" action="index.php?source=categories">
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="AddCategoryName" class="form-label">Category name</label><div class="required">*</div></div>

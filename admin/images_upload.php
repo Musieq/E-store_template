@@ -83,7 +83,6 @@ if (isset($_POST['addImageButton'])) {
 
     <div class="col-12">
         <h2>Upload new image</h2>
-        <!-- TODO form validation -->
         <form class="form-width-700" action="index.php?source=images&uploadImage=1" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="addImage" class="form-label">Select image to upload</label>

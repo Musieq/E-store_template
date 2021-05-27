@@ -105,12 +105,11 @@ if (isset($_POST['productAdd'])) {
 
     <div class="col-12">
         <h2>Add new product</h2>
-        <!-- TODO form validation -->
         <form method="post" action="index.php?source=products&addProduct=1">
 
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="addProductName" class="form-label">Product name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="addProductName" name="addProductName" maxlength="255">
+                <input type="text" class="form-control" id="addProductName" name="addProductName" maxlength="255" required>
             </div>
 
             <div class="mb-3">
@@ -149,12 +148,12 @@ if (isset($_POST['productAdd'])) {
             <div class="row mb-3">
                 <div class="col-lg-6">
                     <div class="d-flex flex-row"><label for="addProductPrice" class="form-label">Price</label><div class="required">*</div></div>
-                    <input type="text" class="form-control" id="addProductPrice" name="addProductPrice">
+                    <input type="number" step="0.01" class="form-control" id="addProductPrice" name="addProductPrice" required>
                 </div>
 
                 <div class="col-lg-6">
                     <div class="d-flex flex-row"><label for="addProductSalePrice" class="form-label">Sale price</label></div>
-                    <input type="text" class="form-control" id="addProductSalePrice" name="addProductSalePrice">
+                    <input type="number" step="0.01" class="form-control" id="addProductSalePrice" name="addProductSalePrice">
                 </div>
             </div>
 

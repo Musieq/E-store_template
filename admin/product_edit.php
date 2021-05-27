@@ -30,6 +30,8 @@ if (isset($_POST['productEdit'])) {
         $productPrice = $_POST['editProductPrice'];
         $productSalePrice = $_POST['editProductSalePrice'];
         $productSalePrice = $productSalePrice > 0 ? $productSalePrice: -1;
+        $productSalePrice = str_replace(',', '.', $productSalePrice);
+        $productPrice = str_replace(',', '.', $productPrice);
         if (!empty($productPrice) && is_numeric($productPrice) && is_numeric($productSalePrice)) {
 
             if (strlen($productName) <= 255) {
@@ -191,12 +193,11 @@ if (is_numeric($editProductID)) {
 
     <div class="col-12">
         <h2>Edit product</h2>
-        <!-- TODO form validation -->
         <form method="post" action="index.php?source=products&editProductID=<?=$_GET['editProductID']?>">
 
             <div class="mb-3">
                 <div class="d-flex flex-row"><label for="editProductName" class="form-label">Product name</label><div class="required">*</div></div>
-                <input type="text" class="form-control" id="editProductName" name="editProductName" maxlength="255" value="<?=$productName?>">
+                <input type="text" class="form-control" id="editProductName" name="editProductName" maxlength="255" value="<?=$productName?>" required>
             </div>
 
             <div class="mb-3">
@@ -269,12 +270,12 @@ if (is_numeric($editProductID)) {
             <div class="row mb-3">
                 <div class="col-lg-6">
                     <div class="d-flex flex-row"><label for="editProductPrice" class="form-label">Price</label><div class="required">*</div></div>
-                    <input type="text" class="form-control" id="editProductPrice" name="editProductPrice" value="<?=$productPrice?>">
+                    <input type="number" step="0.01" class="form-control" id="editProductPrice" name="editProductPrice" value="<?=$productPrice?>" required>
                 </div>
 
                 <div class="col-lg-6">
                     <div class="d-flex flex-row"><label for="editProductSalePrice" class="form-label">Sale price</label></div>
-                    <input type="text" class="form-control" id="editProductSalePrice" name="editProductSalePrice" value="<?php if ($productPriceSale != -1) echo $productPriceSale ?>">
+                    <input type="number" step="0.01" class="form-control" id="editProductSalePrice" name="editProductSalePrice" value="<?php if ($productPriceSale != -1) echo $productPriceSale ?>">
                 </div>
             </div>
 

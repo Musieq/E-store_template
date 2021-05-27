@@ -48,6 +48,13 @@ require_once('common/header.php');
                 }
                 break;
 
+            case 'shippingOptions':
+                if (isset($_GET['editShippingID'])) {
+                    include 'shipping_options_edit.php';
+                } else {
+                    include 'shipping_options.php';
+                }
+                break;
 
             default:
                 ?>
