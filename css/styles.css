@@ -619,31 +619,50 @@ div.admin-image-container {
 .cart-wrapper .cart-product .cart-quantity-wrapper input[type=number] {
   -moz-appearance: textfield;
 }
-.cart-wrapper .cart-product .cart-subtotal {
+.cart-wrapper .cart-product .cart-quantity-no-edit-wrapper {
+  display: flex;
+  margin-left: auto;
+  padding: 0.5rem;
+  width: auto;
+}
+@media screen and (min-width: 576px) {
+  .cart-wrapper .cart-product .cart-quantity-no-edit-wrapper {
+    width: auto;
+  }
+}
+.cart-wrapper .cart-product .cart-quantity-no-edit-wrapper span {
+  font-size: 1.25rem;
+  width: max-content;
+  font-weight: 500;
+}
+.cart-wrapper .cart-product .cart-subtotal, .cart-wrapper .cart-product .cart-subtotal-no-edit {
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
   margin-left: auto;
 }
 @media screen and (min-width: 576px) {
-  .cart-wrapper .cart-product .cart-subtotal {
+  .cart-wrapper .cart-product .cart-subtotal, .cart-wrapper .cart-product .cart-subtotal-no-edit {
     margin-left: 0;
   }
 }
-.cart-wrapper .cart-product .cart-subtotal .priceQty, .cart-wrapper .cart-product .cart-subtotal .priceSingleQty {
+.cart-wrapper .cart-product .cart-subtotal .priceQty, .cart-wrapper .cart-product .cart-subtotal .priceSingleQty, .cart-wrapper .cart-product .cart-subtotal-no-edit .priceQty, .cart-wrapper .cart-product .cart-subtotal-no-edit .priceSingleQty {
   font-weight: 500;
   font-size: 1.25rem;
   white-space: nowrap;
 }
-.cart-wrapper .cart-product .cart-subtotal .priceEach {
+.cart-wrapper .cart-product .cart-subtotal .priceEach, .cart-wrapper .cart-product .cart-subtotal-no-edit .priceEach {
   font-size: 0.9rem;
   white-space: nowrap;
 }
-.cart-wrapper .cart-product .cart-subtotal div:first-of-type {
+.cart-wrapper .cart-product .cart-subtotal div:first-of-type, .cart-wrapper .cart-product .cart-subtotal-no-edit div:first-of-type {
   margin-top: auto;
 }
-.cart-wrapper .cart-product .cart-subtotal div:last-of-type {
+.cart-wrapper .cart-product .cart-subtotal div:last-of-type, .cart-wrapper .cart-product .cart-subtotal-no-edit div:last-of-type {
   margin-bottom: auto;
+}
+.cart-wrapper .cart-product .cart-subtotal-no-edit {
+  margin-left: 0 !important;
 }
 .cart-wrapper .cart-product .cart-remove-product {
   display: flex;
@@ -735,6 +754,24 @@ div.admin-image-container {
 .account-details-wrapper {
   border-radius: 0.5rem;
   padding: 1rem 2rem;
+}
+
+.checkout-create-account {
+  display: none;
+}
+
+.checkout-total {
+  margin-top: 3rem;
+  font-weight: 500;
+  font-size: 1.5rem;
+  text-align: right;
+}
+
+.checkout-btn {
+  display: flex;
+}
+.checkout-btn .btn {
+  margin-left: auto;
 }
 
 /* Root */

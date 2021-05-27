@@ -1,0 +1,18 @@
+.checkout-create-account{
+  display: none;
+}
+
+.checkout-total {
+  margin-top: 3rem;
+  font-weight: 500;
+  font-size: 1.5rem;
+  text-align: right;
+}
+
+.checkout-btn {
+  display: flex;
+
+  .btn {
+    margin-left: auto;
+  }
+}

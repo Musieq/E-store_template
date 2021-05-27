@@ -68,3 +68,44 @@
 })();
 
 
+
+/** Show register inputs in checkout **/
+(function() {
+    const checkoutCreateAcc = document.getElementById('checkoutCreateAcc');
+    const checkoutCreateAccountContainer = document.getElementById('checkoutCreateAccountContainer');
+    if (checkoutCreateAcc && checkoutCreateAccountContainer) {
+        checkoutCreateAcc.addEventListener('click', function () {
+            if (this.checked) {
+                checkoutCreateAccountContainer.style.display = "block";
+            } else {
+                checkoutCreateAccountContainer.style.display = "none";
+            }
+        })
+    }
+})();
+
+
+
+/** Update total cost in checkout **/
+if (checkoutTotal && currency) {
+    (function (checkoutTotal, currency) {
+        const shippingOptions = document.getElementsByName('shippingOption');
+        const checkoutTotalElement = document.getElementById('checkoutTotalElement');
+        shippingOptions.forEach(el => {
+            el.addEventListener('change', function () {
+                updateTotalCost(el.getAttribute('data-price'), checkoutTotal);
+            })
+        })
+
+        function updateTotalCost(price, checkoutTotal) {
+            checkoutTotal = parseFloat(checkoutTotal);
+            price = parseFloat(price);
+            checkoutTotal += price;
+            checkoutTotal = checkoutTotal.toFixed(2);
+            checkoutTotalElement.innerHTML = 'Total cost with shipping: ' + checkoutTotal + ' ' + currency;
+        }
+        updateTotalCost(0, checkoutTotal);
+    })(checkoutTotal, currency);
+}
+
+

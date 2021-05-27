@@ -149,8 +149,26 @@
       }
     }
 
+    // Checkout
+    .cart-quantity-no-edit-wrapper {
+      display: flex;
+      margin-left: auto;
+      padding: .5rem ;
+      width: auto;
 
-    .cart-subtotal {
+      @media screen and (min-width: $sm) {
+        width: auto;
+      }
+
+      span {
+        font-size: 1.25rem;
+        width: max-content;
+        font-weight: 500;
+      }
+    }
+
+
+    .cart-subtotal, .cart-subtotal-no-edit {
       display: flex;
       flex-direction: column;
       padding: .5rem ;
@@ -179,6 +197,11 @@
       div:last-of-type {
         margin-bottom: auto;
       }
+    }
+
+    // Checkout
+    .cart-subtotal-no-edit {
+      margin-left: 0 !important;
     }
 
     .cart-remove-product {
