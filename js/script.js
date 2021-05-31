@@ -71,7 +71,7 @@
 
 
 /** Update total cost in checkout **/
-if (checkoutTotal && currency) {
+if (typeof checkoutTotal !== 'undefined' && typeof currency !== 'undefined') {
     (function (checkoutTotal, currency) {
         const shippingOptions = document.getElementsByName('shippingOption');
         const checkoutTotalElement = document.getElementById('checkoutTotalElement');
@@ -96,9 +96,9 @@ if (checkoutTotal && currency) {
 /** Gallery image init **/
 window.onload = function(){
     if(document.querySelector('.yBox')){
-        var myYbox = new yBox();
+        let myYbox = new yBox();
         myYbox.init();
-    };
+    }
 }
 
 
