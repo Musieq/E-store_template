@@ -56,6 +56,10 @@ require_once('common/header.php');
                 }
                 break;
 
+            case 'settings':
+                include 'settings.php';
+                break;
+
             default:
                 ?>
 
