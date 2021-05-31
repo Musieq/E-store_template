@@ -24,6 +24,8 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <meta name="robots" content="noindex, nofollow">
+
     <!-- Bootstrap CSS -->
     <link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
 

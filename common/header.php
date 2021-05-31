@@ -43,6 +43,8 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     endif;
     ?>
 
+    <meta name="robots" content="index, follow">
+
     <!-- Bootstrap CSS -->
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
 
