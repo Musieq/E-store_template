@@ -35,19 +35,27 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <?php
+    if (empty($_GET)) :
+    ?>
+    <meta name="description" content="<?=getSiteDescription($db)?>">
+    <?php
+    endif;
+    ?>
+
     <!-- Bootstrap CSS -->
     <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
 
     <!-- Website CSS -->
     <link href="css/styles.css" rel="stylesheet" type="text/css">
 
-    <title>Store template</title>
+    <title><?=getSiteName($db)?></title>
 </head>
 <body>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm sticky-top">
     <div class="container-fluid container-xl">
-        <a class="navbar-brand" href="./">Store name</a>
+        <a class="navbar-brand" href="./"><?=getSiteName($db)?></a>
 
 
 

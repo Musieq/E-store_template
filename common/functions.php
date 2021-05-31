@@ -389,3 +389,34 @@ function categoriesHierarchyInProducts($db, $currentParentID, $parentID = 0, $hi
     }
 }
 
+
+
+function getSiteName($db): string {
+    $stmt = mysqli_prepare($db, "SELECT value FROM settings WHERE setting_name = 'site_name'");
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+
+    if (mysqli_num_rows($res) == 1) {
+        $siteName = mysqli_fetch_assoc($res)['value'];
+    } else {
+        $siteName = 'E-store template';
+    }
+
+    return $siteName;
+}
+
+function getSiteDescription($db): string {
+    $stmt = mysqli_prepare($db, "SELECT value FROM settings WHERE setting_name = 'site_description'");
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+
+    if (mysqli_num_rows($res) == 1) {
+        $siteDesc = mysqli_fetch_assoc($res)['value'];
+    } else {
+        $siteDesc = '';
+    }
+
+    return $siteDesc;
+}

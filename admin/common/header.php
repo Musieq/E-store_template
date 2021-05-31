@@ -31,7 +31,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <link href="../css/styles.css" rel="stylesheet" type="text/css">
 
 
-    <title>Store Name - admin panel</title>
+    <title><?=getSiteName($db)?> - admin panel</title>
 </head>
 <body>
 
@@ -44,7 +44,7 @@ $currentPage = $_GET['source'] ?? '';
 
 <div class="navbar navbar-expand-lg navbar-dark admin-sidebar text-white bg-dark">
     <div class="container-fluid container-lg d-lg-flex flex-lg-column p-lg-3 mb-lg-auto align-items-lg-start">
-        <a class="navbar-brand mb-lg-3" href="..">Store name</a>
+        <a class="navbar-brand mb-lg-3" href=".."><?=getSiteName($db)?></a>
 
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
