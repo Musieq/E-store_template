@@ -69,22 +69,6 @@
 
 
 
-/** Show register inputs in checkout **/
-(function() {
-    const checkoutCreateAcc = document.getElementById('checkoutCreateAcc');
-    const checkoutCreateAccountContainer = document.getElementById('checkoutCreateAccountContainer');
-    if (checkoutCreateAcc && checkoutCreateAccountContainer) {
-        checkoutCreateAcc.addEventListener('click', function () {
-            if (this.checked) {
-                checkoutCreateAccountContainer.style.display = "block";
-            } else {
-                checkoutCreateAccountContainer.style.display = "none";
-            }
-        })
-    }
-})();
-
-
 
 /** Update total cost in checkout **/
 if (checkoutTotal && currency) {

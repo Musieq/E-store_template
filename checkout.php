@@ -129,24 +129,18 @@ if (isset($_SESSION['userID'])) {
 
 
                 <?php
-                // Create account if not logged in and user wants it
+                // Create account if not logged in
                 if (!isset($_SESSION['userID'])) :
                     ?>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" id="checkoutCreateAcc" name="checkoutCreateAcc">
-                        <label class="form-check-label" for="checkoutCreateAcc">Create account?</label>
+
+                    <div class="mb-3">
+                        <div class="d-flex flex-row"><label for="checkoutPassword" class="form-label">Password</label><div class="required">*</div></div>
+                        <input type="password" class="form-control" id="checkoutPassword" name="checkoutPassword" autocomplete="new-password" minlength="7" required>
                     </div>
 
-                    <div class="checkout-create-account" id="checkoutCreateAccountContainer">
-                        <div class="mb-3">
-                            <div class="d-flex flex-row"><label for="checkoutPassword" class="form-label">Password</label><div class="required">*</div></div>
-                            <input type="password" class="form-control" id="checkoutPassword" name="checkoutPassword" autocomplete="new-password" minlength="7" required>
-                        </div>
-
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="checkoutAgree" name="checkoutAgree" required>
-                            <div class="d-flex flex-row"><label class="form-check-label" for="checkoutAgree">I agree to the terms of service</label><div class="required">*</div></div>
-                        </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="checkoutAgree" name="checkoutAgree" required>
+                        <div class="d-flex flex-row"><label class="form-check-label" for="checkoutAgree">I agree to the terms of service</label><div class="required">*</div></div>
                     </div>
 
                 <?php
