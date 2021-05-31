@@ -420,3 +420,19 @@ function getSiteDescription($db): string {
 
     return $siteDesc;
 }
+
+
+function getCurrency($db): string {
+    $stmt = mysqli_prepare($db, "SELECT value FROM settings WHERE setting_name = 'currency'");
+    mysqli_stmt_execute($stmt);
+    $res = mysqli_stmt_get_result($stmt);
+    mysqli_stmt_close($stmt);
+
+    if (mysqli_num_rows($res) == 1) {
+        $currency = mysqli_fetch_assoc($res)['value'];
+    } else {
+        $currency = '$';
+    }
+
+    return $currency;
+}

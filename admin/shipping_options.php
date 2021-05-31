@@ -94,7 +94,7 @@ if (isset($_GET['deleteShippingID'])) {
                     ?>
                     <tr>
                         <td><?=$resArr['shipping_option']?></td>
-                        <td><?=$resArr['shipping_price']?></td>
+                        <td><?=$resArr['shipping_price']?> <?=getCurrency($db)?></td>
                         <td><a href="index.php?source=shippingOptions&editShippingID=<?=$resArr['id']?>">Edit</a></td>
                         <td><a href="index.php?source=shippingOptions&deleteShippingID=<?=$resArr['id']?>" class="link-danger delete-shipping-link" data-bs-toggle="modal" data-bs-target="#modalShippingDeleteWarning">Delete</a></td>
                     </tr>

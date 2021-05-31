@@ -30,6 +30,7 @@ if(isset($_POST['productAddToCart'])) {
 
         <?php
         /** Get product **/
+        $currency = getCurrency($db);
         $productID = $_GET['productID'];
         if (is_numeric($_GET['productID'])) {
             $stmt = mysqli_prepare($db, "SELECT * FROM products WHERE id = ?");
@@ -103,10 +104,10 @@ if(isset($_POST['productAddToCart'])) {
                             <span class="product-price">
                                 <?php
                                 if ($priceSale > -1) {
-                                    echo "<span class='price-crossed text-muted me-1'>" . $price . "$</span>";
-                                    echo "<span class='price'>" . $priceSale . "$</span>";
+                                    echo "<span class='price-crossed text-muted me-1'>" . $price . "$currency</span>";
+                                    echo "<span class='price'>" . $priceSale . "$currency</span>";
                                 } else {
-                                    echo "<span class='price'>" . $price . "$</span>";
+                                    echo "<span class='price'>" . $price . "$currency</span>";
                                 }
                                 ?>
                             </span>

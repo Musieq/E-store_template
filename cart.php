@@ -1,8 +1,7 @@
 <?php
 $errors = [];
 $totalCost = 0;
-//unset($_SESSION['cart']);
-//print_r($_SESSION['cart']);
+$currency = getCurrency($db);
 
 if (isset($_GET['removeProduct'])) {
     $removeProductID = $_GET['removeProduct'];
@@ -146,17 +145,17 @@ if (isset($_POST['updateCartBtn'])) {
                                         <?php
                                         if ($priceSale != -1) {
                                             if ($allowMultiplePurchases == 1 && $quantity > 1) {
-                                                echo "<div class='priceQty'>".number_format($priceSale * $quantity, 2)." $</div>";
-                                                echo "<div class='priceEach'>".number_format($priceSale, 2)." $ each</div>";
+                                                echo "<div class='priceQty'>".number_format($priceSale * $quantity, 2)." $currency</div>";
+                                                echo "<div class='priceEach'>".number_format($priceSale, 2)." $currency each</div>";
                                             } else {
-                                                echo "<div class='priceSingleQty'>".number_format($priceSale, 2)." $</div>";
+                                                echo "<div class='priceSingleQty'>".number_format($priceSale, 2)." $currency</div>";
                                             }
                                         } else {
                                             if ($allowMultiplePurchases == 1 && $quantity > 1) {
-                                                echo "<div class='priceQty'>".number_format($price * $quantity, 2)." $</div>";
-                                                echo "<div class='priceEach'>".number_format($price, 2)." $ each</div>";
+                                                echo "<div class='priceQty'>".number_format($price * $quantity, 2)." $currency</div>";
+                                                echo "<div class='priceEach'>".number_format($price, 2)." $currency each</div>";
                                             } else {
-                                                echo "<div class='priceSingleQty'>".number_format($price, 2)." $</div>";
+                                                echo "<div class='priceSingleQty'>".number_format($price, 2)." $currency</div>";
                                             }
                                         }
                                         ?>
@@ -200,7 +199,7 @@ if (isset($_POST['updateCartBtn'])) {
                 <div class="cart-summary-wrapper">
                     <div class="cart-summary-total">
                         <div class="price-total">
-                            Total cost: <?=number_format($totalCost,2)?> $
+                            Total cost: <?=number_format($totalCost,2)?> <?=$currency?>
                         </div>
                     </div>
 

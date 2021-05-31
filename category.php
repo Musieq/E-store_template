@@ -7,7 +7,7 @@ $offset = ($currentPage - 1) * $limit;
 $productCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM products WHERE published = 1");
 $productCount = mysqli_fetch_array($productCountQuery)[0];
 $pages =  ceil($productCount / $limit);
-
+$currency = getCurrency($db);
 
 function sortBy(): string {
     $order = '';
@@ -208,10 +208,10 @@ function sortBy(): string {
 
                                 <?php
                                 if ($row['price_sale'] > -1) {
-                                    echo "<span class='price-crossed text-muted me-1'>" . $row['price'] . "$</span>";
-                                    echo "<span class='price'>" . $row['price_sale'] . "$</span>";
+                                    echo "<span class='price-crossed text-muted me-1'>" . $row['price'] . "$currency</span>";
+                                    echo "<span class='price'>" . $row['price_sale'] . "$currency</span>";
                                 } else {
-                                    echo "<span class='price'>" . $row['price'] . "$</span>";
+                                    echo "<span class='price'>" . $row['price'] . "$currency</span>";
                                 }
                                 ?>
 

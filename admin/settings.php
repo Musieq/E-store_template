@@ -5,12 +5,15 @@ $errors = [];
 if (isset($_POST['generalBtn'])) {
     $siteName = $_POST['siteName'];
     $siteDesc = $_POST['siteDescription'];
+    $currency = $_POST['currency'];
 
-    $settings = ['site_name' => $siteName, 'site_description' => $siteDesc];
+    $settings = ['site_name' => $siteName, 'site_description' => $siteDesc, 'currency' => $currency];
 
     if (strlen($siteName) > 255) { array_push($errors, "Site name is too long. Max 255 characters."); }
 
     if (strlen($siteDesc) > 255) { array_push($errors, "Site description is too long. Max 255 characters."); }
+
+    if (strlen($currency) > 255) { array_push($errors, "Currency is too long. Max 255 characters."); }
 
     if (count($errors) == 0) {
 
@@ -63,6 +66,10 @@ while ($resArr = mysqli_fetch_assoc($res)) {
         <li class="nav-item" role="presentation">
             <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">General</button>
         </li>
+
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="general-tab" data-bs-toggle="tab" data-bs-target="#general" type="button" role="tab" aria-controls="general" aria-selected="true">General</button>
+        </li>
     </ul>
 
 
@@ -79,6 +86,12 @@ while ($resArr = mysqli_fetch_assoc($res)) {
                     <label for="siteDescription" class="form-label">Site description</label>
                     <input type="text" id="siteDescription" name="siteDescription" class="form-control" aria-describedby="siteDescriptionDesc" value="<?=$settings['site_description'] ?? ''?>" maxlength="255">
                     <div id="siteDescriptionDesc" class="form-text">In a few words, explain what this site is about.</div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="currency" class="form-label">Currency</label>
+                    <input type="text" id="currency" name="currency" class="form-control" aria-describedby="currencyDesc" value="<?=$settings['currency'] ?? ''?>" maxlength="255">
+                    <div id="currencyDesc" class="form-text">Type in your currency. (e.g. $)</div>
                 </div>
 
                 <input type="submit" name="generalBtn" value="Submit" class="btn btn-primary">

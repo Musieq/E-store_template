@@ -1,5 +1,6 @@
 <?php
 $errors = [];
+$currency = getCurrency($db);
 
 /** Get user data **/
 $email = '';
@@ -117,7 +118,7 @@ if (isset($_SESSION['userID'])) {
                             <div class="form-check">
                                 <input class="form-check-input" type="radio" name="shippingOption" id="shippingOption<?=$resArr['id']?>" value="<?=$resArr['id']?>" data-price="<?=$resArr['shipping_price']?>">
                                 <label class="form-check-label" for="shippingOption<?=$resArr['id']?>">
-                                    <?=$resArr['shipping_option']?>: <?=$resArr['shipping_price']?>$
+                                    <?=$resArr['shipping_option']?>: <?=$resArr['shipping_price']?> <?=$currency?>
                                 </label>
                             </div>
                         <?php
@@ -233,17 +234,17 @@ if (isset($_SESSION['userID'])) {
                                         <?php
                                         if ($priceSale != -1) {
                                             if ($allowMultiplePurchases == 1 && $quantity > 1) {
-                                                echo "<div class='priceQty'>".number_format($priceSale * $quantity, 2)." $</div>";
-                                                echo "<div class='priceEach'>".number_format($priceSale, 2)." $ each</div>";
+                                                echo "<div class='priceQty'>".number_format($priceSale * $quantity, 2)." $currency</div>";
+                                                echo "<div class='priceEach'>".number_format($priceSale, 2)." $currency each</div>";
                                             } else {
-                                                echo "<div class='priceSingleQty'>".number_format($priceSale, 2)." $</div>";
+                                                echo "<div class='priceSingleQty'>".number_format($priceSale, 2)." $currency</div>";
                                             }
                                         } else {
                                             if ($allowMultiplePurchases == 1 && $quantity > 1) {
-                                                echo "<div class='priceQty'>".number_format($price * $quantity, 2)." $</div>";
-                                                echo "<div class='priceEach'>".number_format($price, 2)." $ each</div>";
+                                                echo "<div class='priceQty'>".number_format($price * $quantity, 2)." $currency</div>";
+                                                echo "<div class='priceEach'>".number_format($price, 2)." $currency each</div>";
                                             } else {
-                                                echo "<div class='priceSingleQty'>".number_format($price, 2)." $</div>";
+                                                echo "<div class='priceSingleQty'>".number_format($price, 2)." $currency</div>";
                                             }
                                         }
                                         ?>
@@ -278,8 +279,7 @@ if (isset($_SESSION['userID'])) {
             <div class="checkout-total" id="checkoutTotalElement">
                 <script>
                     let checkoutTotal = <?=$totalCost?>;
-                    // TODO currency here
-                    const currency = '$';
+                    const currency = '<?=$currency?>';
                 </script>
             </div>
 
