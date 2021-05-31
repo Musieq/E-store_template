@@ -16,6 +16,10 @@
 <!-- Bootstrap Bundle with Popper -->
 <script src="js/bootstrap.bundle.min.js"></script>
 
+<!-- Ybox JS -->
+<script src="common/Ybox-master/dist/js/directive.js"></script>
+<script src="common/Ybox-master/dist/js/yBox.min.js"></script>
+
 <!-- Website JS -->
 <script>
     const updateCartCount = function () {

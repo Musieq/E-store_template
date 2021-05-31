@@ -84,7 +84,7 @@ if(isset($_POST['productAddToCart'])) {
                             ?>
 
                             <div class="product-single-image">
-                                <a href="<?=$imgPath?>">
+                                <a href="<?=$imgPath?>" class="yBox" data-ybox-group="group1">
                                     <img src="<?php echo $i == 0 ? $imgMainScaledPath : $imgThumbnailScaledPath; ?>" alt="<?=$imgAlt?>" title="<?=$imgTitle?>">
                                 </a>
                             </div>

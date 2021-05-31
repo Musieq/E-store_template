@@ -93,3 +93,12 @@ if (checkoutTotal && currency) {
 }
 
 
+/** Gallery image init **/
+window.onload = function(){
+    if(document.querySelector('.yBox')){
+        var myYbox = new yBox();
+        myYbox.init();
+    };
+}
+
+
