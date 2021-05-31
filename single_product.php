@@ -61,9 +61,9 @@ if(isset($_POST['productAddToCart'])) {
                     $res = mysqli_stmt_get_result($stmt);
                     mysqli_stmt_close($stmt);
                     // check if there are any images
+                    echo "<div class='col-lg-8 product-images-container mb-3'>";
                     if (mysqli_num_rows($res) > 0) {
                         $i = 0;
-                        echo "<div class='col-lg-8 product-images-container mb-3'>";
                         while ($resArr = mysqli_fetch_assoc($res)) {
                             $imageID = $resArr['image_id'];
 
@@ -74,7 +74,6 @@ if(isset($_POST['productAddToCart'])) {
                             mysqli_stmt_close($stmt);
 
                             // display images
-
                             while ($resImgArr = mysqli_fetch_assoc($resImg)) {
                                 $imgTitle = $resImgArr['title'];
                                 $imgAlt =$resImgArr['alt'];
@@ -93,8 +92,14 @@ if(isset($_POST['productAddToCart'])) {
                             }
                             $i++;
                         }
-                        echo "</div>";
+                    } else {
+                        ?>
+                            <div class="product-single-image-placeholder">
+                                <span>Placeholder</span>
+                            </div>
+                        <?php
                     }
+                    echo "</div>";
                     ?>
 
 
