@@ -167,8 +167,25 @@ if (isset($_POST['btnCheckout'])) {
 
                     // Add products to "orders_products" table
                     foreach ($_SESSION['cart'] as $productID => $quantity) {
-                        $stmt = mysqli_prepare($db, "INSERT INTO orders_products (order_id, product_id, quantity) VALUES (?, ?, ?)");
-                        mysqli_stmt_bind_param($stmt, 'iii', $orderID, $productID, $quantity);
+                        // Get product current price
+                        $stmt = mysqli_prepare($db, "SELECT price, price_sale FROM products WHERE id = ?");
+                        mysqli_stmt_bind_param($stmt, 'i', $productID);
+                        mysqli_stmt_execute($stmt);
+                        $res = mysqli_stmt_get_result($stmt);
+                        mysqli_stmt_close($stmt);
+                        while ($resArr = mysqli_fetch_assoc($res)) {
+                            $price = $resArr['price'];
+                            $priceSale = $resArr['price_sale'];
+
+                            if ($priceSale == -1) {
+                                $currentProductPrice = $price;
+                            } else {
+                                $currentProductPrice = $priceSale;
+                            }
+                        }
+
+                        $stmt = mysqli_prepare($db, "INSERT INTO orders_products (order_id, product_id, quantity, current_price) VALUES (?, ?, ?, ?)");
+                        mysqli_stmt_bind_param($stmt, 'iiid', $orderID, $productID, $quantity, $currentProductPrice);
                         mysqli_stmt_execute($stmt);
                         mysqli_stmt_close($stmt);
 
