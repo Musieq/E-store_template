@@ -6,11 +6,15 @@
 @import "cart";
 @import "myAccount";
 @import "checkout";
+@import "footer";
 
 
 /* Root */
 body {
-
+  display:flex;
+  flex-direction:column;
+  height: 100vh;
+  //margin: 0;
 }
 
 

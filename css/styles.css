@@ -339,7 +339,12 @@ div.admin-image-container {
   margin-top: 0;
 }
 .product-images-container .product-single-image:not(:first-child) {
-  width: 25%;
+  width: 33.333%;
+}
+@media screen and (min-width: 768px) {
+  .product-images-container .product-single-image:not(:first-child) {
+    width: 25%;
+  }
 }
 .product-images-container .product-single-image-placeholder {
   width: 100%;
@@ -783,7 +788,24 @@ div.admin-image-container {
   margin-left: auto;
 }
 
+div.footer-margin {
+  min-height: 3rem;
+}
+
+div.footer {
+  margin-top: auto;
+  background-color: #23282d;
+  min-height: 50px;
+  color: white;
+}
+
 /* Root */
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
 /* Global classes */
 .required {
   color: red;

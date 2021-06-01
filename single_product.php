@@ -153,6 +153,31 @@ if(isset($_POST['productAddToCart'])) {
                         <?=$description?>
                     </div>
 
+
+                    <div class="col-lg-8 mt-3">
+                        <div class="shipping-options">
+                            <h4>Shipping options</h4>
+                            <?php
+                            // Shipping options
+
+                            $stmt = mysqli_prepare($db, "SELECT * FROM shipping_options");
+                            mysqli_stmt_execute($stmt);
+                            $res = mysqli_stmt_get_result($stmt);
+                            mysqli_stmt_close($stmt);
+
+                            while ($resArr = mysqli_fetch_assoc($res)) :
+                                ?>
+                                <div class="shipping-option">
+                                    <?=$resArr['shipping_option']?>: <?=$resArr['shipping_price']?> <?=$currency?>
+                                </div>
+                            <?php
+                            endwhile;
+
+                            ?>
+                        </div>
+                    </div>
+
+
                     <?php
                 } else {
                     array_push($errors, "Product has not been found.");

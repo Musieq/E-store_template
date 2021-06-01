@@ -1,6 +1,14 @@
 
-<div class="footer">
+<div class="footer-margin">&nbsp</div>
 
+<div class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                Footer
+            </div>
+        </div>
+    </div>
 </div>
 
 

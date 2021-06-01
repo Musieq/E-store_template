@@ -23,7 +23,11 @@
     }
 
     &:not(:first-child) {
-      width: 25%;
+      width: 33.333%;
+
+      @media screen and (min-width: $md) {
+        width: 25%;
+      }
     }
   }
 
