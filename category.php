@@ -76,6 +76,9 @@ function sortBy(): string {
                     $parentID = $_GET['categoryID'];
                     if (is_numeric($parentID)) {
                         $categoriesQuery = mysqli_prepare($db, "SELECT category_name, category_id FROM categories WHERE parent_id = ?");
+                    } else {
+                        $parentID = 0;
+                        $categoriesQuery = mysqli_prepare($db, "SELECT category_name, category_id FROM categories WHERE parent_id = ?");
                     }
                 } else {
                     $parentID = 0;
@@ -86,12 +89,14 @@ function sortBy(): string {
                 mysqli_stmt_execute($categoriesQuery);
                 $categoriesResults = mysqli_stmt_get_result($categoriesQuery);
                 mysqli_stmt_close($categoriesQuery);
-                while ($row = mysqli_fetch_assoc($categoriesResults)) {
-                    ?>
-                    <li class="nav-item">
-                        <a href="index.php?categoryID=<?=$row['category_id']?>" class="nav-link"><?=$row['category_name']?></a>
-                    </li>
-                    <?php
+                if (mysqli_num_rows($categoriesResults) > 0) {
+                    while ($row = mysqli_fetch_assoc($categoriesResults)) {
+                        ?>
+                        <li class="nav-item">
+                            <a href="index.php?categoryID=<?=$row['category_id']?>" class="nav-link"><?=$row['category_name']?></a>
+                        </li>
+                        <?php
+                    }
                 }
                 ?>
                 </ul>
@@ -108,21 +113,19 @@ function sortBy(): string {
             <div class="products-top-bar">
             <?php
 
-            if (isset($_GET['categoryID'])) {
+            if (isset($_GET['categoryID']) && is_numeric($_GET['categoryID'])) {
                 $categoryID = $_GET['categoryID'];
-                if (is_numeric($categoryID)) {
-                    // Show products from this category
-                    $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products, product_category WHERE products.published = 1 AND product_category.category_id LIKE ? AND products.id = product_category.product_id";
-                    $prepQuery .= sortBy();
-                    $prepQuery .= " LIMIT $limit OFFSET $offset";
-                    $stmt = mysqli_prepare($db, $prepQuery);
-                    mysqli_stmt_bind_param($stmt, 'i', $categoryID);
-                    mysqli_stmt_execute($stmt);
-                    $productsQuery = mysqli_stmt_get_result($stmt);
-                    mysqli_stmt_close($stmt);
-                } else {
-                    array_push($errors, 'Category has not been found.');
-                }
+
+                // Show products from this category
+                $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products, product_category WHERE products.published = 1 AND product_category.category_id LIKE ? AND products.id = product_category.product_id";
+                $prepQuery .= sortBy();
+                $prepQuery .= " LIMIT $limit OFFSET $offset";
+                $stmt = mysqli_prepare($db, $prepQuery);
+                mysqli_stmt_bind_param($stmt, 'i', $categoryID);
+                mysqli_stmt_execute($stmt);
+                $productsQuery = mysqli_stmt_get_result($stmt);
+                mysqli_stmt_close($stmt);
+
             } elseif (isset($_GET['query'])) {
                 // Show found products
                 $query = $_GET['query'];
