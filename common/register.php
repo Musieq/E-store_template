@@ -56,20 +56,7 @@ if (isset($_POST['btnRegister'])) {
 
     // Create account if there are no errors
     if (count($registerErrors) == 0) {
-        $password = password_hash($password, PASSWORD_DEFAULT);
-
-        $stmt = mysqli_prepare($db,"INSERT INTO users(email, password) VALUES (?, ?)");
-        mysqli_stmt_bind_param($stmt, "ss", $email, $password);
-        mysqli_stmt_execute($stmt);
-        $insertedID = mysqli_stmt_insert_id($stmt);
-        mysqli_stmt_close($stmt);
-
-        $stmt = mysqli_prepare($db, "INSERT INTO  user_informations(user_id, first_name, last_name, city, street, postal_code, apartment, telephone) 
-                                            VALUES(?, ?, ?, ?, ?, ?, ? ,?)");
-        mysqli_stmt_bind_param($stmt, "isssssss", $insertedID, $firstName, $lastName, $city, $street, $zip, $apartment, $phoneNumber);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-
+        createAccount($db, $password, $email, $firstName, $lastName, $phoneNumber, $city, $zip, $street, $apartment);
     }
 
 }

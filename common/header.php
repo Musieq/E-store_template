@@ -22,6 +22,7 @@ if (!isset($_SESSION['userID'])) {
 
 if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 1800)) {
     header("Location: common/logout.php");
+    exit();
 } elseif (isset($_SESSION['lastActivity'])) {
     $_SESSION['lastActivity'] = time();
 }

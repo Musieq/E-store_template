@@ -6,11 +6,12 @@ $errors = [];
 
 if(!isset($_SESSION['userRole']) || $_SESSION['userRole'] != 'admin') {
     header("Location: ../index.php");
-    exit;
+    exit();
 }
 
 if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 1800)) {
     header("Location: ../common/logout.php");
+    exit();
 } elseif (isset($_SESSION['lastActivity'])) {
     $_SESSION['lastActivity'] = time();
 }

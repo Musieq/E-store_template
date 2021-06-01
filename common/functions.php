@@ -188,6 +188,7 @@ function deleteImage($db, $imageID) {
             unset($_GET['deleteImageID']);
             $cleanURL = http_build_query($_GET);
             header("Location: index.php?$cleanURL");
+            exit();
 
         } else {
             array_push($errors, "Image with given ID doesn't exist");
@@ -435,4 +436,36 @@ function getCurrency($db): string {
     }
 
     return $currency;
+}
+
+
+function createAccount($db, $password, $email, $firstName, $lastName, $phoneNumber, $city, $zip, $street, $apartment) {
+    $password = password_hash($password, PASSWORD_DEFAULT);
+
+    $stmt = mysqli_prepare($db,"INSERT INTO users(email, password) VALUES (?, ?)");
+    mysqli_stmt_bind_param($stmt, "ss", $email, $password);
+    mysqli_stmt_execute($stmt);
+    $insertedID = mysqli_stmt_insert_id($stmt);
+    mysqli_stmt_close($stmt);
+
+    $stmt = mysqli_prepare($db, "INSERT INTO  user_informations(user_id, first_name, last_name, city, street, postal_code, apartment, telephone) 
+                                            VALUES(?, ?, ?, ?, ?, ?, ? ,?)");
+    mysqli_stmt_bind_param($stmt, "isssssss", $insertedID, $firstName, $lastName, $city, $street, $zip, $apartment, $phoneNumber);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+
+    // Login user
+    loginUser($email, $insertedID, 'user');
+}
+
+
+function loginUser($email, $userID, $userRole) {
+    $_SESSION['userEmail'] = $email;
+    $_SESSION['userID'] = $userID;
+    $_SESSION['userRole'] = $userRole;
+
+    // "Remember me" button
+    if (!isset($_POST['loginRememberMe'])) {
+        $_SESSION['lastActivity'] = time();
+    }
 }

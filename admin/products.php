@@ -27,6 +27,7 @@ function deleteProduct($db, $productID) {
         unset($_GET['deleteProductID']);
         $cleanURL = http_build_query($_GET);
         header("Location: index.php?$cleanURL");
+        exit();
 
     } else {
         array_push($errors, "Given product ID isn't a numeric value.");

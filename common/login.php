@@ -27,14 +27,17 @@ if (isset($_POST['btnLogin'])) {
             while ($result = mysqli_fetch_assoc($query)) {
                 $_SESSION['userFirstName'] = $result['first_name'];
             }
-            $_SESSION['userEmail'] = $email;
+
+            loginUser($email, $userID, $userRole);
+
+/*            $_SESSION['userEmail'] = $email;
             $_SESSION['userID'] = $userID;
             $_SESSION['userRole'] = $userRole;
 
             // "Remember me" button
             if (!isset($_POST['loginRememberMe'])) {
                 $_SESSION['lastActivity'] = time();
-            }
+            }*/
 
         } else {
             array_push($loginErrors, 'Incorrect account details.');

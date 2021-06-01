@@ -1,8 +1,8 @@
 <?php
 $errors = [];
+$orderErrors = [];
 $currency = getCurrency($db);
 
-/** Get user data **/
 $email = '';
 $firstName = '';
 $lastName = '';
@@ -11,6 +11,202 @@ $city = '';
 $zip = '';
 $street = '';
 $apartment = '';
+$additionalInfo = '';
+
+/** Finalize order **/
+if (isset($_POST['btnCheckout'])) {
+    $firstName = $_POST['checkoutFirstName'];
+    $lastName = $_POST['checkoutLastName'];
+    $phone = $_POST['checkoutPhone'];
+    $city = $_POST['checkoutCity'];
+    $zip = $_POST['checkoutZip'];
+    $street = $_POST['checkoutStreet'];
+    $apartment = $_POST['checkoutApartment'];
+    $shippingOption = $_POST['shippingOption'] ?? '';
+
+    $additionalInfo = $_POST['checkoutAdditionalInfo'];
+
+    // Check if required fields are filled
+    if (empty($firstName)) { array_push($orderErrors, "First name is required"); }
+    if (empty($lastName)) { array_push($orderErrors, "Last name is required"); }
+    if (empty($phone)) { array_push($orderErrors, "Phone number is required"); }
+    if (empty($city)) { array_push($orderErrors, "City is required"); }
+    if (empty($zip)) { array_push($orderErrors, "Postal code is required"); }
+    if (empty($street)) { array_push($orderErrors, "Street is required"); }
+    if (empty($apartment)) { array_push($orderErrors, "Apartment is required"); }
+    if (empty($shippingOption)) { array_push($orderErrors, "Choose shipping option"); }
+
+
+    // Check if data is not too long
+    if (strlen($firstName) > 50) { array_push($orderErrors, "First name is too long. Max 50 characters."); }
+    if (strlen($lastName) > 50) { array_push($orderErrors, "Last name is too long. Max 50 characters."); }
+    if (strlen($phone) > 20) { array_push($orderErrors, "Phone number is too long. Max 20 characters."); }
+    if (strlen($city) > 100) { array_push($orderErrors, "City is too long. Max 100 characters."); }
+    if (strlen($zip) > 10) { array_push($orderErrors, "Postal code is too long. Max 10 characters."); }
+    if (strlen($street) > 100) { array_push($orderErrors, "Street is too long. Max 100 characters."); }
+    if (strlen($apartment) > 25) { array_push($orderErrors, "Apartment is too long. Max 25 characters."); }
+
+
+    if (count($orderErrors) == 0) {
+        // Init variable with total order cost
+        $totalOrderCost = 0;
+
+        // Check if products from cart are available
+        foreach ($_SESSION['cart'] as $id => $quantity) {
+            $stmt = mysqli_prepare($db, "SELECT name, price, price_sale, stock, stock_status, stock_manage FROM products WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $id);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            mysqli_stmt_close($stmt);
+
+            if (mysqli_num_rows($res) == 1) {
+                while ($resArr = mysqli_fetch_assoc($res)) {
+                    $name = $resArr['name'];
+                    $price = $resArr['price'];
+                    $priceSale = $resArr['price_sale'];
+                    $stock = $resArr['stock'];
+                    $stockStatus = $resArr['stock_status'];
+                    $stockManage = $resArr['stock_manage'];
+
+                    // Add product price to total order cost
+                    if ($priceSale != -1) {
+                        $totalOrderCost += $priceSale * $quantity;
+                    } else {
+                        $totalOrderCost += $price * $quantity;
+                    }
+
+                    if ($stockManage == 0) {
+                        if ($stockStatus == 0) {
+                            array_push($orderErrors, "Product $name is no longer available. It was deleted from your cart.");
+                        }
+                    } else {
+                        if ($quantity > $stock) {
+                            array_push($orderErrors, "Product $name does not have required quantity available. It's quantity was set to maximum available.");
+                            $_SESSION['cart'][$id] = $stock;
+                        } elseif ($stock == 0) {
+                            array_push($orderErrors, "Product $name is no longer available. It was deleted from your cart.");
+                        }
+                    }
+                }
+            } else {
+                unset($_SESSION['cart'][$id]);
+                array_push($orderErrors, "One of your product is no longer available. It was deleted from your cart.");
+
+            }
+        }
+
+
+        // Proceed if all products are available
+        if (count($orderErrors) == 0) {
+            // Check if user logged in - true = no registration
+            if (isset($_SESSION['userID'])) {
+                $userID = $_SESSION['userID'];
+
+            } else {
+                $email = $_POST['checkoutEmail'];
+                $password = $_POST['checkoutPassword'];
+                $agreement = '';
+                if(isset($_POST['checkoutAgree'])) { $agreement = $_POST['checkoutAgree']; }
+
+                // Check for required fields
+                if (empty($email)) { array_push($orderErrors, 'Email is required'); }
+                if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                    array_push($orderErrors, 'Invalid email');
+                }
+                if (strlen($email) > 60) { array_push($orderErrors, "Email is too long. Max 60 characters."); }
+
+                if (empty($password)) { array_push($orderErrors, 'Password is required'); }
+                if (strlen($password) < 7) { array_push($orderErrors, 'Password is too short'); }
+
+                if (!$agreement) { array_push($orderErrors, 'You have to accept our terms of service'); }
+
+
+                // Check if user with this email already exist
+                $stmt = mysqli_prepare($db, "SELECT email FROM users WHERE email = ?");
+                mysqli_stmt_bind_param($stmt, 's', $email);
+                mysqli_stmt_execute($stmt);
+                $res = mysqli_stmt_get_result($stmt);
+                mysqli_stmt_close($stmt);
+
+                if (mysqli_num_rows($res) == 0) {
+                    // Register user if email is free
+                    createAccount($db, $password, $email, $firstName, $lastName, $phone, $city, $zip, $street, $apartment);
+
+                    // Get user id
+                    $userID = $_SESSION['userID'];
+                } else {
+                    array_push($orderErrors, "User with given email address already exists. Choose different email.");
+                }
+            }
+
+
+            // If user was logged in or registration was successful - proceed
+            if (count($orderErrors) == 0) {
+                // Get cost of shipping
+                $stmt = mysqli_prepare($db, "SELECT shipping_price FROM shipping_options WHERE id = ?");
+                mysqli_stmt_bind_param($stmt, 'i', $shippingOption);
+                mysqli_stmt_execute($stmt);
+                $res = mysqli_stmt_get_result($stmt);
+                mysqli_stmt_close($stmt);
+
+                if (mysqli_num_rows($res) == 1) {
+                    $shippingCost = mysqli_fetch_array($res)[0];
+                    $totalOrderCost += $shippingCost;
+                } else {
+                    array_push($orderErrors, "Shipping option was not found. Please refresh page.");
+                }
+
+                // Proceed if shipping option was found
+                if (count($orderErrors) == 0) {
+                    // Add order to "orders" table
+                    $stmt = mysqli_prepare($db, "INSERT INTO orders (user_id, order_cost, shipping_id, first_name, last_name, city, street, postal_code, apartment, telephone, additional_info) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                    mysqli_stmt_bind_param($stmt, 'idissssssss', $userID, $totalOrderCost, $shippingOption, $firstName, $lastName, $city, $street, $zip, $apartment, $phone, $additionalInfo);
+                    mysqli_stmt_execute($stmt);
+                    $orderID = mysqli_stmt_insert_id($stmt);
+                    mysqli_stmt_close($stmt);
+
+                    // Add products to "orders_products" table
+                    foreach ($_SESSION['cart'] as $productID => $quantity) {
+                        $stmt = mysqli_prepare($db, "INSERT INTO orders_products (order_id, product_id, quantity) VALUES (?, ?, ?)");
+                        mysqli_stmt_bind_param($stmt, 'iii', $orderID, $productID, $quantity);
+                        mysqli_stmt_execute($stmt);
+                        mysqli_stmt_close($stmt);
+
+                        // Get current stock
+                        $stmt = mysqli_prepare($db, "SELECT stock FROM products WHERE id = ?");
+                        mysqli_stmt_bind_param($stmt, 'i', $productID);
+                        mysqli_stmt_execute($stmt);
+                        $res = mysqli_stmt_get_result($stmt);
+                        mysqli_stmt_close($stmt);
+
+                        $currentStock = mysqli_fetch_array($res)[0];
+
+
+                        // Update stock in "products" table
+                        if ($currentStock != -1) {
+                            $currentStock = $currentStock - $quantity;
+                            $stmt = mysqli_prepare($db, "UPDATE products SET stock = ? WHERE id = ?");
+                            mysqli_stmt_bind_param($stmt, 'ii', $currentStock, $productID);
+                            mysqli_stmt_execute($stmt);
+                            mysqli_stmt_close($stmt);
+                        }
+
+                        unset($_SESSION['cart']);
+
+                        echo "
+                        <script>
+                        window.location.href = 'my-account.php?source=orders&order-successful=1';
+                        </script>
+                        ";
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+/** Get user data **/
 
 if (isset($_SESSION['userID'])) {
     $email = $_SESSION['userEmail'];
@@ -39,12 +235,16 @@ if (isset($_SESSION['userID'])) {
         <h2>Checkout</h2>
 
         <?php
-        displayErrors($errors);
+        if (isset($_SESSION['cart'])) :
+
+        displayErrors($orderErrors);
         // Log in info
         if (!isset($_SESSION['userID'])) :
         ?>
-        <div class="callout callout-info alert-info">
-            Already have an account? <a href="#" id="checkoutLogin">Click here to login</a>
+        <div class="col-12">
+            <div class="callout callout-info alert-info">
+                Already have an account? <a href="#" id="checkoutLogin">Click here to login</a>
+            </div>
         </div>
         <?php
         endif;
@@ -54,10 +254,6 @@ if (isset($_SESSION['userID'])) {
 
         <form method="post" action="index.php?source=checkout">
             <div class="form-width-700">
-                <div class="mb-3">
-                    <div class="d-flex flex-row"><label for="checkoutEmail" class="form-label">Email address</label><div class="required">*</div></div>
-                    <input type="email" class="form-control" id="checkoutEmail" name="checkoutEmail" maxlength="60" autocomplete="email" value="<?=$email?>" required>
-                </div>
 
                 <div class="row g-3 mb-3">
                     <div class="col-sm">
@@ -99,7 +295,7 @@ if (isset($_SESSION['userID'])) {
 
                 <div class="mb-3">
                     <label for="checkoutAdditionalInfo" class="form-label">Additional information</label>
-                    <textarea type="text" class="form-control" id="checkoutAdditionalInfo" name="checkoutAdditionalInfo" rows="4"></textarea>
+                    <textarea type="text" class="form-control" id="checkoutAdditionalInfo" name="checkoutAdditionalInfo" rows="4"><?=$additionalInfo?></textarea>
                 </div>
 
                 <div class="mb-3">
@@ -116,7 +312,7 @@ if (isset($_SESSION['userID'])) {
                         while ($resArr = mysqli_fetch_assoc($res)) :
                             ?>
                             <div class="form-check">
-                                <input class="form-check-input" type="radio" name="shippingOption" id="shippingOption<?=$resArr['id']?>" value="<?=$resArr['id']?>" data-price="<?=$resArr['shipping_price']?>">
+                                <input class="form-check-input" type="radio" name="shippingOption" id="shippingOption<?=$resArr['id']?>" value="<?=$resArr['id']?>" data-price="<?=$resArr['shipping_price']?>" >
                                 <label class="form-check-label" for="shippingOption<?=$resArr['id']?>">
                                     <?=$resArr['shipping_option']?>: <?=$resArr['shipping_price']?> <?=$currency?>
                                 </label>
@@ -133,6 +329,11 @@ if (isset($_SESSION['userID'])) {
                 // Create account if not logged in
                 if (!isset($_SESSION['userID'])) :
                     ?>
+
+                    <div class="mb-3">
+                        <div class="d-flex flex-row"><label for="checkoutEmail" class="form-label">Email address</label><div class="required">*</div></div>
+                        <input type="email" class="form-control" id="checkoutEmail" name="checkoutEmail" maxlength="60" autocomplete="email" value="<?=$email?>" required>
+                    </div>
 
                     <div class="mb-3">
                         <div class="d-flex flex-row"><label for="checkoutPassword" class="form-label">Password</label><div class="required">*</div></div>
@@ -289,6 +490,10 @@ if (isset($_SESSION['userID'])) {
             </div>
 
         </form>
+
+        <?php
+        endif;
+        ?>
 
     </div>
 </div>
