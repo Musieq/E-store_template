@@ -325,14 +325,15 @@ div.admin-image-container {
   flex-direction: row;
 }
 .product-images-container .product-single-image {
-  margin-right: 0.75rem;
   margin-top: 0.75rem;
+  padding-right: 0.375rem;
+  padding-left: 0.375rem;
 }
-.product-images-container .product-single-image img {
+.product-images-container .product-single-image a img {
   width: 100%;
   height: auto;
 }
-.product-images-container .product-single-image:first-child {
+.product-images-container .product-single-image a:first-child {
   width: 100%;
   margin-right: 0;
   margin-top: 0;
