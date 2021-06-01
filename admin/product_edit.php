@@ -52,7 +52,7 @@ if (isset($_POST['productEdit'])) {
                     $allowMultiplePurchases = 0;
                 }
 
-                if ($productStock != -1 && $productStock < 99999) {
+                if ($productStock < 99999) {
 
                     // Update products
                     $stmt = mysqli_prepare($db, "UPDATE products SET name = ?, description = ?, tags = ?, price = ?, price_sale = ?, stock = ?, stock_status = ?, stock_manage = ?, allow_multiple_purchases = ?, published = ? WHERE id = ?");
