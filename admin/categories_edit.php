@@ -47,7 +47,7 @@ if (!is_numeric($editCatID)) {
     if ($success) :
     ?>
     <div class="col-12">
-        <div class="alert-success">
+        <div class="callout callout-success alert-success">
             <p><strong>Category updated.</strong></p>
             <p><a href="index.php?source=categories">Go back to categories</a></p>
         </div>
