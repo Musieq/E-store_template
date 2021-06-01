@@ -150,13 +150,16 @@ ajaxFilterImages();
         return;
     }
     chooseImagesBtn.addEventListener('click', function () {
-        const imageList = document.querySelectorAll('.imageList');
+        let imageList = document.querySelectorAll('.imageList');
         // Get array with all selected images
         let selectedImagesArr = getSelectedImages(imageList);
 
         // Close modal if at least 1 image is selected
         if (selectedImagesArr.length > 0) {
             productImagesModal.hide();
+
+            // Remove event listeners
+            dragAndDrop.removeDnDHandlers();
 
             // Show images on page
             if (!selectedImagesContainer && !imageInput) {
@@ -308,6 +311,7 @@ ajaxFilterImages();
             // Don't do anything if dropping the same column we're dragging.
             if (dragSrcEl !== this) {
                 // Set the source column's HTML to the HTML of the column we dropped on.
+                console.log(this.parentNode);
                 this.parentNode.removeChild(dragSrcEl);
                 let dropHTML = e.dataTransfer.getData('text/html');
 
@@ -338,11 +342,24 @@ ajaxFilterImages();
             elem.addEventListener('dragleave', handleDragLeave, false);
             elem.addEventListener('drop', handleDrop, false);
             elem.addEventListener('dragend', handleDragEnd, false);
-
         }
 
-        let cols = document.querySelectorAll('.selected-product-images .imageList');
-        [].forEach.call(cols, addDnDHandlers);
+        function removeDnDHandlers() {
+            const cols = document.querySelectorAll('.selected-product-images .imageList');
+            cols.forEach(elem => {
+                elem.removeEventListener('dragstart', handleDragStart, false);
+                elem.removeEventListener('dragenter', handleDragEnter, false)
+                elem.removeEventListener('dragover', handleDragOver, false);
+                elem.removeEventListener('dragleave', handleDragLeave, false);
+                elem.removeEventListener('drop', handleDrop, false);
+                elem.removeEventListener('dragend', handleDragEnd, false);
+            })
+        }
+
+        dragAndDrop.removeDnDHandlers = removeDnDHandlers;
+
+        const cols = document.querySelectorAll('.selected-product-images .imageList');
+        cols.forEach(addDnDHandlers)
     }
     dragAndDrop();
 
