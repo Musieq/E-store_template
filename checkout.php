@@ -195,7 +195,7 @@ if (isset($_POST['btnCheckout'])) {
 
                         echo "
                         <script>
-                        window.location.href = 'my-account.php?source=orders&order-successful=1';
+                        window.location.href = 'my-account.php?source=orders&order-successful=$orderID';
                         </script>
                         ";
                     }
