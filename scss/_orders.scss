@@ -61,6 +61,11 @@
             height: 150px;
             background-color: #f7f7f7;
 
+            span {
+              font-size: 2rem;
+              color: white;
+            }
+
             @media screen and (min-width: $sm) {
               width: 150px;
               height: 84px;
@@ -82,6 +87,10 @@
           a {
             color: #000;
             text-decoration: none;
+            font-weight: 500;
+          }
+
+          &.product-deleted {
             font-weight: 500;
           }
         }

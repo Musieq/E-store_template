@@ -859,6 +859,10 @@ div.footer {
   height: 150px;
   background-color: #f7f7f7;
 }
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image .placeholder span {
+  font-size: 2rem;
+  color: white;
+}
 @media screen and (min-width: 576px) {
   .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image .placeholder {
     width: 150px;
@@ -881,6 +885,9 @@ div.footer {
 .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-name a {
   color: #000;
   text-decoration: none;
+  font-weight: 500;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-name.product-deleted {
   font-weight: 500;
 }
 .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-quantity {

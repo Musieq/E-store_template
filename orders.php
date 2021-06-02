@@ -67,7 +67,7 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
                 <?php
 
                 // Get ordered products
-                $stmt = mysqli_prepare($db, "SELECT product_id, quantity, current_price, products.name FROM orders_products INNER JOIN products ON orders_products.product_id = products.id WHERE order_id = ?");
+                $stmt = mysqli_prepare($db, "SELECT product_id, quantity, current_price FROM orders_products WHERE order_id = ?");
                 mysqli_stmt_bind_param($stmt, 'i', $orderID);
                 mysqli_stmt_execute($stmt);
                 $res2 = mysqli_stmt_get_result($stmt);
@@ -76,62 +76,103 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
                     $productID = $resArr2['product_id'];
                     $quantity = $resArr2['quantity'];
                     $currentPrice = $resArr2['current_price'];
-                    $productName = $resArr2['name'];
 
                     $orderCostNoShipping += $quantity * $currentPrice;
 
-                    // Get product thumbnail
-                    $stmt = mysqli_prepare($db, "SELECT title, alt, path FROM product_image_order INNER JOIN images ON product_image_order.image_id = images.id WHERE product_id = ? ORDER BY image_order LIMIT 1");
+                    // Get product name
+                    $stmt = mysqli_prepare($db, "SELECT name FROM products WHERE id = ?");
                     mysqli_stmt_bind_param($stmt, 'i', $productID);
                     mysqli_stmt_execute($stmt);
-                    $res3 = mysqli_stmt_get_result($stmt);
-                    ?>
-                    <div class="single-product">
-                    <?php
-                    if (mysqli_num_rows($res3) > 0) {
-                        while ($resArr3 = mysqli_fetch_assoc($res3)) {
+                    $resProduct = mysqli_stmt_get_result($stmt);
+                    mysqli_stmt_close($stmt);
 
-                            $imgTitle = $resArr3['title'];
-                            $imgAlt = $resArr3['alt'];
-                            $imgPath = $resArr3['path'];
+                    if (mysqli_num_rows($resProduct) == 1) {
+                        $productName = mysqli_fetch_array($resProduct)[0];
 
-                            $thumbnailPath = getScaledImagePath($imgPath, 'thumbnail');
+                        // Get product thumbnail
+                        $stmt = mysqli_prepare($db, "SELECT title, alt, path FROM product_image_order INNER JOIN images ON product_image_order.image_id = images.id WHERE product_id = ? ORDER BY image_order LIMIT 1");
+                        mysqli_stmt_bind_param($stmt, 'i', $productID);
+                        mysqli_stmt_execute($stmt);
+                        $res3 = mysqli_stmt_get_result($stmt);
                         ?>
-                            <div class="order-product-image">
-                                <img src="<?=$thumbnailPath?>" alt="<?=$imgAlt?>" title="<?=$imgTitle?>">
-                            </div>
+                        <div class="single-product">
                             <?php
-                        }
-                    } else {
-                        ?>
-                        <div class="order-product-image">
-                            <div class="placeholder m-auto d-flex">
-                                <span class="m-auto">Placeholder</span>
+                            if (mysqli_num_rows($res3) > 0) {
+                                while ($resArr3 = mysqli_fetch_assoc($res3)) {
+
+                                    $imgTitle = $resArr3['title'];
+                                    $imgAlt = $resArr3['alt'];
+                                    $imgPath = $resArr3['path'];
+
+                                    $thumbnailPath = getScaledImagePath($imgPath, 'thumbnail');
+                                    ?>
+                                    <div class="order-product-image">
+                                        <img src="<?=$thumbnailPath?>" alt="<?=$imgAlt?>" title="<?=$imgTitle?>">
+                                    </div>
+                                    <?php
+                                }
+                            } else {
+                                ?>
+                                <div class="order-product-image">
+                                    <div class="placeholder m-auto d-flex">
+                                        <span class="m-auto">Placeholder</span>
+                                    </div>
+                                </div>
+                                <?php
+                            }
+
+                            ?>
+                            <div class="order-product-name">
+                                <a href="index.php?productID=<?=$productID?>"><?=$productName?></a>
+                            </div>
+                            <div class="order-product-quantity">
+                                <?=$quantity?>x
+                            </div>
+                            <div class="order-product-price">
+                                <?php
+                                if ($quantity > 1) {
+                                    echo "<div class='priceQty'>".number_format($currentPrice * $quantity, 2)." $currency</div>";
+                                    echo "<div class='priceEach'>".number_format($currentPrice, 2)." $currency each</div>";
+                                } else {
+                                    echo "<div class='priceSingleQty'>".number_format($currentPrice, 2)." $currency</div>";
+                                }
+                                ?>
                             </div>
                         </div>
                         <?php
-                    }
-                    
-                    ?>
-                    <div class="order-product-name">
-                        <a href="index.php?productID=<?=$productID?>"><?=$productName?></a>
-                    </div>
-                    <div class="order-product-quantity">
-                        <?=$quantity?>x
-                    </div>
-                    <div class="order-product-price">
-                        <?php
-                        if ($quantity > 1) {
-                            echo "<div class='priceQty'>".number_format($currentPrice * $quantity, 2)." $currency</div>";
-                            echo "<div class='priceEach'>".number_format($currentPrice, 2)." $currency each</div>";
-                        } else {
-                            echo "<div class='priceSingleQty'>".number_format($currentPrice, 2)." $currency</div>";
-                        }
-                        ?>
-                    </div>
-                    </div>
-                    <?php
 
+
+                    } else {
+                        ?>
+
+                        <div class="single-product">
+
+                            <div class="order-product-image">
+                                <div class="placeholder m-auto d-flex">
+                                    <span class="m-auto">Placeholder</span>
+                                </div>
+                            </div>
+
+                            <div class="order-product-name product-deleted">
+                                Product deleted
+                            </div>
+                            <div class="order-product-quantity">
+                                <?=$quantity?>x
+                            </div>
+                            <div class="order-product-price">
+                                <?php
+                                if ($quantity > 1) {
+                                    echo "<div class='priceQty'>".number_format($currentPrice * $quantity, 2)." $currency</div>";
+                                    echo "<div class='priceEach'>".number_format($currentPrice, 2)." $currency each</div>";
+                                } else {
+                                    echo "<div class='priceSingleQty'>".number_format($currentPrice, 2)." $currency</div>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+
+                        <?php
+                    }
 
                 }
                 ?>
