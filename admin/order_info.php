@@ -3,6 +3,17 @@ $errors = [];
 $orderID = $_GET['order-info'];
 $currency = getCurrency($db);
 
+
+/** Update order status **/
+if (isset($_POST['orderStatusBtn'])) {
+    $orderStatusUpdate = $_POST['orderStatus'];
+
+    $stmt = mysqli_prepare($db, "UPDATE orders SET order_status = ? WHERE order_id = ?");
+    mysqli_stmt_bind_param($stmt, 'si', $orderStatusUpdate, $orderID);
+    mysqli_stmt_execute($stmt);
+    mysqli_stmt_close($stmt);
+}
+
 /** Get bank info **/
 $stmt = mysqli_prepare($db, "SELECT * FROM settings");
 mysqli_stmt_execute($stmt);
@@ -29,6 +40,18 @@ if (is_numeric($orderID)) {
     if (mysqli_num_rows($res) > 0) {
         ?>
         <h2 class="mb-3">Order information</h2>
+        <?php
+        if (isset($_POST['orderStatusBtn'])) {
+            ?>
+            <div class="col-12">
+                <div class="callout callout-success alert-success">
+                    <p><strong>Order status updated.</strong></p>
+                    <p><a href="index.php?source=orders">Go back to orders</a></p>
+                </div>
+            </div>
+            <?php
+        }
+        ?>
 
         <div class="admin-order-wrapper">
             <?php
@@ -203,7 +226,19 @@ if (is_numeric($orderID)) {
 
                     <div class="order-status">
                         <h6>Order status</h6>
-                        <?=$orderStatus?>
+                        <form action="index.php?<?=http_build_query($_GET)?>" method="post" class="form-width-700">
+                            <div class="mb-3">
+                                <label for="orderStatus" class="form-label">Choose order status</label>
+                                <select class="form-select" id="orderStatus" name="orderStatus">
+                                    <option value="Pending payment" <?php if($orderStatus == 'Pending payment') echo 'selected' ?>>Pending payment</option>
+                                    <option value="Processing" <?php if($orderStatus == 'Processing') echo 'selected' ?>>Processing</option>
+                                    <option value="Completed" <?php if($orderStatus == 'Completed') echo 'selected' ?>>Completed</option>
+                                    <option value="Cancelled" <?php if($orderStatus == 'Cancelled') echo 'selected' ?>>Cancelled</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn btn-primary " name="orderStatusBtn">Submit</button>
+                        </form>
                     </div>
 
                 </div>
