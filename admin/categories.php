@@ -5,25 +5,22 @@ $errors = [];
 /** Add category **/
 if (isset($_POST['categoryAdd'])) {
     $catName = $_POST['AddCategoryName'];
-    $catSlug = $_POST['AddCategorySlug'];
     $catParent = $_POST['AddCategoryParent'];
 
     if (!empty($catName)) {
 
         if (strlen($catName) > 100) { array_push($errors, "Category name is too long. Max 100 characters."); }
-        if (strlen($catSlug) > 150) { array_push($errors, "Category name is too long. Max 150 characters."); }
 
         if (count($errors) == 0) {
             // Insert category
-            $stmt = mysqli_prepare($db, "INSERT INTO categories(parent_id, category_name, category_slug) VALUES (?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "iss", $catParent, $catName, $catSlug);
+            $stmt = mysqli_prepare($db, "INSERT INTO categories(parent_id, category_name) VALUES (?, ?)");
+            mysqli_stmt_bind_param($stmt, "is", $catParent, $catName);
             mysqli_stmt_execute($stmt);
             mysqli_stmt_close($stmt);
         }
     } else {
         array_push($errors, "Fill required fields");
     }
-    // TODO slug validation???
 }
 
 
@@ -84,13 +81,6 @@ if (isset($_GET['deleteCatID'])) {
                 <div id="categoryNameHelp" class="form-text">Category name is the one visible on website.</div>
             </div>
 
-            <!-- TODO pretty links - category slug names required? Maybe auto generate them. -->
-            <div class="mb-3">
-                <label for="AddCategorySlug" class="form-label">Category slug</label>
-                <input type="text" class="form-control" id="AddCategorySlug" name="AddCategorySlug" maxlength="150" aria-describedby="slugHelp">
-                <div id="slugHelp" class="form-text">Category slug is short name of your category which will be used in URLs. It can't contain special characters. For example slug name for category name "Car parts" could be "car-parts". Leave empty to automatically generate.</div>
-            </div>
-
             <div class="mb-3">
                 <label for="AddCategoryParent" class="form-label">Choose parent category</label>
                 <select class="form-select" id="AddCategoryParent" name="AddCategoryParent" aria-describedby="parentHelp">
@@ -118,7 +108,6 @@ if (isset($_GET['deleteCatID'])) {
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
-                        <th scope="col">Slug</th>
                         <th scope="col">Products</th>
                         <th scope="col">Edit</th>
                         <th scope="col">Delete</th>
@@ -128,7 +117,7 @@ if (isset($_GET['deleteCatID'])) {
                 <?php
                 function categoriesHierarchy($parentID = 0, $hierarchy = '') {
                     global $db;
-                    $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name, category_slug FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
+                    $categoriesQuery = mysqli_query($db, "SELECT category_id, category_name FROM categories WHERE parent_id = $parentID ORDER BY category_name ASC");
 
                     if (mysqli_num_rows($categoriesQuery) > 0) {
                         while($categoriesResult = mysqli_fetch_assoc($categoriesQuery)) {
@@ -138,7 +127,6 @@ if (isset($_GET['deleteCatID'])) {
                             ?>
                             <tr>
                                 <td><?php echo $hierarchy.' '.$categoriesResult['category_name']; ?></td>
-                                <td><?php echo $categoriesResult['category_slug'] ?></td>
                                 <td><?=$productCount?></td>
                                 <td><a href="index.php?source=categories&editCatID=<?php echo $categoriesResult['category_id'] ?>">Edit</a></td>
                                 <td><a href="index.php?source=categories&deleteCatID=<?php echo $categoriesResult['category_id'] ?>" class="link-danger delete-category-link" data-bs-toggle="modal" data-bs-target="#modalCatDeleteWarning">Delete</a></td>
