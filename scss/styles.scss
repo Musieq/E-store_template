@@ -7,13 +7,14 @@
 @import "myAccount";
 @import "checkout";
 @import "footer";
+@import "orders";
 
 
 /* Root */
 body {
   display:flex;
   flex-direction:column;
-  height: 100vh;
+  min-height: 100vh;
   //margin: 0;
 }
 

@@ -3,6 +3,18 @@ $errors = [];
 $userID = $_SESSION['userID'];
 $currency = getCurrency($db);
 
+/** Get bank info **/
+$stmt = mysqli_prepare($db, "SELECT * FROM settings");
+mysqli_stmt_execute($stmt);
+$resBank = mysqli_stmt_get_result($stmt);
+mysqli_stmt_close($stmt);
+
+$settingsArr = [];
+
+while ($resBankArr = mysqli_fetch_assoc($resBank)) {
+    $settingsArr[$resBankArr['setting_name']] = $resBankArr['value'];
+}
+
 ?>
 
 <h2 class="mb-3">Orders</h2>
@@ -12,12 +24,6 @@ $currency = getCurrency($db);
     <div class="col-12">
 
         <div class="orders-wrapper shadow-sm">
-            <div class="callout callout-info alert-info">
-                You don't have any orders yet. Go to <a href="index.php">shop</a>.
-            </div>
-
-
-
 
 
         <?php
@@ -79,8 +85,12 @@ $currency = getCurrency($db);
                     mysqli_stmt_bind_param($stmt, 'i', $productID);
                     mysqli_stmt_execute($stmt);
                     $res3 = mysqli_stmt_get_result($stmt);
+                    ?>
+                    <div class="single-product">
+                    <?php
                     if (mysqli_num_rows($res3) > 0) {
                         while ($resArr3 = mysqli_fetch_assoc($res3)) {
+
                             $imgTitle = $resArr3['title'];
                             $imgAlt = $resArr3['alt'];
                             $imgPath = $resArr3['path'];
@@ -119,22 +129,34 @@ $currency = getCurrency($db);
                         }
                         ?>
                     </div>
+                    </div>
                     <?php
 
 
                 }
                 ?>
                     <div class="order-shipping-cost">
-                        <?=$orderCost - $orderCostNoShipping?>
+                        Shipping cost: <?=$orderCost - $orderCostNoShipping.' '.$currency?>
                     </div>
 
                     <div class="order-total-cost">
-                        <?=$orderCost?>
+                        Total cost: <?=$orderCost.' '.$currency?>
                     </div>
 
                     <div class="order-additional-info">
                         <h6>Your additional order information</h6>
                         <?=!empty($additionalInfo) ? $additionalInfo : 'None'?>
+                    </div>
+
+                    <div class="order-payment-info">
+                        <h6>Payment information</h6>
+                        <span class="payment-title"><strong>Payment title: Order ID <?=$orderID?></strong></span>
+                        <span class="payment-name"><?=isset($settingsArr['payment_name']) && !empty($settingsArr['payment_name']) ? '<strong>Payment name:</strong> '.$settingsArr['payment_name'] : ''?></span>
+                        <span class="bank-name"><?=isset($settingsArr['bank_name']) && !empty($settingsArr['bank_name']) ? '<strong>Bank name:</strong> '.$settingsArr['bank_name'] : ''?></span>
+                        <span class="payment-account"><?=isset($settingsArr['account_number']) && !empty($settingsArr['account_number']) ? '<strong>Account number:</strong> '.$settingsArr['account_number'] : ''?></span>
+                        <span class="sort-code"><?=isset($settingsArr['sort_code']) && !empty($settingsArr['sort_code']) ? '<strong>Sort code:</strong> '.$settingsArr['sort_code'] : ''?></span>
+                        <span class="iban"><?=isset($settingsArr['iban']) && !empty($settingsArr['iban']) ? '<strong>IBAN:</strong> '.$settingsArr['iban'] : ''?></span>
+                        <span class="bic-swift"><?=isset($settingsArr['bic_swift']) && !empty($settingsArr['bic_swift']) ? '<strong>BIC / Swift:</strong> '.$settingsArr['bic_swift'] : ''?></span>
                     </div>
 
                     <div class="order-shipping-info">
@@ -145,21 +167,26 @@ $currency = getCurrency($db);
                         <span class="shipping-phone"><?=$shipmentPhone?></span>
                     </div>
 
-                    <div class="order-payment-info">
-                        <h6>Payment information</h6>
-                        <?php
-                        // TODO get bank account and show it here
-                        ?>
+                    <div class="order-status">
+                        <h6>Order status</h6>
+                        <?=$orderStatus?>
                     </div>
 
                 </div>
+
+                <hr class="break">
                 <?php
             }
             ?>
             </div>
             <?php
+        } else {
+            ?>
+            <div class="callout callout-info alert-info">
+                You don't have any orders yet. Go to <a href="index.php">shop</a>.
+            </div>
+            <?php
         }
-
         ?>
 
         </div>

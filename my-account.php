@@ -13,9 +13,9 @@ if (!isset($_SESSION['userID'])) {
 <div class="container-fluid container-xl mt-3">
     <div class="row">
 
-    <div class="col-md-4 col-lg-3">
+    <div class="col-lg-3">
         <div class="my-account-sidebar-wrapper">
-            <div class="d-flex justify-content-end my-account-toggle-container d-md-none">
+            <div class="d-flex justify-content-end my-account-toggle-container d-lg-none">
                 <h4>
                     <a class="my-account-sidebar-toggle" data-bs-toggle="collapse" href="#myAccountSidebar" role="button" aria-expanded="false" aria-controls="myAccountSidebar">
                         Menu
@@ -29,7 +29,7 @@ if (!isset($_SESSION['userID'])) {
                 </h4>
             </div>
 
-            <nav id="myAccountSidebar" class="shadow-sm my-account-sidebar d-md-block collapse">
+            <nav id="myAccountSidebar" class="shadow-sm my-account-sidebar d-lg-block collapse">
                 <div class="my-account-links shadow-sm">
                     <ul class="nav">
 
@@ -66,7 +66,7 @@ if (!isset($_SESSION['userID'])) {
     </div>
 
 
-    <div class="col-md-8 col-lg-9">
+    <div class="col-lg-9">
         <div class="my-account-content-wrapper">
 
             <?php

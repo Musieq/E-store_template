@@ -799,11 +799,190 @@ div.footer {
   color: white;
 }
 
+.orders-wrapper .my-account-orders-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-id {
+  width: 50%;
+  margin-bottom: 1rem;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-date {
+  width: 50%;
+  text-align: right;
+  margin-bottom: 1rem;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product {
+  width: 100%;
+  display: flex;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .single-product {
+    flex-direction: row;
+    flex-wrap: nowrap;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image {
+  display: flex;
+  width: 100%;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image {
+    display: block;
+    width: fit-content;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image img {
+  width: 85%;
+  height: auto;
+  margin-left: auto;
+  margin-right: auto;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image img {
+    width: 150px;
+    height: auto;
+    margin: 0;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image .placeholder {
+  width: 85%;
+  height: 150px;
+  background-color: #f7f7f7;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-image .placeholder {
+    width: 150px;
+    height: 84px;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-name {
+  padding: 0 1rem;
+  font-size: 1.025rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-name {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-name a {
+  color: #000;
+  text-decoration: none;
+  font-weight: 500;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-quantity {
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 0 1rem;
+  font-size: 1.1rem;
+  font-weight: 500;
+  width: auto;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-price {
+  margin-top: auto;
+  margin-bottom: auto;
+  padding: 0 0 0 1rem;
+  width: auto;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-price .priceQty, .orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-price .priceSingleQty {
+  font-weight: 500;
+  font-size: 1.1rem;
+  white-space: nowrap;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .single-product .order-product-price .priceEach {
+  font-size: 0.9rem;
+  white-space: nowrap;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-shipping-cost {
+  width: 100%;
+  margin-bottom: 0;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  font-weight: 500;
+  text-align: right;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .order-shipping-cost {
+    width: 50%;
+    margin-bottom: 2rem;
+    text-align: left;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-total-cost {
+  width: 100%;
+  text-align: right;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+  white-space: nowrap;
+  font-weight: 500;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .order-total-cost {
+    width: 50%;
+    text-align: right;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-additional-info {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-payment-info {
+  width: 100%;
+  margin-bottom: 1rem;
+  margin-right: 0;
+  display: flex;
+  flex-direction: column;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .order-payment-info {
+    width: calc(50% - 1rem);
+    margin-right: 1rem;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-shipping-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-left: 0;
+  margin-bottom: 1rem;
+}
+@media screen and (min-width: 576px) {
+  .orders-wrapper .my-account-orders-wrapper .single-order .order-shipping-info {
+    width: calc(50% - 1rem);
+    margin-left: 1rem;
+  }
+}
+.orders-wrapper .my-account-orders-wrapper .single-order .order-status {
+  width: 100%;
+}
+.orders-wrapper .my-account-orders-wrapper hr.break {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.orders-wrapper .my-account-orders-wrapper hr.break:last-of-type {
+  display: none;
+  margin: 0;
+}
+
 /* Root */
 body {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* Global classes */
