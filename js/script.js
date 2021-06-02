@@ -47,8 +47,6 @@
                     modalAddedToCart.show();
                 });
 
-            // TODO .then update cart count in header
-
             e.preventDefault();
         });
     }
