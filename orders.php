@@ -25,6 +25,38 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
 
         <div class="orders-wrapper shadow-sm">
 
+        <?php
+        /** Display info after ordering products - order id, payment info **/
+        if (isset($_GET['order-successful'])) {
+            // Get order cost
+            $stmt = mysqli_prepare($db, "SELECT order_cost FROM orders WHERE order_id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $_GET['order-successful']);
+            mysqli_stmt_execute($stmt);
+            $resCost = mysqli_stmt_get_result($stmt);
+            if (mysqli_num_rows($resCost) == 1) {
+                $cost = mysqli_fetch_array($resCost)[0];
+            ?>
+            <div class="callout callout-success alert-success">
+                <h5>Your order was successful!</h5>
+                <div>Now we are awaiting your payment. Once it's processed, we will send you your ordered products.</div>
+                <div class="successful-order-payment-info">
+                    <h5>Payment information</h5>
+                    <span class="payment-title"><strong>Payment title: Order ID <?=$_GET['order-successful']?></strong></span>
+                    <span class="payment-cost"><strong>Cost: <?=$cost?> <?=$currency?></strong></span>
+                    <span class="payment-name"><?=isset($settingsArr['payment_name']) && !empty($settingsArr['payment_name']) ? '<strong>Payment name:</strong> '.$settingsArr['payment_name'] : ''?></span>
+                    <span class="bank-name"><?=isset($settingsArr['bank_name']) && !empty($settingsArr['bank_name']) ? '<strong>Bank name:</strong> '.$settingsArr['bank_name'] : ''?></span>
+                    <span class="payment-account"><?=isset($settingsArr['account_number']) && !empty($settingsArr['account_number']) ? '<strong>Account number:</strong> '.$settingsArr['account_number'] : ''?></span>
+                    <span class="sort-code"><?=isset($settingsArr['sort_code']) && !empty($settingsArr['sort_code']) ? '<strong>Sort code:</strong> '.$settingsArr['sort_code'] : ''?></span>
+                    <span class="iban"><?=isset($settingsArr['iban']) && !empty($settingsArr['iban']) ? '<strong>IBAN:</strong> '.$settingsArr['iban'] : ''?></span>
+                    <span class="bic-swift"><?=isset($settingsArr['bic_swift']) && !empty($settingsArr['bic_swift']) ? '<strong>BIC / Swift:</strong> '.$settingsArr['bic_swift'] : ''?></span>
+                </div>
+                <div>You can see all your orders below.</div>
+            </div>
+            <?php
+            }
+        }
+        ?>
+
 
         <?php
         /** Get orders **/
