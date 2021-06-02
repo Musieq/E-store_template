@@ -60,12 +60,16 @@ require_once('common/header.php');
                 include 'settings.php';
                 break;
 
+            case 'orders':
+                if (isset($_GET['order-info'])) {
+                    include "order_info.php";
+                } else {
+                    include "orders.php";
+                }
+                break;
+
             default:
-                ?>
-
-                <p>Dashboard</p>
-
-                <?php
+                include "orders.php";
                 break;
         }
 

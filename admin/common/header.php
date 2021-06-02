@@ -57,8 +57,8 @@ $currentPage = $_GET['source'] ?? '';
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="nav nav-pills flex-column mb-auto pt-3 pt-lg-0">
                 <li class="nav-item">
-                    <a href="index.php" <?php if($currentPage == '') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == '') echo "active" ?>">
-                        Dashboard
+                    <a href="index.php?source=orders" <?php if($currentPage == '' || $currentPage == 'orders') echo "aria-current='page'" ?> class="nav-link text-white <?php if($currentPage == '' || $currentPage == 'orders') echo "active" ?>">
+                        Orders
                     </a>
                 </li>
 
