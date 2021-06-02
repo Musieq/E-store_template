@@ -2,13 +2,27 @@
 $errors = [];
 $currency = getCurrency($db);
 
+
+if (isset($_GET['orderStatus'])) {
+    $orderStatus = $_GET['orderStatus'];
+} else {
+    $orderStatus = '0';
+}
+
 // pagination variables
 $limit = 50;
 $currentPage = $_GET['page'] ?? 1;
 $offset = ($currentPage - 1) * $limit;
-$ordersCountQuery = mysqli_query($db, "SELECT COUNT(order_id) FROM orders");
+if ($orderStatus == '0') {
+    $ordersCountQuery = mysqli_query($db, "SELECT COUNT(order_id) FROM orders");
+} else {
+    $ordersCountQuery = mysqli_query($db, "SELECT COUNT(order_id) FROM orders WHERE order_status = '$orderStatus'");
+}
+
 $ordersCount = mysqli_fetch_array($ordersCountQuery)[0];
 $pages =  ceil($ordersCount / $limit);
+
+
 
 ?>
 
@@ -19,6 +33,24 @@ $pages =  ceil($ordersCount / $limit);
 
     <div class="col-12">
         <h2>Orders</h2>
+
+        <form action="index.php" method="get" class="form-width-700">
+
+            <input type="hidden" value="orders" name="source">
+
+            <div class="mb-3">
+                <label for="orderStatus" class="form-label">Choose order status</label>
+                <select class="form-select" id="orderStatus" name="orderStatus">
+                    <option value="0" <?php if($orderStatus == '0'){ echo 'selected'; } ?>>All orders</option>
+                    <option value="Pending payment" <?php if($orderStatus == 'Pending payment'){ echo 'selected'; } ?>>Pending payment</option>
+                    <option value="Processing" <?php if($orderStatus == 'Processing'){ echo 'selected';} ?>>Processing</option>
+                    <option value="Completed" <?php if($orderStatus == 'Completed'){ echo 'selected';} ?>>Completed</option>
+                    <option value="Cancelled" <?php if($orderStatus == 'Cancelled'){ echo 'selected';} ?>>Cancelled</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary " name="orderStatusSubmit" value="1">Submit</button>
+        </form>
 
 
         <div class="table-responsive">
@@ -36,7 +68,13 @@ $pages =  ceil($ordersCount / $limit);
                 <tbody>
                 <?php
                 /** Get all orders **/
-                $stmt = mysqli_prepare($db, "SELECT order_id, order_cost, order_status, order_date FROM orders ORDER BY order_id DESC LIMIT $limit OFFSET $offset");
+                if ($orderStatus == '0') {
+                    $stmt = mysqli_prepare($db, "SELECT order_id, order_cost, order_status, order_date FROM orders ORDER BY order_id DESC LIMIT $limit OFFSET $offset");
+                } else {
+                    $stmt = mysqli_prepare($db, "SELECT order_id, order_cost, order_status, order_date FROM orders WHERE order_status = ? ORDER BY order_id DESC LIMIT $limit OFFSET $offset");
+                    mysqli_stmt_bind_param($stmt, 's', $orderStatus);
+                }
+
                 mysqli_stmt_execute($stmt);
                 $res = mysqli_stmt_get_result($stmt);
 
