@@ -3,6 +3,14 @@ $errors = [];
 $userID = $_SESSION['userID'];
 $currency = getCurrency($db);
 
+// pagination variables
+$limit = 30;
+$currentPage = $_GET['page'] ?? 1;
+$offset = ($currentPage - 1) * $limit;
+$ordersCountQuery = mysqli_query($db, "SELECT COUNT(order_id) FROM orders WHERE user_id = $userID");
+$ordersCount = mysqli_fetch_array($ordersCountQuery)[0];
+$pages =  ceil($ordersCount / $limit);
+
 /** Get bank info **/
 $stmt = mysqli_prepare($db, "SELECT * FROM settings");
 mysqli_stmt_execute($stmt);
@@ -29,8 +37,8 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
         /** Display info after ordering products - order id, payment info **/
         if (isset($_GET['order-successful'])) {
             // Get order cost
-            $stmt = mysqli_prepare($db, "SELECT order_cost FROM orders WHERE order_id = ?");
-            mysqli_stmt_bind_param($stmt, 'i', $_GET['order-successful']);
+            $stmt = mysqli_prepare($db, "SELECT order_cost FROM orders WHERE order_id = ? AND user_id = ?");
+            mysqli_stmt_bind_param($stmt, 'ii', $_GET['order-successful'], $userID);
             mysqli_stmt_execute($stmt);
             $resCost = mysqli_stmt_get_result($stmt);
             if (mysqli_num_rows($resCost) == 1) {
@@ -61,7 +69,7 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
         <?php
         /** Get orders **/
         $orderedProductsCost = 0;
-        $stmt = mysqli_prepare($db, "SELECT order_id, order_cost, first_name, last_name, city, street, postal_code, apartment, telephone, additional_info, order_status, order_date FROM orders WHERE user_id = ? ORDER BY order_id DESC");
+        $stmt = mysqli_prepare($db, "SELECT order_id, order_cost, first_name, last_name, city, street, postal_code, apartment, telephone, additional_info, order_status, order_date FROM orders WHERE user_id = ? ORDER BY order_id DESC LIMIT $limit OFFSET $offset");
         mysqli_stmt_bind_param($stmt, 'i', $userID);
         mysqli_stmt_execute($stmt);
         $res = mysqli_stmt_get_result($stmt);
@@ -250,6 +258,8 @@ while ($resBankArr = mysqli_fetch_assoc($resBank)) {
                 <hr class="break">
                 <?php
             }
+
+            createPagination('Orders pagination', $pages, $currentPage, 'my-account.php?source=orders');
             ?>
             </div>
             <?php
