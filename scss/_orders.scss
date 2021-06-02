@@ -1,7 +1,7 @@
-.orders-wrapper {
 
 
-  .my-account-orders-wrapper {
+
+  .my-account-orders-wrapper, .admin-order-wrapper {
     display: flex;
     flex-direction: column;
 
@@ -69,6 +69,10 @@
             @media screen and (min-width: $sm) {
               width: 150px;
               height: 84px;
+
+              span {
+                font-size: 1.5rem;
+              }
             }
           }
         }
@@ -205,4 +209,3 @@
     display: flex;
     flex-direction: column;
   }
-}
