@@ -291,6 +291,10 @@ div.admin-image-container {
   background-size: cover;
 }
 
+span.admin-product-price {
+  white-space: nowrap;
+}
+
 /* Admin container and sidebar */
 @media (min-width: 992px) {
   div.admin-content {

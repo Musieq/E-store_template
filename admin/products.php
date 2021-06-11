@@ -278,7 +278,7 @@ if (isset($_POST['productBulkOption'])) {
                             <td>
                                 <?php
                                 if ($row['price_sale'] == -1) {
-                                    echo "<span>{$row['price']} $currency</span>";
+                                    echo "<span class='admin-product-price'>{$row['price']} $currency</span>";
                                 } else {
                                     echo "<span class='text-decoration-line-through wrap'>{$row['price']} $currency</span><br>";
                                     echo "<span>{$row['price_sale']} $currency</span>";
