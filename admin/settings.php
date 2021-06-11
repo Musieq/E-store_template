@@ -94,7 +94,7 @@ while ($resArr = mysqli_fetch_assoc($res)) {
         </li>
 
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Contact</button>
+            <button class="nav-link" id="payment-tab" data-bs-toggle="tab" data-bs-target="#payment" type="button" role="tab" aria-controls="payment" aria-selected="false">Payment</button>
         </li>
     </ul>
 
