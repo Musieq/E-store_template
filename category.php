@@ -184,7 +184,18 @@ function sortBy(): string {
                     ?>
 
                     <div class="product-wrapper mb-4 shadow-sm">
+                        <?php
+                        if (isset($_GET['categoryID'])) {
+                        ?>
+                        <a href="index.php?categoryID=<?=$_GET['categoryID']?>&productID=<?= $currentProductID ?>" class="d-flex">
+                            <?php
+                        } else {
+                        ?>
                         <a href="index.php?productID=<?= $currentProductID ?>" class="d-flex">
+                        <?php
+                        }
+                        ?>
+
                             <div class="image-wrapper d-flex">
                                 <?php
                                 if (mysqli_num_rows($imageQuery) > 0) {
