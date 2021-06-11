@@ -5,30 +5,41 @@ $currency = getCurrency($db);
 function deleteProduct($db, $productID) {
     global $errors;
     if (is_numeric($productID)) {
-        // Delete product from products table
-        $stmt = mysqli_prepare($db, "DELETE FROM products WHERE id = ?");
+
+        // Check if the product has already been ordered
+        $stmt = mysqli_prepare($db, "SELECT product_id FROM orders_products WHERE product_id = ?");
         mysqli_stmt_bind_param($stmt, "i", $productID);
         mysqli_stmt_execute($stmt);
+        $res = mysqli_stmt_get_result($stmt);
         mysqli_stmt_close($stmt);
 
-        // Delete product from product_category table
-        $stmt = mysqli_prepare($db, "DELETE FROM product_category WHERE product_id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $productID);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+        if (mysqli_num_rows($res) == 0) {
+            // Delete product from products table
+            $stmt = mysqli_prepare($db, "DELETE FROM products WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $productID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
-        // Delete product from product_image_order table
-        $stmt = mysqli_prepare($db, "DELETE FROM product_image_order WHERE product_id = ?");
-        mysqli_stmt_bind_param($stmt, "i", $productID);
-        mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
+            // Delete product from product_category table
+            $stmt = mysqli_prepare($db, "DELETE FROM product_category WHERE product_id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $productID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
-        // Delete ID of deleted product from URL
-        unset($_GET['deleteProductID']);
-        $cleanURL = http_build_query($_GET);
-        header("Location: index.php?$cleanURL");
-        exit();
+            // Delete product from product_image_order table
+            $stmt = mysqli_prepare($db, "DELETE FROM product_image_order WHERE product_id = ?");
+            mysqli_stmt_bind_param($stmt, "i", $productID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
 
+            // Delete ID of deleted product from URL
+            unset($_GET['deleteProductID']);
+            $cleanURL = http_build_query($_GET);
+            header("Location: index.php?$cleanURL");
+            exit();
+        } else {
+            array_push($errors, "Cannot delete product that already has been ordered. Instead of deleting it, change it's status.");
+        }
     } else {
         array_push($errors, "Given product ID isn't a numeric value.");
     }
