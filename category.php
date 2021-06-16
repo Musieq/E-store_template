@@ -115,6 +115,7 @@ function sortBy(): string {
 
             if (isset($_GET['categoryID']) && is_numeric($_GET['categoryID'])) {
                 $categoryID = $_GET['categoryID'];
+                echo "<h2 class='mb-3'>$catName</h2>";
 
                 // Show products from this category
                 $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products, product_category WHERE products.published = 1 AND product_category.category_id LIKE ? AND products.id = product_category.product_id";
@@ -141,7 +142,7 @@ function sortBy(): string {
                 mysqli_stmt_close($stmt);
             } else {
                 // Show all newest products
-                echo "<h2 class='mb-3'>Recent products</h2>";
+                echo "<h2 class='mb-3'>All products</h2>";
                 $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products WHERE published = 1";
                 $prepQuery .= sortBy();
                 $prepQuery .= " LIMIT $limit OFFSET $offset";

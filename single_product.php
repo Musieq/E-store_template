@@ -3,11 +3,15 @@ $errors = [];
 
 /** Add to cart **/
 if(isset($_POST['productAddToCart'])) {
+    // Zainicjowanie zmiennej przechowującej ilość produktów
     $productQuantity = 1;
+    // Sprawdzenie czy użytkownik zmienił ilość produktów i przypisanie jej do zmiennej
     if (isset($_POST['quantity'])) {
         $productQuantity = $_POST['quantity'];
     }
+    // Pobranie ID produktu z adresu URL
     $productID = $_GET['productID'];
+    // Stworzenie zmiennej sesyjnej lub przypisanie do niej nowych danych
     if (isset($_SESSION['cart'])) {
         $_SESSION['cart'][$productID] = $productQuantity;
     } else {

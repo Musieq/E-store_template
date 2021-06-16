@@ -30,14 +30,6 @@ if (isset($_POST['btnLogin'])) {
 
             loginUser($email, $userID, $userRole);
 
-/*            $_SESSION['userEmail'] = $email;
-            $_SESSION['userID'] = $userID;
-            $_SESSION['userRole'] = $userRole;
-
-            // "Remember me" button
-            if (!isset($_POST['loginRememberMe'])) {
-                $_SESSION['lastActivity'] = time();
-            }*/
 
         } else {
             array_push($loginErrors, 'Incorrect account details.');
