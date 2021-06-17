@@ -47,13 +47,13 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <meta name="robots" content="index, follow">
 
     <!-- Bootstrap CSS -->
-    <link href="css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
     <!-- YBox CSS -->
     <link rel="stylesheet" href="common/Ybox-master/dist/css/yBox.min.css">
 
     <!-- Website CSS -->
-    <link href="css/styles.css" rel="stylesheet" type="text/css">
+    <link href="css/styles.min.css" rel="stylesheet" type="text/css">
 
     <title><?=getSiteName($db)?></title>
 </head>

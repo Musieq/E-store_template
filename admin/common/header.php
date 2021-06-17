@@ -28,10 +28,10 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <meta name="robots" content="noindex, nofollow">
 
     <!-- Bootstrap CSS -->
-    <link href="../css/bootstrap.css" rel="stylesheet" type="text/css">
+    <link href="../css/bootstrap.min.css" rel="stylesheet" type="text/css">
 
     <!-- CSS -->
-    <link href="../css/styles.css" rel="stylesheet" type="text/css">
+    <link href="../css/styles.min.css" rel="stylesheet" type="text/css">
 
 
     <title><?=getSiteName($db)?> - admin panel</title>
