@@ -52,13 +52,13 @@
     updateCartCount();
 </script>
 
-<script src="js/script.js"></script>
+<script src="js/script.min.js"></script>
 
 <!-- Login/register window JS -->
 <?php
 if (!isset($_SESSION['userID'])) {
     ?>
-    <script src="js/loginWindow.js"></script>
+    <script src="js/loginWindow.min.js"></script>
     <?php
 }
 ?>

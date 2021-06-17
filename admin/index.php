@@ -95,7 +95,7 @@ require_once('common/header.php');
 <script src="https://ckeditor.com/apps/ckfinder/3.5.0/ckfinder.js"></script>
 
 <!-- Admin JS -->
-<script src="js/adminScripts.js"></script>
+<script src="js/adminScripts.min.js"></script>
 
 </body>
 </html>
