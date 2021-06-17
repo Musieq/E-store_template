@@ -55,7 +55,7 @@ if (isset($_SESSION['lastActivity']) && (time() - $_SESSION['lastActivity'] > 18
     <!-- Website CSS -->
     <link href="css/styles.min.css" rel="stylesheet" type="text/css">
 
-    <title><?=getSiteName($db)?></title>
+    <title><?=pageTitle($db)?></title>
 </head>
 <body>
 

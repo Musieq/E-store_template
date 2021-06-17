@@ -469,3 +469,59 @@ function loginUser($email, $userID, $userRole) {
         $_SESSION['lastActivity'] = time();
     }
 }
+
+
+function pageTitle($db ) {
+    $siteTitle = getSiteName($db);
+
+    if (basename($_SERVER['PHP_SELF']) == 'index.php') {
+        if (isset($_GET['productID']) && is_numeric($_GET['productID'])) {
+            $productID = $_GET['productID'];
+            $stmt = mysqli_prepare($db, "SELECT name FROM products WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $productID);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            if (mysqli_num_rows($res) == 1) {
+                $productName = mysqli_fetch_array($res)[0];
+                $prefix = $productName;
+            } else {
+                $prefix = 'Product not found';
+            }
+        } elseif (isset($_GET['categoryID']) && is_numeric($_GET['categoryID'])) {
+            $catID = $_GET['categoryID'];
+            $stmt = mysqli_prepare($db, "SELECT category_name FROM categories WHERE category_id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $catID);
+            mysqli_stmt_execute($stmt);
+            $res = mysqli_stmt_get_result($stmt);
+            if (mysqli_num_rows($res) == 1) {
+                $categoryName = mysqli_fetch_array($res)[0];
+                $prefix = $categoryName;
+            } else {
+                $prefix = 'Category not found';
+            }
+        } elseif (isset($_GET['source']) && $_GET['source'] == 'cart') {
+            $prefix = 'Cart';
+        } elseif (isset($_GET['source']) && $_GET['source'] == 'checkout' && isset($_SESSION['cart']) && !empty($_SESSION['cart'])) {
+            $prefix = 'Checkout';
+        } else {
+            $prefix = 'All products';
+        }
+    } else {
+        if (isset($_GET['source']) && $_GET['source'] == 'address') {
+            $prefix = 'Address';
+        } elseif (isset($_GET['source']) && $_GET['source'] == 'account-details') {
+            $prefix = 'Account details';
+        } else {
+            $prefix = 'Orders';
+        }
+    }
+
+
+    if (isset($_GET['page']) && is_numeric($_GET['page'])) {
+        $suffix = ' - Page ' . $_GET['page'];
+    } else {
+        $suffix = '';
+    }
+
+    return $prefix . ' - ' . $siteTitle . $suffix;
+}
