@@ -39,7 +39,7 @@ function sortBy(): string {
     displayErrors($errors);
     ?>
 
-    <div class="col-lg-4">
+    <div class="col-lg-4 mb-3 mb-lg-0">
         <div class="sidebar-wrapper shadow-sm">
             <div class="categories-wrapper p-3">
                 <?php
