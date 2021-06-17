@@ -24,11 +24,18 @@ if (isset($_GET['deleteShippingID'])) {
     $shippingID = $_GET['deleteShippingID'];
 
     if (is_numeric($shippingID)) {
-        $stmt = mysqli_prepare($db, "DELETE FROM shipping_options WHERE id = ?");
+        $stmt = mysqli_prepare($db, "SELECT shipping_id FROM orders WHERE shipping_id = ?");
         mysqli_stmt_bind_param($stmt, 'i', $shippingID);
         mysqli_stmt_execute($stmt);
-        mysqli_stmt_close($stmt);
-
+        $res = mysqli_stmt_get_result($stmt);
+        if (mysqli_num_rows($res) == 0) {
+            $stmt = mysqli_prepare($db, "DELETE FROM shipping_options WHERE id = ?");
+            mysqli_stmt_bind_param($stmt, 'i', $shippingID);
+            mysqli_stmt_execute($stmt);
+            mysqli_stmt_close($stmt);
+        } else {
+            array_push($errors, "Cannot delete shipping option that already has been selected when ordering products.");
+        }
     } else {
         array_push($errors, "Given shipping ID isn't a numeric value");
     }

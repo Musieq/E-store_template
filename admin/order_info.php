@@ -217,6 +217,23 @@ if (is_numeric($orderID)) {
                     </div>
 
                     <div class="order-shipping-info">
+
+
+                        <h6>Shipping option</h6>
+                        <?php
+                        // Get shipping option
+                        $stmtShipping = mysqli_prepare($db, "SELECT shipping_option FROM shipping_options WHERE id = ?");
+                        mysqli_stmt_bind_param($stmtShipping, 'i', $shippingID);
+                        mysqli_stmt_execute($stmtShipping);
+                        $resShipping = mysqli_stmt_get_result($stmtShipping);
+                        if (mysqli_num_rows($resShipping) == 1) {
+                            $shippingName = mysqli_fetch_array($resShipping)[0];
+                        } else {
+                            $shippingName = 'Shipping option was deleted';
+                        }
+                        ?>
+                        <span class="shipping-option mb-3"><?=$shippingName?></span>
+
                         <h6>Shipping address</h6>
                         <span class="shipping-first-last-name"><?=$shipmentFirstName?> <?=$shipmentLastName?></span>
                         <span class="shipping-street"><?=$shipmentStreet?> <?=$shipmentApartment?></span>
