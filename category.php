@@ -4,7 +4,16 @@ $errors = [];
 $limit = 20;
 $currentPage = $_GET['page'] ?? 1;
 $offset = ($currentPage - 1) * $limit;
-$productCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM products WHERE published = 1");
+if (isset($_GET['categoryID'])) {
+    $catID = $_GET['categoryID'];
+    $productCountQuery = mysqli_query($db, "SELECT COUNT(product_id) FROM product_category INNER JOIN products ON product_id = products.id WHERE products.published = 1 AND category_id = $catID");
+} elseif (isset($_GET['query'])) {
+    $query = $_GET['query'];
+    $productCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM products WHERE published = 1 AND (name LIKE '%$query%' OR tags LIKE '%$query%')");
+} else {
+    $productCountQuery = mysqli_query($db, "SELECT COUNT(id) FROM products WHERE published = 1");
+}
+
 $productCount = mysqli_fetch_array($productCountQuery)[0];
 $pages =  ceil($productCount / $limit);
 $currency = getCurrency($db);
@@ -44,7 +53,6 @@ function sortBy(): string {
             <div class="categories-wrapper p-3">
                 <?php
                 if (isset($_GET['categoryID'])) {
-                    $catID = $_GET['categoryID'];
                     $catNameQuery = mysqli_prepare($db, "SELECT category_name, parent_id FROM categories WHERE category_id = ?");
                     mysqli_stmt_bind_param($catNameQuery, 'i', $catID);
                     mysqli_stmt_execute($catNameQuery);
@@ -129,7 +137,6 @@ function sortBy(): string {
 
             } elseif (isset($_GET['query'])) {
                 // Show found products
-                $query = $_GET['query'];
                 echo "<h2 class='mb-3'>Search results for: $query</h2>";
                 $query = '%'.$query.'%';
                 $prepQuery = "SELECT *, IF(price_sale > -1, price_sale, price) as curPrice FROM products WHERE published = 1 AND (name LIKE ? OR tags LIKE ?)";
